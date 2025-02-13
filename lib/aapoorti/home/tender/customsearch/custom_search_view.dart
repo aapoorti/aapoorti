@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_app/aapoorti/common/DatabaseHelper.dart';
 import 'package:flutter_app/aapoorti/models/CustomSearchData.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 import 'custom_search_filter.dart';
 import 'package:dio/dio.dart';
 
@@ -23,8 +25,8 @@ class Custom_search_view extends StatefulWidget {
       dept,
       unit;
 
-  Custom_search_view(
-      {this.workarea,
+  Custom_search_view({
+      this.workarea,
       this.SearchForstring,
       this.RailZoneIn,
       this.Dt1In,
@@ -45,7 +47,8 @@ class Custom_search_view extends StatefulWidget {
       this.OrgCode!,
       this.ClDate!,
       this.dept!,
-      this.unit!);
+      this.unit!
+  );
 }
 
 class _CustomSearchViewState extends State<Custom_search_view> implements Exception {
@@ -113,6 +116,7 @@ class _CustomSearchViewState extends State<Custom_search_view> implements Except
   void fetchPost() async {
     try {
       if(workarea == '#') {
+        debugPrint("Custom search view 1");
         rowCount = (await dbHelper.rowCountCustomSearch())!;
         if(rowCount > 0) {
           debugPrint('Fetching from local DB');
@@ -125,6 +129,7 @@ class _CustomSearchViewState extends State<Custom_search_view> implements Except
         }
       }
       else {
+        debugPrint("Custom search view 2");
         try{
           var v = AapoortiConstants.webServiceUrl+'Tender/CustomSearch?WorkArea=${this.workarea}&SearchForString=${this.SearchForstring}&RailZoneIn=${this.RailZoneIn}&Dt1In=${this.Dt1In}&Dt2In=${this.Dt2In}&searchOption=${this.searchOption}&OrgCode=${this.OrgCode}&ClDate=${this.ClDate}&dept=${this.dept}&unit=${this.unit}';
           debugPrint("my url==>$v");
@@ -269,7 +274,22 @@ class _CustomSearchViewState extends State<Custom_search_view> implements Except
   Widget _myListView(BuildContext context) {
     //Dismiss spinner
     SpinKitWave(color: Colors.red, type: SpinKitWaveType.end);
-    return jsonResult!.isEmpty ? Center(child: Text(' No Response Found ', style: TextStyle(color: Colors.indigo, fontSize: 15, fontWeight: FontWeight.w600))) : ListView.separated(
+    return jsonResult!.isEmpty ? Center(child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Lottie.asset('assets/json/no_data.json', height: 120, width: 120),
+        AnimatedTextKit(
+            isRepeatingAnimation: false,
+            animatedTexts: [
+              TyperAnimatedText("Data not found",
+                  speed: Duration(milliseconds: 150),
+                  textStyle:
+                  TextStyle(fontWeight: FontWeight.bold)),
+            ]
+        )
+      ],
+    )) : ListView.separated(
             itemCount: jsonResult == null ? 0 : jsonResult!.length,
             itemBuilder: (context, index) {
               return Container(padding: EdgeInsets.all(10), child: Row(

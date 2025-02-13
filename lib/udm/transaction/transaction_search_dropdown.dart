@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TransactionSearchDropDown extends StatefulWidget {
-  static const routeName = "/transaction-search";
+  //static const routeName = "/transaction-search";
   @override
   _TransactionSearchDropDownState createState() =>
       _TransactionSearchDropDownState();
@@ -340,7 +340,6 @@ class _TransactionSearchDropDownState extends State<TransactionSearchDropDown> {
                 return item['intcode'].toString() != "-1" ? item['intcode'].toString() + '-' + item['value'] : item['value'].toString();
               }).toList(),
               onChanged: (changedata) {
-                print(changedata);
                 if(changedata == null) return;
                 _formKey.currentState!.fields['User Sub Depot']!.setValue(null);
                 setState(() {
@@ -492,46 +491,46 @@ class _TransactionSearchDropDownState extends State<TransactionSearchDropDown> {
                     style: IRUDMConstants.bStyle(),
                     onPressed: () {
                       setState(() {
-                        if(_formKey.currentState!.validate()) {
-                          if(userDepotValue.toString() == "All" || userDepotValue.toString() == "-1"){
-                            itemListProvider = Provider.of<TransactionListDataProvider>(context, listen: false);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionListDataDisplayScreen(userDepotValue.toString(),userSubDepotValue.toString())));
-                            //var depot = userDepotValue.split('-');
-                            itemListProvider.fetchTransactionListData(
-                                railway,
-                                unittype,
-                                _formKey.currentState!.fields['Unit Name']!.value,
-                                _formKey.currentState!.fields['Department']!.value,
-                                "-1",
-                                //_formKey.currentState!.fields['User Depot']!.value,
-                                _formKey.currentState!.fields['User Sub Depot']!.value,
-                                _formKey.currentState!.fields['LedgerNo']!.value,
-                                _formKey.currentState!.fields['FolioNo']!.value,
-                                _formKey.currentState!.fields['LedgerFolioPlNo']!.value,
-                                _formKey.currentState!.fields['From Date']!.value,
-                                _formKey.currentState!.fields['To Date']!.value,
-                                context);
-                          }
-                          else{
-                            itemListProvider = Provider.of<TransactionListDataProvider>(context, listen: false);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionListDataDisplayScreen(userDepotValue.toString(),userSubDepotValue.toString())));
-                            var depot = userDepotValue.split('-');
-                            itemListProvider.fetchTransactionListData(
-                                railway,
-                                unittype,
-                                _formKey.currentState!.fields['Unit Name']!.value,
-                                _formKey.currentState!.fields['Department']!.value,
-                                depot[0],
-                                _formKey.currentState!.fields['User Sub Depot']!.value,
-                                _formKey.currentState!.fields['LedgerNo']!.value,
-                                _formKey.currentState!.fields['FolioNo']!.value,
-                                _formKey.currentState!.fields['LedgerFolioPlNo']!.value,
-                                _formKey.currentState!.fields['From Date']!.value,
-                                _formKey.currentState!.fields['To Date']!.value,
-                                context);
-                          }
-
-                        }
+                        // if(_formKey.currentState!.validate()) {
+                        //   if(userDepotValue.toString() == "All" || userDepotValue.toString() == "-1"){
+                        //     itemListProvider = Provider.of<TransactionListDataProvider>(context, listen: false);
+                        //     Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionListDataDisplayScreen(userDepotValue.toString(),userSubDepotValue.toString())));
+                        //     //var depot = userDepotValue.split('-');
+                        //     itemListProvider.fetchTransactionListData(
+                        //         railway,
+                        //         unittype,
+                        //         _formKey.currentState!.fields['Unit Name']!.value,
+                        //         _formKey.currentState!.fields['Department']!.value,
+                        //         "-1",
+                        //         //_formKey.currentState!.fields['User Depot']!.value,
+                        //         _formKey.currentState!.fields['User Sub Depot']!.value,
+                        //         _formKey.currentState!.fields['LedgerNo']!.value,
+                        //         _formKey.currentState!.fields['FolioNo']!.value,
+                        //         _formKey.currentState!.fields['LedgerFolioPlNo']!.value,
+                        //         _formKey.currentState!.fields['From Date']!.value,
+                        //         _formKey.currentState!.fields['To Date']!.value,
+                        //         context);
+                        //   }
+                        //   else{
+                        //     itemListProvider = Provider.of<TransactionListDataProvider>(context, listen: false);
+                        //     Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionListDataDisplayScreen(userDepotValue.toString(),userSubDepotValue.toString())));
+                        //     var depot = userDepotValue.split('-');
+                        //     itemListProvider.fetchTransactionListData(
+                        //         railway,
+                        //         unittype,
+                        //         _formKey.currentState!.fields['Unit Name']!.value,
+                        //         _formKey.currentState!.fields['Department']!.value,
+                        //         depot[0],
+                        //         _formKey.currentState!.fields['User Sub Depot']!.value,
+                        //         _formKey.currentState!.fields['LedgerNo']!.value,
+                        //         _formKey.currentState!.fields['FolioNo']!.value,
+                        //         _formKey.currentState!.fields['LedgerFolioPlNo']!.value,
+                        //         _formKey.currentState!.fields['From Date']!.value,
+                        //         _formKey.currentState!.fields['To Date']!.value,
+                        //         context);
+                        //   }
+                        //
+                        // }
                       });
                     },
                     child: Text(language.text('getDetails'),
@@ -743,7 +742,8 @@ class _TransactionSearchDropDownState extends State<TransactionSearchDropDown> {
               child: Container(
                   padding: EdgeInsets.only(left: 6, top: 9, right: 6, bottom: 9),
                   child: Text(
-                    article[position].ledgername! + ': (' + article[position].ledgerfolioshortdesc! + ' #' + article[position].ledgerkey!,maxLines: 2,
+                    article[position].ledgername! + ': (' + article[position].ledgerfolioshortdesc! + ' #' + article[position].ledgerkey!,
+                    maxLines: 2,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black87,
@@ -1269,17 +1269,20 @@ class _TransactionSearchDropDownState extends State<TransactionSearchDropDown> {
             dropdowndata_UDMUserSubDepot.add(all);
             _formKey.currentState!.fields['User Sub Depot']!.setValue('-1');
           });
-        } else {
+        }
+        else {
           debugPrint("Fetch sub depot internal else condition");
           var all = {
             'intcode': '-1',
             'value': "All",
           };
+          debugPrint("Sub depot........ 111");
           var subDepotData = UDMUserSubDepot_body['data'];
+          debugPrint("Sub depot........ $subDepotData");
           myList_UDMUserDepot.add(all);
           myList_UDMUserDepot.addAll(subDepotData);
           setState(() {
-            dropdowndata_UDMUserSubDepot = myList_UDMUserDepot; //2
+            dropdowndata_UDMUserSubDepot = myList_UDMUserDepot;
             if(userSDepo != "") {
               def_fetchLedgerNo(rai, depot_id, userSDepo, '');
               userSubDepot = userSDepo;
@@ -1489,7 +1492,7 @@ class _TransactionSearchDropDownState extends State<TransactionSearchDropDown> {
           myList_UDMUserDepot.addAll(subDepotData);
           setState(() {
             dropdowndata_UDMFolioPLNoList = myList_UDMUserDepot; //2
-            if (folioPLNo != "") {
+            if(folioPLNo != "") {
               folioPLNo = folioPLNo;
               _formKey.currentState!.fields['LedgerFolioPlNo']!.setValue(folioPLNo);
             } else {

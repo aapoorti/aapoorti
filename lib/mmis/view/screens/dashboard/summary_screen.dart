@@ -158,17 +158,17 @@ class _SummaryScreenState extends State<SummaryScreen> {
                                       RichText(text: TextSpan(
                                         children: <TextSpan>[
                                           TextSpan(text: 'Initiated :- ', style: TextStyle(color: Colors.black)),
-                                          selectedyear == "2022-23" ? TextSpan(text: controller.dsbData[0]['di'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green, fontSize: 16)) :
+                                          selectedyear == "2022-23" ? TextSpan(text: controller.dsbData[2]['di'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green, fontSize: 16)) :
                                           selectedyear == "2023-24" ? TextSpan(text: controller.dsbData[1]['di'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)) :
-                                          TextSpan(text: controller.dsbData[2]['di'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)),
+                                          TextSpan(text: controller.dsbData[0]['di'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)),
                                         ],
                                       )),
                                       RichText(text: TextSpan(
                                           children: <TextSpan>[
                                             TextSpan(text: 'Register :- ', style: TextStyle(color: Colors.black)),
-                                            selectedyear == "2022-23" ? TextSpan(text: controller.dsbData[0]['dr'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)) :
+                                            selectedyear == "2022-23" ? TextSpan(text: controller.dsbData[2]['dr'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)) :
                                             selectedyear == "2023-24" ? TextSpan(text: controller.dsbData[1]['dr'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)) :
-                                            TextSpan(text: controller.dsbData[2]['dr'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)),
+                                            TextSpan(text: controller.dsbData[0]['dr'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)),
                                           ]
                                       )),
                                     ],
@@ -242,17 +242,17 @@ class _SummaryScreenState extends State<SummaryScreen> {
                                   RichText(text: TextSpan(
                                     children: <TextSpan>[
                                       TextSpan(text: 'Tender Published :- ', style: TextStyle(color: Colors.black)),
-                                      selectedyear == "2022-23" ? TextSpan(text: controller.dsbData[0]['tp'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green, fontSize: 16)) :
+                                      selectedyear == "2022-23" ? TextSpan(text: controller.dsbData[2]['tp'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green, fontSize: 16)) :
                                       selectedyear == "2023-24" ? TextSpan(text: controller.dsbData[1]['tp'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)) :
-                                      TextSpan(text: controller.dsbData[2]['tp'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)),
+                                      TextSpan(text: controller.dsbData[0]['tp'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green,fontSize: 16)),
                                     ],
                                   )),
                                   RichText(text: TextSpan(
                                       children: <TextSpan>[
                                         TextSpan(text: 'PO Issued :-', style: TextStyle(color: Colors.black)),
-                                        selectedyear == "2022-23" ? TextSpan(text: controller.dsbData[0]['poi'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)) :
+                                        selectedyear == "2022-23" ? TextSpan(text: controller.dsbData[2]['poi'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)) :
                                         selectedyear == "2023-24" ? TextSpan(text: controller.dsbData[1]['poi'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)) :
-                                        TextSpan(text: controller.dsbData[2]['poi'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
+                                        TextSpan(text: controller.dsbData[0]['poi'] ?? "0", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
                                       ]
                                   )),
                                 ],

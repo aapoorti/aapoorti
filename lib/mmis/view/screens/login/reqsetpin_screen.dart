@@ -56,12 +56,7 @@ class _ReqSetPinScreen extends State<ReqSetPinScreen> {
       body: Container(
         height: Get.height,
         width: Get.width,
-        decoration: BoxDecoration(color: Colors.white
-          // image: DecorationImage(
-          //   image: AssetImage("assets/images/login_bg.jpg"),
-          //   fit: BoxFit.cover,
-          // ),
-        ),
+        decoration: BoxDecoration(color: Colors.white),
         child: Column(
           children: [
             Expanded(
@@ -71,6 +66,7 @@ class _ReqSetPinScreen extends State<ReqSetPinScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Stack(
+                          clipBehavior: Clip.none,
                           children: [
                             Card(
                                 color: Colors.white.withOpacity(0.8),
@@ -346,8 +342,8 @@ class _ReqSetPinScreen extends State<ReqSetPinScreen> {
                                             return InkWell(
                                                 onTap: () {
                                                   FocusManager.instance.primaryFocus?.unfocus();
-                                                  if (networkController.connectionStatus.value != 0) {
-                                                    if (_reqformKey.currentState!.validate()) {
+                                                  if(networkController.connectionStatus.value != 0) {
+                                                    if(_reqformKey.currentState!.validate()) {
                                                       if(_mobileController.text.trim().length == 10) {
                                                           Random random = Random();
                                                           int randomNumber = random.nextInt(900000) + 100000;
@@ -417,7 +413,13 @@ class _ReqSetPinScreen extends State<ReqSetPinScreen> {
                                       ],
                                     ),
                                   ),
-                                ))
+                                )),
+                            Positioned(right: 20, left: 20, bottom: -80, child: RichText(text: TextSpan(children: [
+                              TextSpan(text: "This is not ",style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black,fontSize: 17, letterSpacing: 1.0)),
+                              TextSpan(text: '"iMMS Application"\n', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontSize: 17,letterSpacing: 1.0)),
+                              TextSpan(text: "This is for Internal users of ", style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black,fontSize: 17,letterSpacing: 1.0)),
+                              TextSpan(text: '"CRIS Employees only."', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black, fontSize: 17,letterSpacing: 1.0))
+                            ]))),
                           ],
                         ),
                       ),

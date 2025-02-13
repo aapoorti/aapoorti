@@ -4,10 +4,12 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
+import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:flutter_app/aapoorti/home/tender/highvaluetender/high_value_tender_details.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DropDownhvt extends StatefulWidget {
   DropDownhvt() : super();
@@ -43,10 +45,17 @@ class DropDownState extends State<DropDownhvt> {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(Duration.zero, () {
-      pr = ProgressDialog(context);
-      fetchPost();
+    pr = ProgressDialog(context);
+    Future.delayed(Duration.zero, () async{
+      //fetchPost();
+      DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+      if(providedTime.isBefore(DateTime.now())){
+        await fetchToken(context);
+        fetchOrganisation();
+      }
+      else{
+        fetchOrganisation();
+      }
     });
   }
 
@@ -70,92 +79,293 @@ class DropDownState extends State<DropDownhvt> {
     });
   }
 
+  _progressShow() {
+    pr = ProgressDialog(context, type: ProgressDialogType.normal, isDismissible: true, showLogs: true);
+    pr!.show();
+  }
+
+  _progressHide() {
+    Future.delayed(Duration(milliseconds: 100), () {
+      pr!.hide().then((isHidden) {
+        debugPrint(isHidden.toString());
+      });
+    });
+  }
+
   List dataOrganisation = [];
   List dataZone = [];
   List dataDepartment = [];
   List dataUnit = [];
 
-  Future<void> fetchPost() async {
-    try {
-      var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ORGANIZATION';
-      AapoortiUtilities.getProgressDialog(pr!);
-      final response = await http.post(Uri.parse(u)).timeout(Duration(seconds: 30));
-      jsonResult1 = json.decode(response.body);
-      if (response.statusCode != 200) throw Exception('HTTP request failed, statusCode: ${response.statusCode}');
-      debugPrint(jsonResult1.toString());
-      AapoortiUtilities.stopProgress(pr!);
-      if (this.mounted)
-        setState(() {
-          if (jsonResult1 != null) dataOrganisation = jsonResult1!;
-        });
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  Future<String> fetchPostZone() async {
+  Future<void> fetchOrganisation() async {
+    //debugPrint("Parameter $demandType~$fromDate~$toDate~$deptCode~$statusCode~$demandnum~05~98");
+    _progressShow();
+    fetchToken(context);
     try{
-      if(orgCode != "-1") {
-        AapoortiUtilities.getProgressDialog(pr!);
-
-        var v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,${orgCode}';
-        debugPrint("url2-----" + v);
-        final response = await http.post(Uri.parse(v)).timeout(Duration(seconds: 10));
-        jsonResult2 = json.decode(response.body);
-
-        debugPrint("jsonResult2------");
-        debugPrint(jsonResult2.toString());
-        AapoortiUtilities.stopProgress(pr!);
-        setState(() {
-          dataZone = jsonResult2!;
-        });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': '${prefs.getString('token')}',
+      };
+      final body = json.encode({
+        "input_type" : "ORGANIZATION",
+        "input": "",
+        "key_ver" : "V1"
+      });
+      final response = await http.post(url, headers: headers, body: body);
+      debugPrint("response organisation ${json.decode(response.body)}");
+      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+        dataOrganisation.clear();
+        var listdata = json.decode(response.body);
+        if(listdata['status'] == 'Success') {
+          var listJson = listdata['data'];
+          if(listJson != null) {
+            setState(() {
+              dataOrganisation = listJson;
+            });
+          }
+          else{
+            setState(() {
+              dataOrganisation = [];
+            });
+          }
+        }
+        _progressHide();
       }
-      return "Success";
-    }
-    on Exception catch(e){}
-
-    return "Failure";
-  }
-
-  Future<void> fetchPostDepartment() async {
-    try {
-      debugPrint('Fetching from service first spinner');
-      if (zoneCode != "-1;-1") {
-        AapoortiUtilities.getProgressDialog(pr!);
-        var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,DEPARTMENT,${orgCode!},${zoneCode!.substring(zoneCode!.indexOf(';') + 1)}';
-        debugPrint("ur13-----" + u);
-
-        final response1 = await http.post(Uri.parse(u)).timeout(Duration(seconds: 30));
-        jsonResult3 = json.decode(response1.body);
-        debugPrint("jsonResult3===");
-        debugPrint(jsonResult3.toString());
-
-        AapoortiUtilities.stopProgress(pr!);
-        setState(() {
-          dataDepartment = jsonResult3!;
-        });
+      else{
+        dataOrganisation.clear();
+        //IRUDMConstants().showSnack('Data not found.', context);
+        _progressHide();
       }
     }
-    on Exception catch(e){
-      fetchPostDepartment();
+    on Exception{
+      _progressHide();
     }
   }
 
-  Future<void> fetchPostUnit(String url) async {
-    try {
-      debugPrint('Fetching from service first spinner');
-      if (deptCode != "-1") {
-        AapoortiUtilities.getProgressDialog(pr!);
-        final response1 = await http.post(Uri.parse(url)).timeout(Duration(seconds: 30));
-        jsonResult4 = json.decode(response1.body);
-        AapoortiUtilities.stopProgress(pr!);
-        setState(() {
-          dataUnit = jsonResult4!;
-        });
+  Future<void> fetchZone(String orgCode) async{
+    _progressShow();
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': '${prefs.getString('token')}',
+      };
+      final body = json.encode({
+        "input_type" : "ZONE",
+        "input": orgCode,
+        "key_ver" : "V1"
+      });
+      final response = await http.post(url, headers: headers, body: body);
+      debugPrint("response zone ${json.decode(response.body)}");
+      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+        dataZone.clear();
+        var listdata = json.decode(response.body);
+        if(listdata['status'] == 'Success') {
+          var listJson = listdata['data'];
+          if(listJson != null) {
+            setState(() {
+              dataZone = listJson;
+            });
+          }
+          else{
+            setState(() {
+              dataZone = [];
+            });
+          }
+        }
+        _progressHide();
+      }
+      else{
+        dataZone.clear();
+        //IRUDMConstants().showSnack('Data not found.', context);
+        _progressHide();
       }
     }
-    on Exception catch(e){}
+    on Exception{
+      _progressHide();
+    }
   }
+
+  Future<void> fetchDepartment(String orgCode, String zoneCode) async {
+    debugPrint("fetch Dept $orgCode ${zoneCode.split(";").first}");
+    _progressShow();
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': '${prefs.getString('token')}',
+      };
+      final body = json.encode({
+        "input_type" : "DEPARTMENT",
+        "input": "$orgCode",
+        "key_ver" : "V1"
+      });
+      final response = await http.post(url, headers: headers, body: body);
+      debugPrint("response Department ${json.decode(response.body)}");
+      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+        dataDepartment.clear();
+        var listdata = json.decode(response.body);
+        if(listdata['status'] == 'Success') {
+          var listJson = listdata['data'];
+          if(listJson != null) {
+            setState(() {
+              dataDepartment = listJson;
+            });
+          }
+          else{
+            setState(() {
+              dataDepartment = [];
+            });
+          }
+        }
+        _progressHide();
+      }
+      else{
+        dataDepartment.clear();
+        //IRUDMConstants().showSnack('Data not found.', context);
+        _progressHide();
+      }
+    }
+    on Exception{
+      _progressHide();
+    }
+  }
+
+  Future<void> fetchUnit(String orgCode, String orgZone, String orgDept, String unittypeid) async{
+    _progressShow();
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      debugPrint("$orgCode~$orgZone~$orgDept~$unittypeid");
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': '${prefs.getString('token')}',
+      };
+      final body = json.encode({
+        "input_type" : "UNIT",
+        "input": "$orgCode~${zoneCode!.split(";").last}~$orgDept~$unittypeid",
+        "key_ver" : "V1"
+      });
+      final response = await http.post(url, headers: headers, body: body);
+      debugPrint("response Unit ${json.decode(response.body)}");
+      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+        dataUnit.clear();
+        var listdata = json.decode(response.body);
+        if(listdata['status'] == 'Success') {
+          var listJson = listdata['data'];
+          if(listJson != null) {
+            setState(() {
+              dataUnit = listJson;
+            });
+          }
+          else{
+            setState(() {
+              dataUnit = [];
+            });
+          }
+        }
+        _progressHide();
+      }
+      else{
+        dataUnit.clear();
+        //IRUDMConstants().showSnack('Data not found.', context);
+        _progressHide();
+      }
+    }
+    on Exception{
+      _progressHide();
+    }
+  }
+
+  // Future<void> fetchPost() async {
+  //   try {
+  //     var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ORGANIZATION';
+  //     AapoortiUtilities.getProgressDialog(pr!);
+  //     final response = await http.post(Uri.parse(u)).timeout(Duration(seconds: 30));
+  //     jsonResult1 = json.decode(response.body);
+  //     if (response.statusCode != 200) throw Exception('HTTP request failed, statusCode: ${response.statusCode}');
+  //     debugPrint(jsonResult1.toString());
+  //     AapoortiUtilities.stopProgress(pr!);
+  //     if (this.mounted)
+  //       setState(() {
+  //         if (jsonResult1 != null) dataOrganisation = jsonResult1!;
+  //       });
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //   }
+  // }
+  //
+  // Future<String> fetchPostZone() async {
+  //   try{
+  //     if(orgCode != "-1") {
+  //       AapoortiUtilities.getProgressDialog(pr!);
+  //
+  //       var v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,${orgCode}';
+  //       debugPrint("url2-----" + v);
+  //       final response = await http.post(Uri.parse(v)).timeout(Duration(seconds: 10));
+  //       jsonResult2 = json.decode(response.body);
+  //
+  //       debugPrint("jsonResult2------");
+  //       debugPrint(jsonResult2.toString());
+  //       AapoortiUtilities.stopProgress(pr!);
+  //       setState(() {
+  //         dataZone = jsonResult2!;
+  //       });
+  //     }
+  //     return "Success";
+  //   }
+  //   on Exception catch(e){}
+  //
+  //   return "Failure";
+  // }
+  //
+  // Future<void> fetchPostDepartment() async {
+  //   try {
+  //     debugPrint('Fetching from service first spinner');
+  //     if (zoneCode != "-1;-1") {
+  //       AapoortiUtilities.getProgressDialog(pr!);
+  //       var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,DEPARTMENT,${orgCode!},${zoneCode!.substring(zoneCode!.indexOf(';') + 1)}';
+  //       debugPrint("ur13-----" + u);
+  //
+  //       final response1 = await http.post(Uri.parse(u)).timeout(Duration(seconds: 30));
+  //       jsonResult3 = json.decode(response1.body);
+  //       debugPrint("jsonResult3===");
+  //       debugPrint(jsonResult3.toString());
+  //
+  //       AapoortiUtilities.stopProgress(pr!);
+  //       setState(() {
+  //         dataDepartment = jsonResult3!;
+  //       });
+  //     }
+  //   }
+  //   on Exception catch(e){
+  //     fetchPostDepartment();
+  //   }
+  // }
+  //
+  // Future<void> fetchPostUnit(String url) async {
+  //   try {
+  //     debugPrint('Fetching from service first spinner');
+  //     if (deptCode != "-1") {
+  //       AapoortiUtilities.getProgressDialog(pr!);
+  //       final response1 = await http.post(Uri.parse(url)).timeout(Duration(seconds: 30));
+  //       jsonResult4 = json.decode(response1.body);
+  //       AapoortiUtilities.stopProgress(pr!);
+  //       setState(() {
+  //         dataUnit = jsonResult4!;
+  //       });
+  //     }
+  //   }
+  //   on Exception catch(e){}
+  // }
 
   Widget _myListView(BuildContext context, Size size) {
     return Container(
@@ -168,7 +378,7 @@ class DropDownState extends State<DropDownhvt> {
               child: DropdownSearch<String>(
                 selectedItem: orgName ?? "Select Organization",
                 items: (filter, loadProps) => dataOrganisation.map((e) {
-                  return e['NAME'].toString().trim();
+                  return e['key1'].toString().trim();
                 }).toList(),
                 decoratorProps: DropDownDecoratorProps(
                   decoration: InputDecoration(
@@ -191,14 +401,14 @@ class DropDownState extends State<DropDownhvt> {
                     dataUnit.clear();
 
                     dataOrganisation.forEach((element) {
-                      if(newVal.toString() == element['NAME'].toString()) {
+                      if(newVal.toString() == element['key1'].toString()) {
                         orgName = newVal.toString();
-                        orgCode = element['ID'].toString();
+                        orgCode = element['key2'].toString();
                       }
                     });
                     debugPrint("orgID $orgCode orgname $newVal");
                   });
-                  fetchPostZone();
+                  fetchZone(orgCode!);
                 },
               ),
             ),
@@ -207,7 +417,7 @@ class DropDownState extends State<DropDownhvt> {
               child: DropdownSearch<String>(
                 selectedItem: zoneName ?? "Select Zone",
                 items: (filter, loadProps) => dataZone.map((e) {
-                  return e['NAME'].toString().trim();
+                  return e['key1'].toString().trim();
                 }).toList(),
                 decoratorProps: DropDownDecoratorProps(
                   decoration: InputDecoration(
@@ -229,13 +439,13 @@ class DropDownState extends State<DropDownhvt> {
                     dataUnit.clear();
 
                     dataZone.forEach((element) {
-                      if(newVal.toString() == element['NAME'].toString()) {
-                        zoneCode = element['ACCID'].toString() + ";" + element['ID'].toString();
+                      if(newVal.toString() == element['key1'].toString()) {
+                        zoneCode = element['key3'].toString() + ";" + element['key2'].toString();
                         zoneName = newVal.toString();
                       }
                     });
                   });
-                  this.fetchPostDepartment();
+                  fetchDepartment(orgCode!, zoneCode!);
                 },
               ),
             ),
@@ -244,7 +454,7 @@ class DropDownState extends State<DropDownhvt> {
               child: DropdownSearch<String>(
                 selectedItem: deptName ?? "Select Department",
                 items: (filter, loadProps) => dataDepartment.map((e) {
-                  return e['NAME'].toString().trim();
+                  return e['key1'].toString().trim();
                 }).toList(),
                 decoratorProps: DropDownDecoratorProps(
                   decoration: InputDecoration(
@@ -262,19 +472,19 @@ class DropDownState extends State<DropDownhvt> {
                     unitName = null;
                     dataUnit.clear();
                     dataDepartment.forEach((element){
-                      if(newVal.toString() == element['NAME'].toString()) {
-                        deptCode = element['ID'].toString();
+                      if(newVal.toString() == element['key1'].toString()) {
+                        deptCode = element['key2'].toString();
                         deptName = newVal.toString();
                       }
                     });
                   });
-                  if(deptCode == "-1") {
-                    url = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,UNIT,-2,-2,-2,-1';
-                  }
-                  if (deptCode != "-1") {
-                    url = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,UNIT,${orgCode},${zoneCode!.substring(zoneCode!.indexOf(';') + 1)},${deptCode},';
-                  }
-                  this.fetchPostUnit(url!);
+                  // if(deptCode == "-1") {
+                  //   url = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,UNIT,-1,-1,-1,-1';
+                  // }
+                  // if (deptCode != "-1") {
+                  //   url = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,UNIT,${orgCode},${zoneCode!.substring(zoneCode!.indexOf(';') + 1)},${deptCode},';
+                  // }
+                  fetchUnit(orgCode!, zoneCode!, deptCode!, "-1");
                 },
               ),
             ),
@@ -283,7 +493,7 @@ class DropDownState extends State<DropDownhvt> {
               child: DropdownSearch<String>(
                 selectedItem: unitName ?? "Select Unit",
                 items: (filter, loadProps) => dataUnit.map((e) {
-                  return e['NAME'].toString().trim();
+                  return e['key1'].toString().trim();
                 }).toList(),
                 decoratorProps: DropDownDecoratorProps(
                   decoration: InputDecoration(
@@ -298,8 +508,8 @@ class DropDownState extends State<DropDownhvt> {
                 onChanged: (newVal) {
                   setState(() {
                     dataUnit.forEach((element){
-                      if(newVal.toString() == element['NAME'].toString()) {
-                        unitCode = element['ID'].toString();
+                      if(newVal.toString() == element['key1'].toString()) {
+                        unitCode = element['key2'].toString();
                         unitName = newVal.toString();
                       }
                     });

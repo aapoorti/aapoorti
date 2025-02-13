@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 
 class NoData extends StatelessWidget{
@@ -10,11 +11,10 @@ class NoData extends StatelessWidget{
           Navigator.of(context, rootNavigator: true).pop();
           return false;
         },
-        child: new Scaffold(   resizeToAvoidBottomInset: false,
-          //resizeToAvoidBottomPadding: true,
+        child: Scaffold(   resizeToAvoidBottomInset: false,
           appBar: AppBar(
               iconTheme: IconThemeData(color: Colors.white),
-              backgroundColor: Colors.cyan[400],
+              backgroundColor: AapoortiConstants.primary,
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -23,14 +23,6 @@ class NoData extends StatelessWidget{
                       child: Text('IREPS', style:TextStyle(
                           color: Colors.white
                       ))),
-                  // new Padding(padding: new EdgeInsets.only(right: 50.0)),
-                  //new Padding(padding: new EdgeInsets.all(30)),
-                  //  IconButton(
-                  //     icon: new Icon(
-                  //       Icons.home,color: Colors.white,
-                  //     ),
-                  //     onPressed: () {
-                  //       Navigator.pushNamedAndRemoveUntil(context, "/common_screen", (route) => false) ;})
                 ],
               )),
 
@@ -49,19 +41,7 @@ class NoData extends StatelessWidget{
               ),
               Text('Oops! No record found.',textAlign: TextAlign.center,style: TextStyle(fontSize: 16),)
             ],
-          )),/* Container(
-
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          image: DecorationImage(
-
-            image: AssetImage("assets/nodatafound.png"),
-            fit: BoxFit.fitWidth,
-
-          ),
-        ),
-        child: null *//* add child content here *//*,
-      ),*/
+          ))
     )
     );
   }

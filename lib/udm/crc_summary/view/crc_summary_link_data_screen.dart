@@ -892,8 +892,7 @@ class _CrcSummarylinkDataScreenState extends State<CrcSummarylinkDataScreen>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Lottie.asset('assets/json/no_data.json',
-                              height: 120, width: 120),
+                          Lottie.asset('assets/json/no_data.json', height: 120, width: 120),
                           AnimatedTextKit(
                               isRepeatingAnimation: false,
                               animatedTexts: [
@@ -901,7 +900,8 @@ class _CrcSummarylinkDataScreenState extends State<CrcSummarylinkDataScreen>
                                     speed: Duration(milliseconds: 150),
                                     textStyle:
                                         TextStyle(fontWeight: FontWeight.bold)),
-                              ])
+                              ]
+                          )
                         ],
                       ),
                     );

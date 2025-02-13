@@ -6,6 +6,8 @@ import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../udm/helpers/wso2token.dart';
 import 'custom_search_view.dart';
 
 class CustomSearch extends StatefulWidget {
@@ -39,33 +41,35 @@ class CustomSearchState extends State<CustomSearch> {
 
 
   navigate() async {
-    debugPrint(uploadingDate.difference(closingDate).inDays.toString() + "no of difference in date");
+    debugPrint(closingDate.difference(uploadingDate).inDays.toString() + "no of difference in date1");
     debugPrint("Closing date $closingDate");
     debugPrint("Uploading date $uploadingDate");
     try{
-      if(closingDate.difference(uploadingDate).inDays > 30) {
-        AapoortiUtilities.showInSnackBar(context, "Please select maximum 30 days range in date");
-      }
-      else {
-        debugPrint(zoneCode);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Custom_search_view(
-                  workarea: counterwk,
-                  SearchForstring: searchcriteriaController.text.trim(),
-                  RailZoneIn: '${zoneCode!.split(";").first.trim()}',
-                  Dt1In: DateFormat('dd/MMM/yyyy').format(uploadingDate).toString(),
-                  Dt2In: DateFormat('dd/MMM/yyyy').format(closingDate).toString(),
-                  searchOption: countersc.toString(),
-                  OrgCode: orgCode.toString(),
-                  ClDate: counter.toString(),
-                  dept: deptCode.toString(),
-                  unit: unitCode.toString()),
-            ));
-      }
+        if(closingDate.difference(uploadingDate).inDays > 30){
+          AapoortiUtilities.showInSnackBar(context, "Select Tender Date Criteria Maximum difference 30 days");
+        }
+        else{
+          debugPrint(zoneCode);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Custom_search_view(
+                    workarea: counterwk,
+                    SearchForstring: searchcriteriaController.text.trim(),
+                    RailZoneIn: '${zoneCode!.split(";").first.trim()}',
+                    Dt1In: DateFormat('dd/MMM/yyyy').format(uploadingDate).toString(),
+                    Dt2In: DateFormat('dd/MMM/yyyy').format(closingDate).toString(),
+                    searchOption: countersc.toString(),
+                    OrgCode: orgCode.toString(),
+                    ClDate: counter.toString(),
+                    dept: deptCode.toString(),
+                    unit: unitCode.toString()),
+              ));
+        }
+
     } catch (ex) {
       debugPrint('SharedProfile ' + ex.toString());
+
     }
   }
 
@@ -73,23 +77,6 @@ class CustomSearchState extends State<CustomSearch> {
   void dispose() {
     searchcriteriaController.dispose();
     super.dispose();
-  }
-
-  Future<void> fetchPost() async {
-    try {
-      _progressShow();
-      var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ORGANIZATION';
-      final response = await http.post(Uri.parse(u));
-      List<dynamic>? rlyData = json.decode(response.body);
-      if(response.statusCode != 200) throw new Exception('HTTP request failed, statusCode: ${response.statusCode}');
-      setState(() {
-        if(rlyData!.isNotEmpty) dataRly = rlyData;
-      });
-      _progressHide();
-    } catch (e) {
-      debugPrint(e.toString());
-      _progressHide();
-    }
   }
 
   _progressShow() {
@@ -105,84 +92,101 @@ class CustomSearchState extends State<CustomSearch> {
     });
   }
 
-  Future<void> getZone() async {
-    try {
-      debugPrint('Fetching from service' +orgCode!+ "     ----" + zoneCode!);
-      dataZone.clear();
-      _progressShow();
-      var v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,${orgCode}';
-      final response = await http.post(Uri.parse(v));
-      debugPrint("GetZone response $response");
-      List<dynamic>? zoneResult = json.decode(response.body);
-      if(response.statusCode != 200) throw Exception('HTTP request failed, statusCode: ${response.statusCode}');
-      debugPrint("GetZone jsonresult $zoneResult");
-      zoneCode = "-1;-1";
-      setState(() {
-        if(zoneResult!.isNotEmpty) dataZone = zoneResult;
-      });
-      debugPrint('after Fetching from service' + orgCode! + "     ----" + zoneCode!);
-      _progressHide();
-    } catch (e) {
-      debugPrint("GetZone exception ${e.toString()}");
-      _progressHide();
-    }
-  }
-
-  Future<void> fetchDept() async {
-    debugPrint("orgcode $orgCode");
-    debugPrint("zone code ${zoneCode!.substring(zoneCode!.indexOf(';') + 1)}  ....... ${zoneCode!}");
-    try {
-      dataDept.clear();
-      _progressShow();
-      var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,DEPARTMENT,${orgCode!},${zoneCode!.substring(zoneCode!.indexOf(';') + 1)}';
-      debugPrint("Department url $u");
-      final response = await http.post(Uri.parse(u));
-      List<dynamic>? deptResult = json.decode(response.body);
-      debugPrint("Department data $deptResult");
-      if(deptResult.toString().trim() == "[{ErrorCode: 4}]"){
-        dataDept = [{"NAME": "All Departments", "ID" : "-1"}];
-        _progressHide();
-      }
-      else{
-        if(json.decode(response.body) == null || response.statusCode != 200) throw new Exception('HTTP request failed, statusCode: ${response.statusCode}');
-        deptCode = "-1";
-        setState(() {
-          if(deptResult!.isNotEmpty) dataDept = deptResult;
-        });
-        _progressHide();
-      }
-
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  Future<void> fetchUnit() async {
-    try {
-      dataUnit.clear();
-      var v;
-      if((zoneCode!.substring(zoneCode!.indexOf(';') + 1) == "-1") || (deptCode == "-1")) {
-        v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,UNIT,-2,-2,-2,-1';
-      } else if((zoneCode!.substring(zoneCode!.indexOf(';') + 1) != "-1") || (deptCode != "-1")) {
-        v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,UNIT,${orgCode},${zoneCode!.substring(zoneCode!.indexOf(';') + 1)},${deptCode},';
-      }
-      _progressShow();
-      final response = await http.post(Uri.parse(v));
-      debugPrint("unit resp ${json.decode(response.body)}");
-      if(response.statusCode != 200) throw Exception('HTTP request failed, statusCode: ${response.statusCode}');
-      List<dynamic>? unitResult = json.decode(response.body);
-      if(unitResult.toString().trim() == "[{ErrorCode: 4}]"){
-        dataUnit = [{"NAME": "ALL", "ID": -1}];
-      }
-      unitCode = "-1";
-      setState(() {
-        if(unitResult!.isNotEmpty) dataUnit = unitResult;
-      });
-      _progressHide();
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
+  // Future<void> fetchPost() async {
+  //   try {
+  //     _progressShow();
+  //     var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ORGANIZATION';
+  //     final response = await http.post(Uri.parse(u));
+  //     List<dynamic>? rlyData = json.decode(response.body);
+  //     if(response.statusCode != 200) throw new Exception('HTTP request failed, statusCode: ${response.statusCode}');
+  //     setState(() {
+  //       if(rlyData!.isNotEmpty) dataRly = rlyData;
+  //     });
+  //     _progressHide();
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //     _progressHide();
+  //   }
+  // }
+  //
+  // Future<void> getZone() async {
+  //   try {
+  //     debugPrint('Fetching from service' +orgCode!+ "     ----" + zoneCode!);
+  //     dataZone.clear();
+  //     _progressShow();
+  //     var v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,${orgCode}';
+  //     final response = await http.post(Uri.parse(v));
+  //     debugPrint("GetZone response $response");
+  //     List<dynamic>? zoneResult = json.decode(response.body);
+  //     if(response.statusCode != 200) throw Exception('HTTP request failed, statusCode: ${response.statusCode}');
+  //     debugPrint("GetZone jsonresult $zoneResult");
+  //     zoneCode = "-1;-1";
+  //     setState(() {
+  //       if(zoneResult!.isNotEmpty) dataZone = zoneResult;
+  //     });
+  //     debugPrint('after Fetching from service' + orgCode! + "     ----" + zoneCode!);
+  //     _progressHide();
+  //   } catch (e) {
+  //     debugPrint("GetZone exception ${e.toString()}");
+  //     _progressHide();
+  //   }
+  // }
+  //
+  // Future<void> getDept() async {
+  //   debugPrint("orgcode $orgCode");
+  //   debugPrint("zone code ${zoneCode!.substring(zoneCode!.indexOf(';') + 1)}  ....... ${zoneCode!}");
+  //   try {
+  //     dataDept.clear();
+  //     _progressShow();
+  //     var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,DEPARTMENT,${orgCode!},${zoneCode!.substring(zoneCode!.indexOf(';') + 1)}';
+  //     debugPrint("Department url $u");
+  //     final response = await http.post(Uri.parse(u));
+  //     List<dynamic>? deptResult = json.decode(response.body);
+  //     debugPrint("Department data $deptResult");
+  //     if(deptResult.toString().trim() == "[{ErrorCode: 4}]"){
+  //       dataDept = [{"NAME": "All Departments", "ID" : "-1"}];
+  //       _progressHide();
+  //     }
+  //     else{
+  //       if(json.decode(response.body) == null || response.statusCode != 200) throw new Exception('HTTP request failed, statusCode: ${response.statusCode}');
+  //       deptCode = "-1";
+  //       setState(() {
+  //         if(deptResult!.isNotEmpty) dataDept = deptResult;
+  //       });
+  //       _progressHide();
+  //     }
+  //
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //   }
+  // }
+  //
+  // Future<void> getUnit() async {
+  //   try {
+  //     dataUnit.clear();
+  //     var v;
+  //     if((zoneCode!.substring(zoneCode!.indexOf(';') + 1) == "-1") || (deptCode == "-1")) {
+  //       v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,UNIT,-2,-2,-2,-1';
+  //     } else if((zoneCode!.substring(zoneCode!.indexOf(';') + 1) != "-1") || (deptCode != "-1")) {
+  //       v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,UNIT,${orgCode},${zoneCode!.substring(zoneCode!.indexOf(';') + 1)},${deptCode},';
+  //     }
+  //     _progressShow();
+  //     final response = await http.post(Uri.parse(v));
+  //     debugPrint("unit resp ${json.decode(response.body)}");
+  //     if(response.statusCode != 200) throw Exception('HTTP request failed, statusCode: ${response.statusCode}');
+  //     List<dynamic>? unitResult = json.decode(response.body);
+  //     if(unitResult.toString().trim() == "[{ErrorCode: 4}]"){
+  //       dataUnit = [{"NAME": "ALL", "ID": -1}];
+  //     }
+  //     unitCode = "-1";
+  //     setState(() {
+  //       if(unitResult!.isNotEmpty) dataUnit = unitResult;
+  //     });
+  //     _progressHide();
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //   }
+  // }
 
   String selectedWorkArea = 'Goods & Services';
   String selectedDateType = 'uploading';
@@ -224,14 +228,211 @@ class CustomSearchState extends State<CustomSearch> {
     });
   }
 
+  Future<void> fetchOrganisation() async {
+    //debugPrint("Parameter $demandType~$fromDate~$toDate~$deptCode~$statusCode~$demandnum~05~98");
+    _progressShow();
+    fetchToken(context);
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': '${prefs.getString('token')}',
+      };
+      final body = json.encode({
+        "input_type" : "ORGANIZATION",
+        "input": "",
+        "key_ver" : "V1"
+      });
+      final response = await http.post(url, headers: headers, body: body);
+      debugPrint("response organisation ${json.decode(response.body)}");
+      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+        dataRly.clear();
+        var listdata = json.decode(response.body);
+        if(listdata['status'] == 'Success') {
+          var listJson = listdata['data'];
+          if(listJson != null) {
+            setState(() {
+              dataRly = listJson;
+            });
+          }
+          else{
+            setState(() {
+              dataRly = [];
+            });
+          }
+        }
+        _progressHide();
+      }
+      else{
+        dataRly.clear();
+        //IRUDMConstants().showSnack('Data not found.', context);
+        _progressHide();
+      }
+    }
+    on Exception{
+      _progressHide();
+    }
+  }
+
+  Future<void> fetchZone(String orgCode) async{
+    _progressShow();
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': '${prefs.getString('token')}',
+      };
+      final body = json.encode({
+        "input_type" : "ZONE",
+        "input": orgCode,
+        "key_ver" : "V1"
+      });
+      final response = await http.post(url, headers: headers, body: body);
+      debugPrint("response zone ${json.decode(response.body)}");
+      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+        dataZone.clear();
+        var listdata = json.decode(response.body);
+        if(listdata['status'] == 'Success') {
+          var listJson = listdata['data'];
+          if(listJson != null) {
+            setState(() {
+              dataZone = listJson;
+            });
+          }
+          else{
+            setState(() {
+              dataZone = [];
+            });
+          }
+        }
+        _progressHide();
+      }
+      else{
+        dataZone.clear();
+        //IRUDMConstants().showSnack('Data not found.', context);
+        _progressHide();
+      }
+    }
+    on Exception{
+      _progressHide();
+    }
+  }
+
+  Future<void> fetchDepartment(String orgCode, String zoneCode) async {
+    debugPrint("fetch Dept $orgCode ${zoneCode.split(";").first}");
+    _progressShow();
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': '${prefs.getString('token')}',
+      };
+      final body = json.encode({
+        "input_type" : "DEPARTMENT",
+        "input": "$orgCode",
+        "key_ver" : "V1"
+      });
+      final response = await http.post(url, headers: headers, body: body);
+      debugPrint("response Department ${json.decode(response.body)}");
+      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+        dataDept.clear();
+        var listdata = json.decode(response.body);
+        if(listdata['status'] == 'Success') {
+          var listJson = listdata['data'];
+          if(listJson != null) {
+            setState(() {
+              dataDept = listJson;
+            });
+          }
+          else{
+            setState(() {
+              dataDept = [];
+            });
+          }
+        }
+        _progressHide();
+      }
+      else{
+        dataDept.clear();
+        //IRUDMConstants().showSnack('Data not found.', context);
+        _progressHide();
+      }
+    }
+    on Exception{
+      _progressHide();
+    }
+  }
+
+  Future<void> fetchUnit(String orgCode, String orgZone, String orgDept, String unittypeid) async{
+    _progressShow();
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      debugPrint("$orgCode~$orgZone~$orgDept~$unittypeid");
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': '${prefs.getString('token')}',
+      };
+      final body = json.encode({
+        "input_type" : "UNIT",
+        "input": "$orgCode~${zoneCode!.split(";").last}~$orgDept~$unittypeid",
+        "key_ver" : "V1"
+      });
+      final response = await http.post(url, headers: headers, body: body);
+      debugPrint("response Unit ${json.decode(response.body)}");
+      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+        dataUnit.clear();
+        var listdata = json.decode(response.body);
+        if(listdata['status'] == 'Success') {
+          var listJson = listdata['data'];
+          if(listJson != null) {
+            setState(() {
+              dataUnit = listJson;
+            });
+          }
+          else{
+            setState(() {
+              dataUnit = [];
+            });
+          }
+        }
+        _progressHide();
+      }
+      else{
+        dataUnit.clear();
+        //IRUDMConstants().showSnack('Data not found.', context);
+        _progressHide();
+      }
+    }
+    on Exception{
+      _progressHide();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      fetchPost();
+    Future.delayed(Duration.zero, () async{
+      //fetchPost();
+      DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+      if(providedTime.isBefore(DateTime.now())){
+        await fetchToken(context);
+        fetchOrganisation();
+      }
+      else{
+        fetchOrganisation();
+      }
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -257,16 +458,13 @@ class CustomSearchState extends State<CustomSearch> {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: fetchPost,
+        onRefresh: fetchOrganisation,
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Select Search Criteria",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-              ),
+              Text("Select Search Criteria", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
               SizedBox(height: 12),
               Row(
                 children: [
@@ -325,8 +523,11 @@ class CustomSearchState extends State<CustomSearch> {
                 margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10.0),
                 child: DropdownSearch<String>(
                   selectedItem: orgName ?? "Select Organization",
+                  // items: (filter, loadProps) => dataRly.map((e) {
+                  //     return e['NAME'].toString().trim();
+                  //   }).toList(),
                   items: (filter, loadProps) => dataRly.map((e) {
-                    return e['NAME'].toString().trim();
+                    return e['key1'].toString().trim();
                   }).toList(),
                   decoratorProps: DropDownDecoratorProps(
                     decoration: InputDecoration(
@@ -349,17 +550,24 @@ class CustomSearchState extends State<CustomSearch> {
                           dataDept.clear();
                           dataUnit.clear();
                           dataRly.forEach((element) {
-                            if(newValue.toString() == element['NAME'].toString()) {
+                            if(newValue.toString() == element['key1'].toString()) {
                               orgName = newValue.toString();
-                              orgCode = element['ID'].toString();
+                              orgCode = element['key2'].toString();
                             }
                           });
+                          // dataRly.forEach((element) {
+                          //   if(newValue.toString() == element['NAME'].toString()) {
+                          //     orgName = newValue.toString();
+                          //     orgCode = element['ID'].toString();
+                          //   }
+                          // });
                           debugPrint("orgname $orgName  orgcode $orgCode");
                         });
                       } catch (e) {
                         debugPrint("execption resp " + e.toString());
                       }
-                      getZone();
+                      //getZone();
+                      fetchZone(orgCode!);
                     }
                 ),
               ),
@@ -370,8 +578,11 @@ class CustomSearchState extends State<CustomSearch> {
                 margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10),
                 child: DropdownSearch<String>(
                   selectedItem: zoneName ?? "Select Zone",
+                  // items: (filter, loadProps) => dataZone.map((e) {
+                  //   return e['NAME'].toString().trim();
+                  // }).toList(),
                   items: (filter, loadProps) => dataZone.map((e) {
-                    return e['NAME'].toString().trim();
+                    return e['key1'].toString().trim();
                   }).toList(),
                   decoratorProps: DropDownDecoratorProps(
                     decoration: InputDecoration(
@@ -385,21 +596,27 @@ class CustomSearchState extends State<CustomSearch> {
                   popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
                   onChanged: (newVal) {
                     setState(() {
-                      deptCode = null;
-                      unitCode = null;
+                      deptCode = "-1";
+                      unitCode = "-1";
                       deptName = null;
                       unitName = null;
                       dataDept.clear();
                       dataUnit.clear();
-
+                      // dataZone.forEach((element) {
+                      //   if(newVal.toString() == element['NAME'].toString()) {
+                      //     zoneCode = element['ACCID'].toString() + ";" + element['ID'].toString();
+                      //     zoneName = newVal.toString();
+                      //   }
+                      // });
                       dataZone.forEach((element) {
-                        if(newVal.toString() == element['NAME'].toString()) {
-                          zoneCode = element['ACCID'].toString() + ";" + element['ID'].toString();
+                        if(newVal.toString() == element['key1'].toString()) {
+                          zoneCode = element['key3'].toString() + ";" + element['key2'].toString();
                           zoneName = newVal.toString();
                         }
                       });
                     });
-                    this.fetchDept();
+                    //getDept();
+                    fetchDepartment(orgCode!, zoneCode!);
                   },
                 ),
               ),
@@ -410,8 +627,11 @@ class CustomSearchState extends State<CustomSearch> {
                 child: DropdownSearch<String>(
                   selectedItem: deptName ?? "Select Department",
                   items: (filter, loadProps) => dataDept.map((e) {
-                    return e['NAME'].toString().trim();
-                  }).toList(),
+                      return e['key1'].toString().trim();
+                    }).toList(),
+                  // items: (filter, loadProps) => dataDept.map((e) {
+                  //   return e['NAME'].toString().trim();
+                  // }).toList(),
                   decoratorProps: DropDownDecoratorProps(
                     decoration: InputDecoration(
                       //labelText: "Department",
@@ -427,13 +647,20 @@ class CustomSearchState extends State<CustomSearch> {
                         unitCode = "-1";
                         dataUnit.clear();
                         dataDept.forEach((element){
-                          if(newValue.toString() == element['NAME'].toString()) {
-                            deptCode = element['ID'].toString();
+                          if(newValue.toString() == element['key1'].toString()) {
+                            deptCode = element['key2'].toString();
                             deptName = newValue.toString();
                           }
                         });
+                        // dataDept.forEach((element){
+                        //   if(newValue.toString() == element['NAME'].toString()) {
+                        //     deptCode = element['ID'].toString();
+                        //     deptName = newValue.toString();
+                        //   }
+                        // });
                       });
-                      fetchUnit();
+                      //getUnit();
+                      fetchUnit(orgCode!, zoneCode!, deptCode!, "-1");
                     }
                 ),
               ),
@@ -443,8 +670,11 @@ class CustomSearchState extends State<CustomSearch> {
                 margin: EdgeInsets.only(top: 10.0, left: 10, right: 10),
                 child: DropdownSearch<String>(
                   selectedItem: unitName ?? "Select Unit",
+                  // items: (filter, loadProps) => dataUnit.map((e) {
+                  //   return e['NAME'].toString().trim();
+                  // }).toList(),
                   items: (filter, loadProps) => dataUnit.map((e) {
-                    return e['NAME'].toString().trim();
+                    return e['key1'].toString().trim();
                   }).toList(),
                   decoratorProps: DropDownDecoratorProps(
                     decoration: InputDecoration(
@@ -458,9 +688,15 @@ class CustomSearchState extends State<CustomSearch> {
                   popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
                   onChanged: (newVal) {
                     setState(() {
+                      // dataUnit.forEach((element){
+                      //   if(newVal.toString() == element['NAME'].toString()) {
+                      //     unitCode = element['ID'].toString();
+                      //     unitName = newVal.toString();
+                      //   }
+                      // });
                       dataUnit.forEach((element){
-                        if(newVal.toString() == element['NAME'].toString()) {
-                          unitCode = element['ID'].toString();
+                        if(newVal.toString() == element['key1'].toString()) {
+                          unitCode = element['key2'].toString();
                           unitName = newVal.toString();
                         }
                       });

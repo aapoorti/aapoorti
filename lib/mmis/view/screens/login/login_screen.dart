@@ -286,6 +286,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               )
                           ),
+                          Positioned(right: 20, left: 20, bottom: -80, child: RichText(text: TextSpan(children: [
+                            TextSpan(text: "This is not ",style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black,fontSize: 17, letterSpacing: 1.0)),
+                            TextSpan(text: '"iMMS Application"\n', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontSize: 17,letterSpacing: 1.0)),
+                            TextSpan(text: "This is for Internal users of ", style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black,fontSize: 17,letterSpacing: 1.0)),
+                            TextSpan(text: '"CRIS Employees only."', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black, fontSize: 17,letterSpacing: 1.0))
+                          ]))),
                           Positioned(right: 45, left: 45, top: -30, child: Image.asset('assets/nlogo.png', height: 75, width: 75))
                         ],
                       ),

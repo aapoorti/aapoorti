@@ -35,10 +35,7 @@ class StatusState extends State<Status> {
       date1 = "-1";
       u = 'https://ireps.gov.in/Aapoorti/ServiceCallTender/TenderSearch?param=${this.date1},${this.tendno},${this.railid}';
     } else {
-      date1 = (this.date)!
-          .replaceRange(11, 23, " ")
-          .trimRight()
-          .replaceAll("-", "/");
+      date1 = (this.date)!.replaceRange(11, 23, " ").trimRight().replaceAll("-", "/");
       debugPrint(date1);
       yyyy = date1!.substring(0, 4);
       mm = date1!.substring(5, 7);
@@ -100,13 +97,7 @@ class StatusState extends State<Status> {
         ),
         backgroundColor: Colors.cyan.shade50,
         body: Container(
-            child: jsonResult == null
-                ? SpinKitFadingCircle(
-                    color: Colors.cyan,
-                    size: 130.0,
-                  )
-                : _myListView(context),
-            color: Colors.cyan[50]),
+            child: jsonResult == null ? SpinKitFadingCircle(color: Colors.cyan, size: 130.0) : _myListView(context), color: Colors.cyan[50]),
       ),
     );
   }
@@ -171,12 +162,8 @@ class StatusState extends State<Status> {
                                         padding: EdgeInsets.all(5),
                                       ),
                                       Row(children: <Widget>[
-                                        Expanded(
-                                            child: Text(
-                                          jsonResult![index]['DEPTNM'] != null
-                                              ? " " +
-                                                  jsonResult![index]['DEPTNM']
-                                              : "",
+                                        Expanded(child: Text(
+                                          jsonResult![index]['DEPTNM'] != null ? " " + jsonResult![index]['DEPTNM'] : "",
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 15,
@@ -213,21 +200,10 @@ class StatusState extends State<Status> {
                                                     3)),
                                         GestureDetector(
                                             onTap: () {
-                                              if (jsonResult![index]
-                                                      ['PDFPATH'] !=
-                                                  'NA') {
-                                                var fileUrl = jsonResult![index]
-                                                        ['PDFPATH']
-                                                    .toString();
-                                                var fileName =
-                                                    fileUrl.substring(fileUrl
-                                                        .lastIndexOf("/"));
-                                                AapoortiUtilities.ackAlert(
-                                                    context, fileUrl, fileName);
-
-                                                //Dismiss dialog
-
-//                                                showPdfWidget(context,jsonResult[index]['NIT_PDF_URL'].toString());
+                                              if(jsonResult![index]['PDFPATH'] != 'NA') {
+                                                var fileUrl = jsonResult![index]['PDFPATH'].toString();
+                                                var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
+                                                AapoortiUtilities.ackAlert(context, fileUrl, fileName);
                                               } else {
                                                 AapoortiUtilities.showInSnackBar(
                                                     context,
@@ -396,7 +372,6 @@ class StatusState extends State<Status> {
                                             fontSize: 15,
                                           ),
                                         )
-                                            //AapoortiUtilities.customTextView(jsonResult[index]['DESC1'], Colors.black)
                                             ),
                                       ]),
                                     ],

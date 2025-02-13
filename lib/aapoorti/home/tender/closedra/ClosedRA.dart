@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
@@ -105,7 +106,11 @@ class _CloseRAState extends State<CloseRA> {
         AapoortiUtilities.showInSnackBar(context, 'Something went wrong, please try later.');
         //AapoortiUtilities.showInSnackBar(context, json.decode(response.body)['errors']['detail_arguments']);
       }
-    } catch (e) {
+    }
+    on SocketException catch(ex){
+      AapoortiUtilities.showInSnackBar(context, 'Please check your internet connection.');
+    }
+    catch (e) {
       // Handle any exceptions
       debugPrint('Error occurred: $e');
       AapoortiUtilities.showInSnackBar(context, 'Something went wrong, please try later.');

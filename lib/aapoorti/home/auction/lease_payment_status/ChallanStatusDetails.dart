@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/aapoorti/home/auction/lease_payment_status/ChallanStatus.dart';
 
@@ -15,6 +16,7 @@ class ChallanStatusDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: AapoortiConstants.primary,
           title: Text(
             "Parcel Payment Status",
             style: TextStyle(

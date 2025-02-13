@@ -339,7 +339,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
                                 ),
                               ),
                             )
-                        )
+                        ),
                       ],
                     ),
                   ),

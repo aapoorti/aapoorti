@@ -1,13 +1,16 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/aapoorti/common/NoConnection.dart';
+import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:flutter_app/aapoorti/home/tender/tenderstatus/tender_status_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Tender extends StatefulWidget {
@@ -25,29 +28,21 @@ class DropDownState extends State<Tender> {
   String minus4 = "04", minus5 = "05", minus6 = "06", minus7 = "07";
   final FocusNode _firstFocus = FocusNode();
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 15.0);
-  String? _mySelection, myselection1, _finalsel1;
   TextEditingController myController = TextEditingController();
 
   String? content, id;
   ProgressDialog? pr;
   String date = "-1";
-  String _value = '';
   String? value;
   String text = "";
 
-  bool _autoValidate = false;
-  List<dynamic>? jsonResult;
-  List<dynamic>? jsonResult1;
+
   List<dynamic>? jsonFinalResult;
 
-  List data = [];
-  List data1 = [];
 
   void _onClear() {
     pressed = false;
     myController.text = "";
-    myselection1 = null;
-    _mySelection = null;
     text = "";
     calender = false;
     _dateTime = DateTime.now();
@@ -55,8 +50,6 @@ class DropDownState extends State<Tender> {
     setState(() {
       pressed = false;
       myController.text = "";
-      myselection1 = null;
-      _mySelection = null;
       text = "";
       calender = false;
       _dateTime = DateTime.now();
@@ -65,9 +58,13 @@ class DropDownState extends State<Tender> {
   }
 
   DateTime? _selectedDate;
-  String? _selectedOrganization;
-  String? _selectedRailway;
   final _tenderController = TextEditingController();
+
+  List dataRly = [];
+  List dataZone = [];
+
+  String? orgName, orgCode = "-1";
+  String? zoneName, zoneCode = "-1;-1";
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -95,56 +92,171 @@ class DropDownState extends State<Tender> {
     }
   }
 
+  _progressShow() {
+    pr = ProgressDialog(context, type: ProgressDialogType.normal, isDismissible: true, showLogs: true);
+    pr!.show();
+  }
+
+  _progressHide() {
+    Future.delayed(Duration(milliseconds: 100), () {
+      pr!.hide().then((isHidden) {
+        debugPrint(isHidden.toString());
+      });
+    });
+  }
+
+  Future<void> fetchOrganisation() async {
+    //debugPrint("Parameter $demandType~$fromDate~$toDate~$deptCode~$statusCode~$demandnum~05~98");
+    _progressShow();
+    fetchToken(context);
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': '${prefs.getString('token')}',
+      };
+      final body = json.encode({
+        "input_type" : "ORGANIZATION",
+        "input": "",
+        "key_ver" : "V1"
+      });
+      final response = await http.post(url, headers: headers, body: body);
+      debugPrint("response organisation ${json.decode(response.body)}");
+      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+        dataRly.clear();
+        var listdata = json.decode(response.body);
+        if(listdata['status'] == 'Success') {
+          var listJson = listdata['data'];
+          if(listJson != null) {
+            setState(() {
+              dataRly = listJson;
+            });
+          }
+          else{
+            setState(() {
+              dataRly = [];
+            });
+          }
+        }
+        _progressHide();
+      }
+      else{
+        dataRly.clear();
+        //IRUDMConstants().showSnack('Data not found.', context);
+        _progressHide();
+      }
+    }
+    on Exception{
+      _progressHide();
+    }
+  }
+
+  Future<void> fetchZone(String orgCode) async{
+    _progressShow();
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': '${prefs.getString('token')}',
+      };
+      final body = json.encode({
+        "input_type" : "ZONE",
+        "input": orgCode,
+        "key_ver" : "V1"
+      });
+      final response = await http.post(url, headers: headers, body: body);
+      debugPrint("response zone ${json.decode(response.body)}");
+      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+        dataZone.clear();
+        var listdata = json.decode(response.body);
+        if(listdata['status'] == 'Success') {
+          var listJson = listdata['data'];
+          if(listJson != null) {
+            setState(() {
+              dataZone = listJson;
+            });
+          }
+          else{
+            setState(() {
+              dataZone = [];
+            });
+          }
+        }
+        _progressHide();
+      }
+      else{
+        dataRly.clear();
+        //IRUDMConstants().showSnack('Data not found.', context);
+        _progressHide();
+      }
+    }
+    on Exception{
+      _progressHide();
+    }
+  }
+
   void dispose() {
     myController.dispose();
     super.dispose();
   }
 
-  Future<void> fetchPost() async {
-    AapoortiUtilities.getProgressDialog(pr!);
-    try {
-      var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ORGANIZATION';
-      final response = await http.post(Uri.parse(u));
-      jsonResult1 = json.decode(response.body);
-      if(response.statusCode != 200) throw Exception('HTTP request failed, statusCode: ${response.statusCode}');
-      AapoortiUtilities.stopProgress(pr!);
-      if (this.mounted)
-        setState(() {
-          if (jsonResult1 != null) data1 = jsonResult1!;
-        });
-    } catch (e) {
-      debugPrint(e.toString());
-      AapoortiUtilities.stopProgress(pr!);
-    }
-  }
-
-  Future<String> getSWData() async {
-    try {
-      _mySelection = null;
-      if (myselection1 != "-1") {
-        AapoortiUtilities.getProgressDialog(pr!);
-        var v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,$myselection1';
-        final response = await http.post(Uri.parse(v));
-        jsonResult = json.decode(response.body);
-        AapoortiUtilities.stopProgress(pr!);
-        if (this.mounted)
-          setState(() {
-            data = jsonResult!;
-            _mySelection = null;
-          });
-      }
-      return "Success";
-    }
-    catch(e){}
-    return "Failure";
-  }
+  // Future<void> fetchPost() async {
+  //   AapoortiUtilities.getProgressDialog(pr!);
+  //   try {
+  //     var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ORGANIZATION';
+  //     final response = await http.post(Uri.parse(u));
+  //     jsonResult1 = json.decode(response.body);
+  //     if(response.statusCode != 200) throw Exception('HTTP request failed, statusCode: ${response.statusCode}');
+  //     AapoortiUtilities.stopProgress(pr!);
+  //     if (this.mounted)
+  //       setState(() {
+  //         if (jsonResult1 != null) data1 = jsonResult1!;
+  //       });
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //     AapoortiUtilities.stopProgress(pr!);
+  //   }
+  // }
+  //
+  // Future<String> getSWData() async {
+  //   try {
+  //     _mySelection = null;
+  //     if (myselection1 != "-1") {
+  //       AapoortiUtilities.getProgressDialog(pr!);
+  //       var v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,$myselection1';
+  //       final response = await http.post(Uri.parse(v));
+  //       jsonResult = json.decode(response.body);
+  //       AapoortiUtilities.stopProgress(pr!);
+  //       if (this.mounted)
+  //         setState(() {
+  //           data = jsonResult!;
+  //           _mySelection = null;
+  //         });
+  //     }
+  //     return "Success";
+  //   }
+  //   catch(e){}
+  //   return "Failure";
+  // }
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      pr = ProgressDialog(context);
-      fetchPost();
+    pr = ProgressDialog(context);
+    Future.delayed(Duration.zero, () async{
+      //fetchPost();
+      DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+      if(providedTime.isBefore(DateTime.now())){
+        await fetchToken(context);
+        fetchOrganisation();
+      }
+      else{
+        fetchOrganisation();
+      }
     });
   }
 
@@ -212,54 +324,80 @@ class DropDownState extends State<Tender> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          hint: Text(myselection1 != null ? myselection1! : 'Select Organisation'),
-                          decoration: InputDecoration(
-                            //icon: Icon(Icons.train, color: Colors.black),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(color: Colors.grey,strokeAlign: 1)
-                              )
-                          ),
-                          items: data1.map((item) {
-                            return DropdownMenuItem(
-                                child: Text(
-                                  item['NAME'],
+                        Container(
+                          margin: EdgeInsets.only(top: 10.0, left: 4.0, right: 4.0, bottom: 10.0),
+                          child: DropdownSearch<String>(
+                              selectedItem: orgName ?? "Select Organization",
+                              // items: (filter, loadProps) => dataRly.map((e) {
+                              //     return e['NAME'].toString().trim();
+                              //   }).toList(),
+                              items: (filter, loadProps) => dataRly.map((e) {
+                                return e['key1'].toString().trim();
+                              }).toList(),
+                              decoratorProps: DropDownDecoratorProps(
+                                decoration: InputDecoration(
+                                  //labelText: "Organization",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0)
+                                  ),
+                                  prefixIcon: Icon(Icons.list, color: Colors.blue[800]),
                                 ),
-                                value: item['ID'].toString());
-                          }).toList(),
-                          onChanged: (newVal1) {
-                            setState(() {
-                              _mySelection = null;
-                              data.clear();
-                              myselection1 = newVal1;
-                            });
-                            getSWData();
-                          },
-                          value: myselection1,
+                              ),
+                              popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
+                              onChanged: (String? newValue) {
+                                debugPrint("Select Organization test $newValue");
+                                try {
+                                  setState(() {
+                                    zoneCode = "-1;-1";
+                                    dataZone.clear();
+                                    dataRly.forEach((element) {
+                                      if(newValue.toString() == element['key1'].toString()) {
+                                        orgName = newValue.toString();
+                                        orgCode = element['key2'].toString();
+                                      }
+                                    });
+                                    debugPrint("orgname $orgName  orgcode $orgCode");
+                                  });
+                                } catch (e) {
+                                  debugPrint("execption resp " + e.toString());
+                                }
+                                //getZone();
+                                fetchZone(orgCode!);
+                              }
+                          ),
                         ),
                         const SizedBox(height: 16),
-                        DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          hint: Text('Select Railway '),
-                          decoration: InputDecoration(
-                            //icon: Icon(Icons.account_balance, color: Colors.black),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              )
+                        Container(
+                          margin: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 10),
+                          child: DropdownSearch<String>(
+                            selectedItem: zoneName ?? "Select Zone",
+                            // items: (filter, loadProps) => dataZone.map((e) {
+                            //   return e['NAME'].toString().trim();
+                            // }).toList(),
+                            items: (filter, loadProps) => dataZone.map((e) {
+                              return e['key1'].toString().trim();
+                            }).toList(),
+                            decoratorProps: DropDownDecoratorProps(
+                              decoration: InputDecoration(
+                                //labelText: "Zone",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0)
+                                ),
+                                prefixIcon: Icon(Icons.train, color: Colors.blue[800]),
+                              ),
+                            ),
+                            popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
+                            onChanged: (newVal) {
+                              setState(() {
+                                dataZone.forEach((element) {
+                                  if(newVal.toString() == element['key1'].toString()) {
+                                    zoneCode = element['key3'].toString() + ";" + element['key2'].toString();
+                                    zoneName = newVal.toString();
+                                  }
+                                });
+                              });
+                            },
                           ),
-                          items: data.map((item) {
-                            return DropdownMenuItem(
-                                child: Text(item['NAME']),
-                                value: item['ACCID'].toString());
-                          }).toList(),
-                          onChanged: (newVal2) {
-                            setState(() {
-                              _mySelection = newVal2;
-                            });
-                          },
-                          value: _mySelection,
                         ),
                         const SizedBox(height: 16),
                         InkWell(
@@ -284,10 +422,9 @@ class DropDownState extends State<Tender> {
                             if(_formKey.currentState!.validate()) {
                               if (!_tenderController.text.isEmpty) {
                                 try {
-                                  var connectivityresult = await InternetAddress.lookup('google.com');
-                                  if(myselection1 != null && _mySelection != null) {
+                                  if(orgCode != "-1" && zoneCode != "-1;-1") {
                                     debugPrint("date ${_selectedDate.toString()}");
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Status(Date: _selectedDate.toString(), content: _tenderController.text.trim(), id: _mySelection!)));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Status(Date: _selectedDate.toString(), content: _tenderController.text.trim(), id: zoneCode!.split(";").first.trim())));
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(snackbar);
                                   }
@@ -319,8 +456,6 @@ class DropDownState extends State<Tender> {
                           onPressed: () {
                             setState(() {
                               _tenderController.clear();
-                              _selectedOrganization = null;
-                              _selectedRailway = null;
                               _selectedDate = null;
                             });
                           },
@@ -562,7 +697,7 @@ class DropDownState extends State<Tender> {
       _formKey.currentState!.save();
     } else {
       setState(() {
-        _autoValidate = true;
+        //_autoValidate = true;
       });
     }
   }

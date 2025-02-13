@@ -63,8 +63,10 @@ class TransactionListDataProvider with ChangeNotifier{
   Future<void> fetchTransactionListData(railway,unitType,division,department,userDepot,userSubDepot, ledgerNo, folioNo, ledgerFolioPlNo, fromDate,toDate,BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(TransactionListDataState.Busy);
-    String fDate=DateFormat('dd-MM-yyyy').format(fromDate);
-    String tDate=DateFormat('dd-MM-yyyy').format(toDate);
+    String fDate = fromDate;
+    String tDate = toDate;
+    //String fDate = DateFormat('dd-MM-yyyy').format(fromDate);
+    //String tDate=DateFormat('dd-MM-yyyy').format(toDate);
     issueQty='';issuValue='';recQty='';recValue='';
     try {
       from_Date=fDate;
@@ -73,13 +75,13 @@ class TransactionListDataProvider with ChangeNotifier{
       if(headerResponse.statusCode==200){
         var headerjsonData = json.decode(headerResponse.body);
         headerData=headerjsonData['data'];
-        print(headerResponse.body);
+        debugPrint(headerResponse.body);
       }
-      print("input data ${railway+"~"+userDepot+"~"+userSubDepot+"~"+ledgerNo+"~"+folioNo+"~"+ledgerFolioPlNo+"~"+fDate+"~"+tDate}");
+      debugPrint("input data ${railway+"~"+userDepot+"~"+userSubDepot+"~"+ledgerNo+"~"+folioNo+"~"+ledgerFolioPlNo+"~"+fDate+"~"+tDate}");
       var response = await Network.postDataWithAPIM('UDM/transaction/V1.0.0/transaction', 'TransactionResult', railway+"~"+userDepot+"~"+userSubDepot+"~"+ledgerNo+"~"+folioNo+"~"+ledgerFolioPlNo+"~"+fDate+"~"+tDate, prefs.getString('token'));
       if(response.statusCode == 200) {
         var listdata = json.decode(response.body);
-        print("txn Detail Data....$listdata");
+        debugPrint("txn Detail Data....$listdata");
         if(listdata['status']=='OK') {
           var listJson=listdata['data'];
           if(listJson != null) {
@@ -116,12 +118,12 @@ class TransactionListDataProvider with ChangeNotifier{
       setState(TransactionListDataState.Idle);
       IRUDMConstants().showSnack('Something Unexpected happened! Please try again.', context);
     } on SocketException {
-      print('No Internet connection 😑');
+      debugPrint('No Internet connection 😑');
       _error = Error("Connectivity Error", "No connectivity. Please check your connection.");
       setState(TransactionListDataState.Idle);
       IRUDMConstants().showSnack('No connectivity. Please check your connection.', context);
     } on FormatException {
-      print("Bad response format 👎");
+      debugPrint("Bad response format 👎");
       _error = Error("Exception", "Something Unexpected happened! Please try again.");
       setState(TransactionListDataState.Idle);
       IRUDMConstants().showSnack('Something Unexpected happened! Please try again.', context);
@@ -132,7 +134,7 @@ class TransactionListDataProvider with ChangeNotifier{
   }
 
   void showInSnackBar(String value, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(value)
     ));
   }

@@ -20,20 +20,43 @@ import 'package:share_plus/share_plus.dart';
 class TransactionListDataDisplayScreen extends StatefulWidget {
 
   static const routeName = "/TransactionDataList-Result-screen";
-  String userDepot, userSubDepot;
-  TransactionListDataDisplayScreen(this.userDepot, this.userSubDepot);
+
+  String railwayCode,
+      unittypeCode,
+      unitnameCode,
+      departmentCode,
+      userdepotCode,
+      usersubdepotCode,
+      ledgerNoCode,
+      folioNoCode,
+      folioPLNoCode,
+      fromdate,
+      todate;
+  TransactionListDataDisplayScreen(this.railwayCode, this.unittypeCode, this.unitnameCode, this.departmentCode,
+      this.userdepotCode, this.usersubdepotCode, this.ledgerNoCode, this.folioNoCode, this.folioPLNoCode, this.fromdate, this.todate);
 
   @override
   _TransactionListDataDisplayState createState() => _TransactionListDataDisplayState();
 }
 
-class _TransactionListDataDisplayState
-    extends State<TransactionListDataDisplayScreen> {
+class _TransactionListDataDisplayState extends State<TransactionListDataDisplayScreen> {
+
   @override
   void initState() {
     super.initState();
-    print("user depot txn ${widget.userDepot}");
-    print("user Sub depot txn ${widget.userSubDepot}");
+    Provider.of<TransactionListDataProvider>(context, listen: false).fetchTransactionListData(
+        widget.railwayCode,
+        widget.unittypeCode,
+        widget.unitnameCode,
+        widget.departmentCode,
+        widget.userdepotCode,
+        widget.usersubdepotCode,
+        widget.ledgerNoCode,
+        widget.folioNoCode,
+        widget.folioPLNoCode,
+        widget.fromdate,
+        widget.todate,
+        context);
   }
 
   static final DateTime now = DateTime.now();
@@ -148,11 +171,11 @@ class _TransactionListDataDisplayState
                               child: Text(
                                   language.text('consignee') +
                                       ' - ' +
-                                      widget.userDepot +
+                                      widget.userdepotCode +
                                       '\n' +
                                       language.text('subDepot') +
                                       ' - ' +
-                                      widget.userSubDepot,
+                                      widget.usersubdepotCode,
                                   style: TextStyle(
                                     color: Colors.black87,
                                     // fontWeight:
@@ -254,8 +277,7 @@ class _TransactionListDataDisplayState
                                 Expanded(
                                     flex: 4,
                                     child: Text(
-                                      transactionListDataProvider.headerData[0]
-                                          ['ledgerfolioname'],
+                                      transactionListDataProvider.headerData[0]['ledgerfolioname'],
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.black87,
@@ -1079,6 +1101,8 @@ class ProductBox extends StatelessWidget {
         padding: EdgeInsets.all(6),
         child: Card(
             elevation: 6,
+            color: Colors.white,
+            surfaceTintColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -1340,8 +1364,6 @@ class ProductBox extends StatelessWidget {
                                       if (item!.tRANSQTY == '0.000' &&
                                           item!.cARDCODE == '41' &&
                                           item!.lOANINDDESC == '1') {
-                                        // return item.vOUCHERNO+'\ndt. '+item.tRANSDATE+'\n'+"No discrepancy found during Stock Verification \nOn Loan";
-                                        // TODO Here is the issue note no.
                                         return TextSpan(children: <InlineSpan>[
                                           TextSpan(
                                               text: () {
@@ -1809,13 +1831,15 @@ class ProductBox extends StatelessWidget {
                           SizedBox(height: 5),
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(
+                            child: ReadMoreText(
                                   item!.cARDCODE == '51' && item!.tRANSCARDCODEDESC.toString().length > 0
                                   ? item!.tRANSCARDCODEDESC! + '\n' + item!.mACHINEDTLS!
                                   : item!.tRANSCARDCODEDESC.toString().length == 0 || item!.tRANSCARDCODEDESC.toString() == "null" ? "NA" : item!.tRANSCARDCODEDESC.toString(),
-                              style: TextStyle(
-                                color: Colors.deepOrangeAccent,
-                              ),
+                              style: TextStyle(color: Colors.deepOrangeAccent),
+                              trimCollapsedText: '...Show more',
+                              trimExpandedText: '...Show less',
+                              trimMode: TrimMode.Line,
+                              trimLines: 2,
                             ),
                           ),
                         ],

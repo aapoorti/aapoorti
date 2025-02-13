@@ -110,13 +110,13 @@ class SearchPoOther extends StatelessWidget {
                             child:Column(
                               children: <Widget>[
                                 Padding(padding: EdgeInsets.only(top:20.0,bottom: 10)),
-                                Text("DLW",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.indigo[900],fontSize: 25.0)) ,
+                                Text("BLW",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.indigo[900],fontSize: 25.0)) ,
                                 Text("Varanasi",textAlign: TextAlign.center,style: TextStyle(fontSize: 15.0,color: Colors.indigo[900]),)
                               ],
                             ),
                           ),
                           onTap: (){
-                            url ="http://dlw.indianrailways.gov.in/view_section.jsp?lang=0&id=0,299,446,722";
+                            url ="http://blw.indianrailways.gov.in/view_section.jsp?lang=0&id=0,299,446,722";
                             _asyncConfirmDialog(context);
                           },),
         

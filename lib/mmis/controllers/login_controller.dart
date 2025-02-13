@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
@@ -185,7 +186,15 @@ class LoginController extends GetxController{
           reqsetpinState.value = ReqSetPinState.idle;
         });
       }
-    } catch (e) {
+    }
+    on SocketException catch(ex){
+      AapoortiUtilities.showInSnackBar(context, 'Please check your internet connection.');
+      Future.delayed(Duration(milliseconds: 500), () {
+        reqsetpinState.value = ReqSetPinState.idle;
+      });
+    }
+    on HttpException catch(e1){}
+    catch (e) {
       reqsetpinState.value = ReqSetPinState.failedWithError;
       debugPrint('Error occurred: $e');
       AapoortiUtilities.showInSnackBar(context, 'Something went wrong, please try later.');

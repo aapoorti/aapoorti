@@ -35,13 +35,13 @@ class HighValueStatusState extends State<HighValueStatus> {
     this.item5 = item5;
     this.item6 = item6;
     this.item7 = item7;
-    debugPrint("item1---" + item1);
-    debugPrint("item2---" + item2);
-    debugPrint("item3---" + item3);
-    debugPrint("item4---" + item4);
-    debugPrint("item5---" + item5);
-    debugPrint("item6---" + item6);
-    debugPrint("item7---" + item7);
+    debugPrint("item1 orgcode--- " + item1);
+    debugPrint("item2 zonecode--- " + item2);
+    debugPrint("item3 deptcode--- " + item3);
+    debugPrint("item4 unitcode--- " + item4);
+    debugPrint("item5 workarea--- " + item5);
+    debugPrint("item6 datefrom--- " + item6);
+    debugPrint("item7 dateto--- " + item7);
   }
   void initState() {
     super.initState();
@@ -58,7 +58,7 @@ class HighValueStatusState extends State<HighValueStatus> {
     final response1 = await http.post(Uri.parse(u));
     jsonResult = json.decode(response1.body);
     debugPrint("jsonresult1===");
-    print(jsonResult);
+    debugPrint(jsonResult.toString());
     setState(() {
       data = jsonResult;
     });
@@ -90,10 +90,10 @@ class HighValueStatusState extends State<HighValueStatus> {
               ),
             ],
             title: Text('High Value Tender', style: TextStyle(color: Colors.white))),
-        body: Container(
-          child: Column(
-            children: <Widget>[
-              Container(
+            body: Container(
+             child: Column(
+              children: <Widget>[
+                Container(
                 width: 400,
                 height: 30,
                 color: Colors.cyan.shade50,
@@ -108,13 +108,7 @@ class HighValueStatusState extends State<HighValueStatus> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Expanded(
-                  child: jsonResult == null
-                      ? SpinKitFadingCircle(
-                          color: AapoortiConstants.primary,
-                          size: 120.0,
-                        )
-                      : _myListView(context))
+                Expanded(child: jsonResult == null ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : _myListView(context))
             ],
           ),
         ),
@@ -124,10 +118,7 @@ class HighValueStatusState extends State<HighValueStatus> {
 
   Widget _myListView(BuildContext context) {
 
-    return jsonResult!.isEmpty
-        ? Container(
-            height: 40.0,
-            width: 500,
+    return jsonResult!.isEmpty ? Container(height: 40.0, width: 500,
             child: Container(
               margin: EdgeInsets.only(top: 20.0, left: 15, right: 15),
               child: Text(
@@ -168,18 +159,8 @@ class HighValueStatusState extends State<HighValueStatus> {
                                       fontWeight: FontWeight.w600),
                                 ),
                               ),
-                              Expanded(
-                                  child: Container(
-                                //height: 30,
-                                child: Text(
-                                  (jsonResult![index]['ZONE'] != null
-                                          ? jsonResult![index]['ZONE']
-                                          : "") +
-                                      '/ ' +
-                                      (jsonResult![index]['DEPT'] != null
-                                          ? jsonResult![index]['DEPT']
-                                          : "") +
-                                      '/ ' +
+                              Expanded(child: Container(
+                                child: Text((jsonResult![index]['ZONE'] != null ? jsonResult![index]['ZONE'] : "") + '/ ' + (jsonResult![index]['DEPT'] != null ? jsonResult![index]['DEPT'] : "") + '/ ' +
                                       (jsonResult![index]['DEPT_NAME'] != null
                                           ? jsonResult![index]['DEPT_NAME']
                                           : ""),
@@ -236,13 +217,8 @@ class HighValueStatusState extends State<HighValueStatus> {
                               Container(
                                 height: 30,
                                 child: Text(
-                                  jsonResult![index]['TENDER_OPENING_DATE_N'] !=
-                                          null
-                                      ? jsonResult![index]
-                                          ['TENDER_OPENING_DATE_N']
-                                      : "",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 15),
+                                  jsonResult![index]['TENDER_OPENING_DATE_N'] != null ? jsonResult![index]['TENDER_OPENING_DATE_N'] : "",
+                                  style: TextStyle(color: Colors.grey, fontSize: 15),
                                 ),
                               )
                             ]),
@@ -406,7 +382,6 @@ class HighValueStatusState extends State<HighValueStatus> {
                                                               color: Color(
                                                                   0xAB000000),
 
-                                                              // Aligns the container to center
                                                               child: Column(
                                                                   children: <
                                                                       Widget>[
@@ -467,11 +442,8 @@ class HighValueStatusState extends State<HighValueStatus> {
                                             ),
                                           ])),
                                       GestureDetector(
-//
                                           onTap: () {
-                                            if (jsonResult![index]
-                                                    ['CORRI_DETAILS'] !=
-                                                'NA') {
+                                            if (jsonResult![index]['CORRI_DETAILS'] != 'NA') {
                                               showDialog(
                                                   context: context,
                                                   builder: (_) => Material(
@@ -489,8 +461,6 @@ class HighValueStatusState extends State<HighValueStatus> {
                                                                             50),
                                                                 color: Color(
                                                                     0xAB000000),
-
-                                                                // Aligns the container to center
                                                                 child: Column(
                                                                     children: <
                                                                         Widget>[
@@ -519,9 +489,7 @@ class HighValueStatusState extends State<HighValueStatus> {
                                                                     ]))),
                                                       ));
                                             } else {
-                                              AapoortiUtilities.showInSnackBar(
-                                                  context,
-                                                  "No corrigendum issued with this Tender!!");
+                                              AapoortiUtilities.showInSnackBar(context, "No corrigendum issued with this Tender!!");
                                             }
                                           },
                                           child: Column(children: <Widget>[
@@ -530,9 +498,7 @@ class HighValueStatusState extends State<HighValueStatus> {
                                               child: Text(
                                                 "C",
                                                 style: TextStyle(
-                                                    color: jsonResult![index][
-                                                                'CORRI_DETAILS'] !=
-                                                            'NA'
+                                                    color: jsonResult![index]['CORRI_DETAILS'] != 'NA'
                                                         ? Colors.green
                                                         : Colors.brown,
                                                     fontSize: 23,
@@ -540,11 +506,11 @@ class HighValueStatusState extends State<HighValueStatus> {
                                                         FontWeight.bold),
                                               ),
                                             ),
-                                            new Padding(
+                                            Padding(
                                                 padding: EdgeInsets.all(0.0)),
-                                            new Container(
-                                              child: new Text('  CORRIGENDA',
-                                                  style: new TextStyle(
+                                            Container(
+                                              child: Text('  CORRIGENDA',
+                                                  style: TextStyle(
                                                       color: Colors.blueGrey,
                                                       fontSize: 9),
                                                   textAlign: TextAlign.center),
@@ -569,11 +535,7 @@ class HighValueStatusState extends State<HighValueStatus> {
   final snackbar = SnackBar(
     backgroundColor: Colors.redAccent[100],
     content: Container(
-      child: Text(
-        'No letter attached with this Firm!!',
-        style: TextStyle(
-            fontWeight: FontWeight.w400, fontSize: 18, color: Colors.white),
-      ),
+      child: Text('No letter attached with this Firm!!', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18, color: Colors.white)),
     ),
   );
 }

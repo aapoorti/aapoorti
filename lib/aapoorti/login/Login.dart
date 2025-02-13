@@ -195,9 +195,11 @@ class _LoginActivityState extends State<LoginActivity> {
         AapoortiUtilities.setUserDetails(jsonResult); //To save user details in shared object
         userType = jsonResult[0]['USER_TYPE'].toString();
         return true;
-      } else
+      }
+      else
         return false;
-    } else
+    }
+    else
       return false;
   }
 

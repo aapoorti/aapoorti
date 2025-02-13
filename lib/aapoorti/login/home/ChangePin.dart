@@ -496,6 +496,7 @@ class _ChangePinState extends State<ChangePin> {
       },
     ),
   );
+
   var bodyProgress = Container(
     child: Stack(
       children: <Widget>[

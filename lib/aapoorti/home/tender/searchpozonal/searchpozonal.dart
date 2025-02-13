@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 import 'SearchPoList.dart';
 
 class SearchPoZonal extends StatefulWidget {
-  TextEditingController _textFieldController = TextEditingController();
   SearchPoZonal() : super();
 
   @override
@@ -18,12 +17,10 @@ class SearchPoZonal extends StatefulWidget {
 }
 
 class _SearchZonalState extends State<SearchPoZonal> {
-  // final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<dynamic>? jsonResult;
    List data = [];
    GlobalKey<ScaffoldState> _snackKey = GlobalKey<ScaffoldState>();
 
-  late TabController _tabController;
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _supplierController = TextEditingController();
@@ -33,6 +30,7 @@ class _SearchZonalState extends State<SearchPoZonal> {
   // Initialize with default values
   double _minValue = 0;
   double _maxValue = 100;
+  bool _autoValidate = false;
 
   String? _selectedRailway;
 
@@ -418,15 +416,6 @@ class _SearchZonalState extends State<SearchPoZonal> {
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    // key: _snackKey,
-    // body: Builder(
-    //   builder: (context) => Material(
-    //       color: Colors.cyan.shade50,
-    //       child: ListView(
-    //         children: <Widget>[_myListView(context)],
-    //       )),
-    // ));
     return Scaffold(
       key: _snackKey,
       body: SingleChildScrollView(
@@ -458,11 +447,7 @@ class _SearchZonalState extends State<SearchPoZonal> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Processing Search...')),
-                    );
-                  }
+                  checkvalue();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade800,
@@ -799,7 +784,7 @@ class _SearchZonalState extends State<SearchPoZonal> {
     }
     else {
       setState(() {
-        //_autoValidate = true;
+        _autoValidate = true;
       });
     }
   }

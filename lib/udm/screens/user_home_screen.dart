@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
+import 'package:flutter_app/udm/helpers/wso2token.dart';
+import 'package:flutter_app/udm/transaction/transaction_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_app/udm/crc_digitally_signed/view/crc_screen.dart';
 import 'package:flutter_app/udm/crc_summary/view/crc_summary_screen.dart';
@@ -61,8 +63,7 @@ class UserHomeScreen extends StatefulWidget {
   _UserHomeScreenState createState() => _UserHomeScreenState();
 }
 
-class _UserHomeScreenState extends State<UserHomeScreen>
-    with TickerProviderStateMixin {
+class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStateMixin {
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -306,91 +307,187 @@ class _UserHomeScreenState extends State<UserHomeScreen>
   }
 
   Future<void> onTapFunction(String gridno, int itemIndex) async {
-    if(gridno == '1') {
-      switch (itemIndex) {
-        case 0:
-          Navigator.push(context, MaterialPageRoute(builder: (context) => CustomRightSideDrawer()));
-          break;
-        case 1:
-          Navigator.push(context, MaterialPageRoute(builder: (context) => StockRightSideDrawer()));
-          break;
-        case 2:
-          Navigator.push(context, MaterialPageRoute(builder: (context) => StoreStkDepotRightSideDrawer()));
-          break;
-        case 3:
-          Navigator.of(context).pushNamed(POSearchRightSideDrawer.routeName);
-          //Navigator.push(context, MaterialPageRoute(builder: (context) => POSearchRightSideDrawer()));
-          break;
-        case 4:
-          Navigator.of(context).pushNamed(StockSummarySideDrawer.routeName);
-          break;
-        case 5:
-          Navigator.of(context).pushNamed(NonMovingFilter.routeName);
-          break;
-        case 6:
-          Navigator.of(context).pushNamed(ValueWiseStockFilter.routeName);
-          break;
-        case 7:
-          Navigator.of(context).pushNamed(HighValueFilter.routeName);
-          break;
-        case 8:
-          Navigator.of(context).pushNamed(ConsumtionAnalysisFilter.routeName);
-          break;
-        case 9:
-          Navigator.of(context).pushNamed(ConsumtionSummaryFilter.routeName);
-          break;
-        case 10:
-          Navigator.of(context).pushNamed(TransactionSearchDropDown.routeName);
-          break;
-        case 11:
-          Navigator.of(context).pushNamed(StatusDropDown.routeName);
-          break;
-        case 12:
-          Navigator.of(context).pushNamed(SummaryDropdown.routeName);
-          break;
-        case 13:
-          Navigator.of(context).pushNamed(CrnScreen.routeName);
-          break;
-        case 14:
-          Navigator.of(context).pushNamed(CrcScreen.routeName);
-          break;
-        case 15:
-          Navigator.of(context).pushNamed(StockItemHistorySheetScreen.routeName);
-          break;
-        case 16:
-          Navigator.of(context).pushNamed(NonStockDemandsScreen.routeName);
-          break;
-        case 17:
-          Navigator.of(context).pushNamed(GemOrderScreen.routeName);
-          break;
-        case 18:
-          Navigator.of(context).pushNamed(WarrantyRejectionScreen.routeName);
-          break;
-        case 19:
-          Navigator.of(context).pushNamed(NSDemandSummaryScreen.routeName);
-          break;
-        case 20:
-          Navigator.of(context).pushNamed(WarrantyComplaintDropdown.routeName);
-          break;
-        case 21:
-          Navigator.of(context).pushNamed(CrnSummaryScreen.routeName);
-          break;
-        case 22:
-          Navigator.of(context).pushNamed(StockingProposalSummaryScreen.routeName);
-          break;
-        case 23:
-          Navigator.of(context).pushNamed(WarrantyRejectionRegisterScreen.routeName);
-          break;
-        case 24:
-          Navigator.of(context).pushNamed(CrcSummaryScreen.routeName);
-          break;
-        case 25:
-          Navigator.of(context).pushNamed(ToEndUserScreen.routeName);
-          break;
-        case 26:
-          Navigator.of(context).pushNamed(WarrantyCRNSummaryScreen.routeName);
-          break;
-        default:
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+    if(providedTime.isBefore(DateTime.now())){
+      await fetchToken(context);
+      if(gridno == '1') {
+        switch (itemIndex) {
+          case 0:
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CustomRightSideDrawer()));
+            break;
+          case 1:
+            Navigator.push(context, MaterialPageRoute(builder: (context) => StockRightSideDrawer()));
+            break;
+          case 2:
+            Navigator.push(context, MaterialPageRoute(builder: (context) => StoreStkDepotRightSideDrawer()));
+            break;
+          case 3:
+            Navigator.of(context).pushNamed(POSearchRightSideDrawer.routeName);
+            //Navigator.push(context, MaterialPageRoute(builder: (context) => POSearchRightSideDrawer()));
+            break;
+          case 4:
+            Navigator.of(context).pushNamed(StockSummarySideDrawer.routeName);
+            break;
+          case 5:
+            Navigator.of(context).pushNamed(NonMovingFilter.routeName);
+            break;
+          case 6:
+            Navigator.of(context).pushNamed(ValueWiseStockFilter.routeName);
+            break;
+          case 7:
+            Navigator.of(context).pushNamed(HighValueFilter.routeName);
+            break;
+          case 8:
+            Navigator.of(context).pushNamed(ConsumtionAnalysisFilter.routeName);
+            break;
+          case 9:
+            Navigator.of(context).pushNamed(ConsumtionSummaryFilter.routeName);
+            break;
+          case 10:
+          //Navigator.of(context).pushNamed(TransactionSearchDropDown.routeName);
+            Navigator.of(context).pushNamed(TransactionScreen.routeName);
+            break;
+          case 11:
+            Navigator.of(context).pushNamed(StatusDropDown.routeName);
+            break;
+          case 12:
+            Navigator.of(context).pushNamed(SummaryDropdown.routeName);
+            break;
+          case 13:
+            Navigator.of(context).pushNamed(CrnScreen.routeName);
+            break;
+          case 14:
+            Navigator.of(context).pushNamed(CrcScreen.routeName);
+            break;
+          case 15:
+            Navigator.of(context).pushNamed(StockItemHistorySheetScreen.routeName);
+            break;
+          case 16:
+            Navigator.of(context).pushNamed(NonStockDemandsScreen.routeName);
+            break;
+          case 17:
+            Navigator.of(context).pushNamed(GemOrderScreen.routeName);
+            break;
+          case 18:
+            Navigator.of(context).pushNamed(WarrantyRejectionScreen.routeName);
+            break;
+          case 19:
+            Navigator.of(context).pushNamed(NSDemandSummaryScreen.routeName);
+            break;
+          case 20:
+            Navigator.of(context).pushNamed(WarrantyComplaintDropdown.routeName);
+            break;
+          case 21:
+            Navigator.of(context).pushNamed(CrnSummaryScreen.routeName);
+            break;
+          case 22:
+            Navigator.of(context).pushNamed(StockingProposalSummaryScreen.routeName);
+            break;
+          case 23:
+            Navigator.of(context).pushNamed(WarrantyRejectionRegisterScreen.routeName);
+            break;
+          case 24:
+            Navigator.of(context).pushNamed(CrcSummaryScreen.routeName);
+            break;
+          case 25:
+            Navigator.of(context).pushNamed(ToEndUserScreen.routeName);
+            break;
+          case 26:
+            Navigator.of(context).pushNamed(WarrantyCRNSummaryScreen.routeName);
+            break;
+          default:
+        }
+      }
+    }
+    else{
+      if(gridno == '1') {
+        switch (itemIndex) {
+          case 0:
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CustomRightSideDrawer()));
+            break;
+          case 1:
+            Navigator.push(context, MaterialPageRoute(builder: (context) => StockRightSideDrawer()));
+            break;
+          case 2:
+            Navigator.push(context, MaterialPageRoute(builder: (context) => StoreStkDepotRightSideDrawer()));
+            break;
+          case 3:
+            Navigator.of(context).pushNamed(POSearchRightSideDrawer.routeName);
+            //Navigator.push(context, MaterialPageRoute(builder: (context) => POSearchRightSideDrawer()));
+            break;
+          case 4:
+            Navigator.of(context).pushNamed(StockSummarySideDrawer.routeName);
+            break;
+          case 5:
+            Navigator.of(context).pushNamed(NonMovingFilter.routeName);
+            break;
+          case 6:
+            Navigator.of(context).pushNamed(ValueWiseStockFilter.routeName);
+            break;
+          case 7:
+            Navigator.of(context).pushNamed(HighValueFilter.routeName);
+            break;
+          case 8:
+            Navigator.of(context).pushNamed(ConsumtionAnalysisFilter.routeName);
+            break;
+          case 9:
+            Navigator.of(context).pushNamed(ConsumtionSummaryFilter.routeName);
+            break;
+          case 10:
+          //Navigator.of(context).pushNamed(TransactionSearchDropDown.routeName);
+            Navigator.of(context).pushNamed(TransactionScreen.routeName);
+            break;
+          case 11:
+            Navigator.of(context).pushNamed(StatusDropDown.routeName);
+            break;
+          case 12:
+            Navigator.of(context).pushNamed(SummaryDropdown.routeName);
+            break;
+          case 13:
+            Navigator.of(context).pushNamed(CrnScreen.routeName);
+            break;
+          case 14:
+            Navigator.of(context).pushNamed(CrcScreen.routeName);
+            break;
+          case 15:
+            Navigator.of(context).pushNamed(StockItemHistorySheetScreen.routeName);
+            break;
+          case 16:
+            Navigator.of(context).pushNamed(NonStockDemandsScreen.routeName);
+            break;
+          case 17:
+            Navigator.of(context).pushNamed(GemOrderScreen.routeName);
+            break;
+          case 18:
+            Navigator.of(context).pushNamed(WarrantyRejectionScreen.routeName);
+            break;
+          case 19:
+            Navigator.of(context).pushNamed(NSDemandSummaryScreen.routeName);
+            break;
+          case 20:
+            Navigator.of(context).pushNamed(WarrantyComplaintDropdown.routeName);
+            break;
+          case 21:
+            Navigator.of(context).pushNamed(CrnSummaryScreen.routeName);
+            break;
+          case 22:
+            Navigator.of(context).pushNamed(StockingProposalSummaryScreen.routeName);
+            break;
+          case 23:
+            Navigator.of(context).pushNamed(WarrantyRejectionRegisterScreen.routeName);
+            break;
+          case 24:
+            Navigator.of(context).pushNamed(CrcSummaryScreen.routeName);
+            break;
+          case 25:
+            Navigator.of(context).pushNamed(ToEndUserScreen.routeName);
+            break;
+          case 26:
+            Navigator.of(context).pushNamed(WarrantyCRNSummaryScreen.routeName);
+            break;
+          default:
+        }
       }
     }
   }
@@ -632,17 +729,18 @@ class _UserHomeScreenState extends State<UserHomeScreen>
                       style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                     )
                 ),
-                ListTile(
-                    onTap: () => IRUDMConstants.launchURL(play_store_url),
-                    leading: Icon(
-                      Icons.star,
-                      color: Colors.black, size: 20
-                    ),
-                    trailing: Icon(Icons.arrow_forward_ios, color: Colors.black, size: 20),
-                    title: Text(
-                      language.text('rateUs'),
-                      style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),
-                    )),
+                // ListTile(
+                //     onTap: () => IRUDMConstants.launchURL(play_store_url),
+                //     leading: Icon(
+                //       Icons.star,
+                //       color: Colors.black, size: 20
+                //     ),
+                //     trailing: Icon(Icons.arrow_forward_ios, color: Colors.black, size: 20),
+                //     title: Text(
+                //       language.text('rateUs'),
+                //       style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),
+                //     )
+                // ),
               ],
             ),
           ),

@@ -25,16 +25,16 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
   final List<String> iconList = [
     'assets/images/icon_home.png',
     'assets/images/icon_user.png',
-    'assets/images/icon_setting.png',
-    'assets/images/icon_help.png',
+    // 'assets/images/icon_setting.png',
+    // 'assets/images/icon_help.png',
   ];
 
 
   final textList = [
     "होम\nHome",
     "प्रोफ़ाइल\nProfile",
-    "सेटिंग\nSettings",
-    "सहायता केंद्र\nHelpdesk"
+    // "सेटिंग\nSettings",
+    // "सहायता केंद्र\nHelpdesk"
   ];
 
 
