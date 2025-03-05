@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/udm/helpers/api.dart';
@@ -141,7 +142,7 @@ class _CustomItemDtailsState extends State<PoSearch>
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         iconTheme: IconThemeData(color: Colors.white),
         leading: IconButton(
           splashRadius: 30,
@@ -182,7 +183,7 @@ class _CustomItemDtailsState extends State<PoSearch>
                         opacity: _controller.view,
                         child: Icon(
                           icons[index],
-                          color: Colors.red[300],
+                          color: AapoortiConstants.primary,
                         ),
                       ),
                     ),
@@ -198,7 +199,7 @@ class _CustomItemDtailsState extends State<PoSearch>
         }).toList()..add(
             FloatingActionButton(
               heroTag: null,
-              backgroundColor: Colors.red[300],
+              backgroundColor:AapoortiConstants.primary,
               child: AnimatedBuilder(
                 animation: _controller,
                 builder: (BuildContext context, Widget? child) {

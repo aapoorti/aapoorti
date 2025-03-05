@@ -56,25 +56,15 @@ class _live2State extends State<live2> {
       child: Scaffold(
         appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                    child: Text('Live Auctions(Sale)',
-                        style: TextStyle(color: Colors.white))),
-                IconButton(
-                  icon: Icon(
-                    Icons.home,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    // Navigator.pushNamed(context, '/common_screen');
-                    Navigator.of(context, rootNavigator: true).pop();
-                  },
-                ),
-              ],
-            )),
+            backgroundColor: AapoortiConstants.primary,
+            actions: [
+              IconButton(icon: Icon(Icons.home, color: Colors.white),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+              ),
+            ],
+            title:Text('Live Auctions(Sale)', style: TextStyle(color: Colors.white))),
         body: Container(
           child: Column(
             children: <Widget>[
@@ -82,9 +72,10 @@ class _live2State extends State<live2> {
                 width: MediaQuery.of(context).size.width,
                 height: 30,
                 color: Colors.cyan.shade600,
+                alignment: Alignment.center,
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  '     Auction Catalogue',
+                  'Auction Catalogue',
                   style: TextStyle(
                       color: Colors.white,
                       backgroundColor: Colors.cyan.shade600,

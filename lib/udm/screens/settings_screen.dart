@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:fluttericon/typicons_icons.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:flutter_app/udm/helpers/database_helper.dart';
@@ -70,7 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red.shade300,
+        backgroundColor: AapoortiConstants.primary,
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(language.text('settingritle'),
             style: TextStyle(color: Colors.white)),
@@ -87,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Card(
                   elevation: 5.0,
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color:Colors.red.shade300, width: 1),
+                    side: BorderSide(color:AapoortiConstants.primary, width: 1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   surfaceTintColor: Colors.white,
@@ -99,7 +100,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           height: 60,
                           width: 60,
                           decoration: BoxDecoration(
-                              color: Colors.red.shade300,
+                              color: AapoortiConstants.primary,
                               borderRadius: BorderRadius.circular(30),
                               border: Border.all(color: Colors.grey.shade600)),
                           child: CircleAvatar(
@@ -139,7 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Card(
                   elevation: 5.0,
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color:Colors.red.shade300, width: 1),
+                    side: BorderSide(color:AapoortiConstants.primary, width: 1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   surfaceTintColor: Colors.white,

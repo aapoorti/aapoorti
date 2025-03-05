@@ -1,3 +1,4 @@
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/end_user/models/checkverification.dart';
 import 'package:flutter_app/udm/end_user/models/enduser_list_data.dart';
 import 'package:flutter_app/udm/end_user/models/ledgerfolioitemData.dart';
@@ -403,7 +404,7 @@ class ToEndUSerViewModel with ChangeNotifier{
                 Align(
                   alignment: Alignment.bottomRight,
                   child: ElevatedButton(child: Text(language.text('endok'), style: TextStyle(color: Colors.white, fontSize: 16, fontStyle: FontStyle.normal)), onPressed: (){Navigator.pop(context);}, style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade300,
+                    backgroundColor: AapoortiConstants.primary,
                     side: BorderSide(color: Colors.white, width: 2),
                     textStyle: const TextStyle(color: Colors.white, fontSize: 16, fontStyle: FontStyle.normal),
                   )),

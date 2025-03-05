@@ -44,7 +44,7 @@ class StockPLDetailsDescState extends State<StockPLDetailsDesc> {
     String inputParam1 = AapoortiUtilities.user!.C_TOKEN + "," +AapoortiUtilities.user!.S_TOKEN + ",Flutter,0,0";
     String inputParam2 = AapoortiUtilities.user!.MAP_ID + "," +zoneid!+","+","+"D"+","+result!;
     try{
-    jsonResult = await AapoortiUtilities.fetchPostPostLogin('Rpt/StockReport', 'StockReport' ,inputParam1, inputParam2) ;
+    jsonResult = await AapoortiUtilities.fetchPostPostLogin('Rpt/StockReport', 'StockReport' ,inputParam1, inputParam2, context) ;
     if(jsonResult!.length >0){
     if(jsonResult![0]['ErrorCode']==3) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> NoData()));

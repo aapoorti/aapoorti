@@ -53,24 +53,21 @@ class _ClosedTenderState extends State<ClosedTender> {
     String inputParam2 = AapoortiUtilities.user!.MAP_ID +
         "," +
         AapoortiUtilities.user!.CUSTOM_WK_AREA;
-    jsonResult = await AapoortiUtilities.fetchPostPostLogin(
-        'Login/ClosedTenderList', 'ClosedTenderList', inputParam1, inputParam2);
+    jsonResult = await AapoortiUtilities.fetchPostPostLogin('Login/ClosedTenderList', 'ClosedTenderList', inputParam1, inputParam2, context);
     debugPrint(" " + jsonResult!.length.toString());
     debugPrint(jsonResult.toString());
-    if (jsonResult!.length == 0) {
-      jsonResult = '' as List;
+    if(jsonResult!.length == 0) {
+      //jsonResult = '' as List;
       Navigator.pop(context);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => NoData()));
-      //AapoortiUtilities.stopProgress(pr!);
-    } else if (jsonResult![0]['ErrorCode'] == 3) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => NoData()));
+    }
+    else if (jsonResult![0]['ErrorCode'] == 3) {
       jsonResult = null;
       Navigator.pop(context);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => NoResponse()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => NoResponse()));
       //AapoortiUtilities.stopProgress(pr!);
     }
-    if (this.mounted) setState(() {});
+    if(this.mounted) setState(() {});
     //AapoortiUtilities.stopProgress(pr!);
   }
 

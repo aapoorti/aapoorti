@@ -11,6 +11,7 @@ import 'package:flutter_app/aapoorti/common/NoConnection.dart';
 import 'package:flutter_app/aapoorti/helpdesk/problemreport/ReportOpt.dart';
 import 'package:flutter_app/aapoorti/login/home/UserHome.dart';
 import 'package:flutter_app/aapoorti/views/imp_link_screen.dart';
+import 'package:flutter_app/aapoorti/widgets/confirm_dialog.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
@@ -72,6 +73,12 @@ class _CommonScreenState extends State<CommonScreen> {
     ];
   }
 
+  @override
+  void didUpdateWidget(covariant CommonScreen oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+  }
+
   void checkBeforeLogin() async {
     if(Platform.isAndroid) {
       if(AapoortiConstants.ans == "true") {
@@ -89,7 +96,7 @@ class _CommonScreenState extends State<CommonScreen> {
             "pass": AapoortiConstants.hash,
             "cToken": "$ctoken",
             "sToken": "",
-            "os": "Flutter",
+            "os": "Flutter~ios",
             "token4": "",
             "token5": ""
           };
@@ -113,16 +120,18 @@ class _CommonScreenState extends State<CommonScreen> {
               encoding: Encoding.getByName("utf-8"));
           jsonResult = json.decode(response.body);
 
-          if (response.statusCode == 200) {
-            debugPrint(jsonResult[0]['ErrorCode'].toString());
-            if (jsonResult[0]['ErrorCode'] == null) {
+          if(response.statusCode == 200) {
+            if(jsonResult[0]['ErrorCode'] == null) {
+              AapoortiUtilities.ProgressStop(context);
               AapoortiUtilities.setUserDetails(jsonResult); //To save user details in shared object
               AapoortiUtilities.user1 = jsonResult[0]['USER_TYPE'].toString();
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserHome(AapoortiUtilities.user1!, AapoortiConstants.loginUserEmailID)));
+            }
+            else{
+              AapoortiUtilities.ProgressStop(context);
+              //AapoortiUtilities.showInSnackBar(context, "Something unexpected happened, please try again!!");
             }
           }
-          AapoortiUtilities.ProgressStop(context);
-
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserHome(AapoortiUtilities.user1!, AapoortiConstants.loginUserEmailID)));
         } else {
           bottomIndex = 1;
         }
@@ -163,23 +172,26 @@ class _CommonScreenState extends State<CommonScreen> {
           debugPrint("url = " + url);
 
           final response = await http.post(Uri.parse(url),
-              headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/x-www-form-urlencoded"
-              },
+           headers: {
+            "Accept": "application/json",
+             "Content-Type": "application/x-www-form-urlencoded"
+          },
               body: formBody,
               encoding: Encoding.getByName("utf-8"));
           jsonResult = json.decode(response.body);
-          if (response.statusCode == 200) {
+          if(response.statusCode == 200) {
             debugPrint(jsonResult[0]['ErrorCode'].toString());
             if(jsonResult[0]['ErrorCode'] == null) {
+              AapoortiUtilities.ProgressStop(context);
               AapoortiUtilities.setUserDetails(jsonResult); //To save user details in shared object
               AapoortiUtilities.user1 = jsonResult[0]['USER_TYPE'].toString();
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserHome(AapoortiUtilities.user1!, AapoortiConstants.loginUserEmailID)));
+            }
+            else{
+              AapoortiUtilities.ProgressStop(context);
+              //AapoortiUtilities.showInSnackBar(context, "Something unexpected happened, please try again!!");
             }
           }
-          AapoortiUtilities.ProgressStop(context);
-
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserHome(AapoortiUtilities.user1!, AapoortiConstants.loginUserEmailID)));
         } else {
           bottomIndex = 1;
         }
@@ -242,8 +254,10 @@ class _CommonScreenState extends State<CommonScreen> {
           Future.delayed(Duration.zero, () => setState(() {bottomIndex = 0;}));
           return false;
         } else {
-           AapoortiUtilities.alertDialog(context, "IREPS");
-          return true;
+           //AapoortiUtilities.alertDialog(context, "IREPS");
+           Future.delayed(Duration.zero, () => setState(() {bottomIndex = 0;  afterLogout = 1;}));
+           AapoortiUtilities.showAlertDailog(context, "IREPS");
+           return true;
         }
       },
       child: Scaffold(
@@ -291,5 +305,6 @@ class _CommonScreenState extends State<CommonScreen> {
         ),
     );
   }
+
 
 }

@@ -1,11 +1,15 @@
 import 'dart:core';
 import 'dart:core';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 import 'SearchPoList.dart';
 
@@ -31,43 +35,78 @@ class _SearchZonalState extends State<SearchPoZonal> {
   double _minValue = 0;
   double _maxValue = 100;
   bool _autoValidate = false;
+  ProgressDialog? pr;
 
   String? _selectedRailway;
 
   Future<String> getSWData() async {
-    var v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,01,,,-1';
-    final response = await http.post(Uri.parse(v));
-    jsonResult = json.decode(response.body);
+    _progressShow();
+    try {
+      var v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,01,,,-1';
+      final response = await http.post(Uri.parse(v));
+      jsonResult = json.decode(response.body);
 
-    // Check if the widget is still mounted before calling setState()
-    if(mounted) {
-      setState(() {
-        data = jsonResult!;
-        data.removeAt(0);
-      });
+      // Check if the widget is still mounted before calling setState()
+      if (mounted) {
+        setState(() {
+          data = jsonResult!;
+          data.removeAt(0);
+        });
+      }
+      _progressHide();
+      return "Success";
     }
-    return "Success";
+    on SocketException catch(ex){
+      AapoortiUtilities.showInSnackBar(context, "Please check your internet connection!!");
+      _progressHide();
+      return "False";
+    }
+    on Exception catch(e){
+      AapoortiUtilities.showInSnackBar(context, "Something went wrong, please try later");
+      _progressHide();
+      return "False";
+    }
   }
 
 
   @override
   void initState() {
     super.initState();
-    this.getSWData();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      getSWData();
+    });
   }
 
-  void reset() {
-    getSWData();
+  void reset() async{
+    await getSWData();
     setState(() {
-      //valueRange = 0.0;
-      //pressed = false;
-      //data = [];
-      //myselection1 = null;
-      //myController.clear();
-      //myController1.clear();
-      //_valueto = DateTime.now();
-      //_valueto = _valuefrom.add(Duration(days: 1));
-      //_valuecond = _valuefrom.add(Duration(days: 30));
+      _supplierController.text = '';
+      _plNoController.text = '';
+      _selectedRailway = null;
+      _startDate = DateTime.now();
+      _endDate = DateTime.now().add(Duration(days: 30));
+      // Initialize with default values
+
+      _minValue = 0;
+      _maxValue = 100;
+    });
+  }
+
+  _progressShow() {
+    pr = ProgressDialog(
+      context,
+      type: ProgressDialogType.normal,
+      isDismissible: true,
+      showLogs: true,
+    );
+    pr!.show();
+  }
+
+  _progressHide() {
+    Future.delayed(Duration(milliseconds: 100), () {
+      pr!.hide().then((isHidden) {
+        debugPrint(isHidden.toString());
+      });
     });
   }
 
@@ -462,21 +501,27 @@ class _SearchZonalState extends State<SearchPoZonal> {
                 ),
               ),
               const SizedBox(height: 8),
-              OutlinedButton(
-                onPressed: _resetForm,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  side: BorderSide(color: Colors.blue.shade800),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  'Reset',
-                  style: TextStyle(fontSize: 16),
-                ),
+              _buildActionButton(
+                "Reset",
+                Colors.blue.shade400,
+                onPressed: reset,
+                isOutlined: true,
               ),
+              // OutlinedButton(
+              //   onPressed: reset,
+              //   style: OutlinedButton.styleFrom(
+              //     foregroundColor: Colors.black,
+              //     padding: const EdgeInsets.symmetric(vertical: 16),
+              //     side: BorderSide(color: Colors.blue.shade800),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //   ),
+              //   child: const Text(
+              //     'Reset',
+              //     style: TextStyle(fontSize: 16),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -485,18 +530,18 @@ class _SearchZonalState extends State<SearchPoZonal> {
 
   }
 
-  void _resetForm() {
-    setState(() {
-      _formKey.currentState?.reset();
-      _supplierController.clear();
-      _plNoController.clear();
-      _startDate = null;
-      _endDate = null;
-      _minValue = 0;
-      _maxValue = 100;
-      _selectedRailway = null;
-    });
-  }
+  // void _resetForm() {
+  //   setState(() {
+  //     _formKey.currentState?.reset();
+  //     _supplierController.clear();
+  //     _plNoController.clear();
+  //     _startDate = DateTime.now();
+  //     _endDate = DateTime.now().add(Duration(days: 30));
+  //     _minValue = 0;
+  //     _maxValue = 100;
+  //     _selectedRailway = null;
+  //   });
+  // }
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
@@ -538,39 +583,32 @@ class _SearchZonalState extends State<SearchPoZonal> {
 
   Widget _buildTextFormField(TextEditingController controller, String label, String hint, IconData icon) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            labelText: label,
-            hintText: hint,
-            prefixIcon: Icon(icon, color: Colors.blue.shade800),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.blue.shade800),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.blue.shade800),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.blue.shade800, width: 2),
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            labelStyle: const TextStyle(fontSize: 12, color: Colors.black),
-            hintStyle: const TextStyle(color: Colors.black54),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hint,
+          labelText: label,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300),
           ),
-          style: const TextStyle(fontSize: 12, color: Colors.black),
-          validator: (value) {
-            if (value == null || value.length < 3) {
-              return 'Minimum 3 characters required';
-            }
-            return null;
-          },
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.blue.shade400, width: 2),
+          ),
+          filled: true,
+          fillColor: Colors.blue.shade50,
+          hintStyle: const TextStyle(fontSize: 13),
+          prefixIcon: Icon(icon, size: 18, color: Colors.blue.shade700),
         ),
+        style: const TextStyle(fontSize: 12, color: Colors.black),
+        validator: (value) {
+          if (value == null || value.length < 3) {
+            return 'Minimum 3 characters required';
+          }
+          return null;
+        },
       ),
     );
   }
@@ -749,6 +787,42 @@ class _SearchZonalState extends State<SearchPoZonal> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton(
+      String text,
+      Color color, {
+        VoidCallback? onPressed,
+        bool isOutlined = false,
+      }) {
+    return SizedBox(
+      width: double.infinity,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isOutlined ? Colors.white : color,
+            foregroundColor: isOutlined ? color : Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: isOutlined ? BorderSide(color: color, width: 1.5) : BorderSide.none,
+            ),
+            elevation: isOutlined ? 0 : 2,
+          ),
+          onPressed: onPressed,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: isOutlined ? color : Colors.white,
+            ),
+          ),
         ),
       ),
     );

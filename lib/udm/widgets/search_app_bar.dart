@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/models/high_value.dart';
 import 'package:flutter_app/udm/new_posearch_recipt/receipt_provider.dart';
 import 'package:flutter_app/udm/onlineBillStatus/actionProvider.dart';
@@ -118,7 +119,7 @@ class _SearchAppbarState extends State<SearchAppbar>
     return Stack(children: [
       AppBar(
         title: Text("${widget.title}", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         iconTheme: IconThemeData(color: Colors.white),
         actions: <Widget>[
           GestureDetector(

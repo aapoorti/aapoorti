@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   var finalDate;
   Error? _error;
 
-  var app_store_url = 'https://apps.apple.com/in/app/ireps/1462024189';
+  // var app_store_url = 'https://apps.apple.com/in/app/ireps/1462024189';
 
   var play_store_url = 'https://play.google.com/store/apps/details?id=in.gov.ireps';
 
@@ -105,12 +105,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   @override
   Future<void> didChangeDependencies() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    fetchPostBF();
-    fetchLoginDtls();
     _textScaleAnimation.addStatusListener((status) {
       try {
         if(status == AnimationStatus.completed) {
-          if (prefs.containsKey('exp_time')) {
+          if(prefs.containsKey('exp_time')) {
             var expTime = prefs.getString('exp_time');
             var today = DateTime.now();
             DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -318,8 +316,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     );
   }
 
-  final dbHelper1 = DatabaseHelper.instance;
-
   void fetchLoginDtls() async {
     int? n = await dbhelper.rowCountLoginUser();
     AapoortiConstants.n = n!;
@@ -355,9 +351,9 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
   void fetchPostBF() async {
-    rowCount = await dbHelper1.rowCountBanned();
+    rowCount = await dbhelper.rowCountBanned();
     if (rowCount! > 0) {
-      jsonResult1 = await dbHelper1.fetchBanned();
+      jsonResult1 = await dbhelper.fetchBanned();
       debugPrint("fetchBanned ${jsonResult1.toString()}");
       AapoortiConstants.jsonResult2 = jsonResult1!;
       AapoortiConstants.count = jsonResult1![0]['Count'];
@@ -373,15 +369,13 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         animation: _controller,
         builder: (context, child) {
           return Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  //Color(0xff0C67A5),
-                  //Color(0xff04253C)
-                  Color(0xFF003B73),
-                  Color(0xFF003B73)
+                  Colors.lightBlue[800]!,
+                  Colors.lightBlue[800]!
                 ],
               ),
             ),

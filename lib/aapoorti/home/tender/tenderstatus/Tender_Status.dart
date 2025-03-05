@@ -21,14 +21,12 @@ class Tender extends StatefulWidget {
 
 class DropDownState extends State<Tender> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  static DateTime _dateTime = DateTime.now();
   bool pressed = false, showdatepicker = false;
   bool _validate = false, calender = false;
   String minus = "-1", minus1 = "01", minus2 = "02", minus3 = "03";
   String minus4 = "04", minus5 = "05", minus6 = "06", minus7 = "07";
   final FocusNode _firstFocus = FocusNode();
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 15.0);
-  TextEditingController myController = TextEditingController();
 
   String? content, id;
   ProgressDialog? pr;
@@ -41,23 +39,15 @@ class DropDownState extends State<Tender> {
 
 
   void _onClear() {
-    pressed = false;
-    myController.text = "";
-    text = "";
-    calender = false;
-    _dateTime = DateTime.now();
-    date = "-1";
     setState(() {
-      pressed = false;
-      myController.text = "";
-      text = "";
-      calender = false;
-      _dateTime = DateTime.now();
-      date = "-1";
+      _tenderController.text = '';
+      orgName = null;
+      zoneName = null;
+      _selectedDate = DateTime.now();
     });
   }
 
-  DateTime? _selectedDate;
+  DateTime? _selectedDate = DateTime.now();
   final _tenderController = TextEditingController();
 
   List dataRly = [];
@@ -200,7 +190,7 @@ class DropDownState extends State<Tender> {
   }
 
   void dispose() {
-    myController.dispose();
+    _tenderController.clear();
     super.dispose();
   }
 
@@ -248,7 +238,7 @@ class DropDownState extends State<Tender> {
     super.initState();
     pr = ProgressDialog(context);
     Future.delayed(Duration.zero, () async{
-      //fetchPost();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
       if(providedTime.isBefore(DateTime.now())){
         await fetchToken(context);
@@ -268,62 +258,71 @@ class DropDownState extends State<Tender> {
           appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
             backgroundColor: AapoortiConstants.primary,
-            actions: [
-              IconButton(
-                alignment: Alignment.centerRight,
-                icon: Icon(
-                  Icons.home,
-                ),
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                },
-              ),
-            ],
+            // actions: [
+            //   IconButton(
+            //     alignment: Alignment.centerRight,
+            //     icon: Icon(
+            //       Icons.home,
+            //     ),
+            //     onPressed: () {
+            //       Navigator.of(context, rootNavigator: true).pop();
+            //     },
+            //   ),
+            // ],
             title: Text('Tender Status Search', style: TextStyle(color: Colors.white,fontSize: 18)),
           ),
-          backgroundColor: Colors.cyan.shade50,
+          backgroundColor: Colors.white,
           body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFFF5F5F5), Colors.white],
-              ),
-            ),
+            // decoration: const BoxDecoration(
+            //   gradient: LinearGradient(
+            //     begin: Alignment.topCenter,
+            //     end: Alignment.bottomCenter,
+            //     colors: [Color(0xFFF5F5F5), Colors.white],
+            //   ),
+            // ),
             child:Form( key: _formKey,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: AapoortiConstants.primary)
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        TextFormField(
-                          controller: _tenderController,
-                          decoration: InputDecoration(
-                            labelText: 'Enter Tender No.',
-                            prefixIcon: const Icon(Icons.description, color: Colors.blue),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Colors.blue, width: 2),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter tender number';
-                            }
-                            return null;
-                          },
+                        Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: _buildDemandNumberField(),
                         ),
-                        const SizedBox(height: 16),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(5.0),
+                        //   child: TextFormField(
+                        //     controller: _tenderController,
+                        //     focusNode: _firstFocus,
+                        //     decoration: InputDecoration(
+                        //       labelText: 'Enter Tender No.',
+                        //       prefixIcon: Icon(Icons.description, color: AapoortiConstants.primary),
+                        //       border: OutlineInputBorder(
+                        //         borderRadius: BorderRadius.circular(12),
+                        //       ),
+                        //       focusedBorder: OutlineInputBorder(
+                        //         borderRadius: BorderRadius.circular(12),
+                        //         borderSide: const BorderSide(color: Colors.blue, width: 2),
+                        //       ),
+                        //     ),
+                        //     validator: (value) {
+                        //       if (value == null || value.isEmpty) {
+                        //         return 'Please enter tender number';
+                        //       }
+                        //       return null;
+                        //     },
+                        //   ),
+                        // ),
+                        const SizedBox(height: 10),
                         Container(
                           margin: EdgeInsets.only(top: 10.0, left: 4.0, right: 4.0, bottom: 10.0),
                           child: DropdownSearch<String>(
@@ -400,80 +399,90 @@ class DropDownState extends State<Tender> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        InkWell(
-                          onTap: () => _selectDate(context),
-                          child: InputDecorator(
-                            decoration: InputDecoration(
-                              labelText: 'Tender Closing Date (Optional)',
-                              prefixIcon: const Icon(Icons.calendar_today, color: Colors.blue),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: InkWell(
+                            onTap: () => _selectDate(context),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                labelText: 'Tender Closing Date (Optional)',
+                                prefixIcon: Icon(Icons.calendar_today, color: AapoortiConstants.primary),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              _selectedDate == null ? 'Select Date' : '${_selectedDate!.day} ${_getMonth(_selectedDate!.month)} ${_selectedDate!.year}',
+                              child: Text(
+                                style: TextStyle(color: Colors.blue.shade800),
+                                _selectedDate == null ? 'Select Date' : '${_selectedDate!.day} ${_getMonth(_selectedDate!.month)} ${_selectedDate!.year}',
+                              ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 24),
 
-                        ElevatedButton(
-                          onPressed: () async{
-                            if(_formKey.currentState!.validate()) {
-                              if (!_tenderController.text.isEmpty) {
-                                try {
-                                  if(orgCode != "-1" && zoneCode != "-1;-1") {
-                                    debugPrint("date ${_selectedDate.toString()}");
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Status(Date: _selectedDate.toString(), content: _tenderController.text.trim(), id: zoneCode!.split(";").first.trim())));
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                        Container(
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () async{
+                              if(_formKey.currentState!.validate()) {
+                                if (!_tenderController.text.isEmpty) {
+                                  try {
+                                    if(orgName != null && zoneName != null) {
+                                      debugPrint("date ${_selectedDate.toString()}");
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Status(Date: _selectedDate.toString(), content: _tenderController.text.trim(), id: zoneCode!.split(";").first.trim())));
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                    }
+                                  } on SocketException catch (_) {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => NoConnection()));
                                   }
-                                } on SocketException catch (_) {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => NoConnection()));
                                 }
                               }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue.shade800,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue.shade800,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
-                          ),
-                          child: const Text(
-                            'Show Result',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                            child: const Text(
+                              'Show Result',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 12),
 
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _tenderController.clear();
-                              _selectedDate = null;
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.grey[350],
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: Text(
-                            'Reset',
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              fontSize: 16,
-                            ),
-                          ),
+                        _buildActionButton(
+                          "Reset",
+                          Colors.blue.shade400,
+                          onPressed: _onClear,
+                          isOutlined: true,
                         ),
+                        // TextButton(
+                        //   onPressed: () {
+                        //     _onClear();
+                        //   },
+                        //   style: TextButton.styleFrom(
+                        //     backgroundColor: Colors.grey[350],
+                        //     padding: const EdgeInsets.symmetric(vertical: 16),
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(12),
+                        //     ),
+                        //   ),
+                        //   child: Text(
+                        //     'Reset',
+                        //     style: TextStyle(
+                        //       color: Colors.grey[700],
+                        //       fontSize: 16,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -486,6 +495,70 @@ class DropDownState extends State<Tender> {
       //   autovalidateMode: AutovalidateMode.onUserInteraction,
       //   child: FormUI(),
       // ),
+    );
+  }
+
+  Widget _buildDemandNumberField() {
+    return TextFormField(
+      controller: _tenderController,
+      decoration: InputDecoration(
+        hintText: 'Enter Tender No.',
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.blue.shade400, width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.blue.shade50,
+        hintStyle: const TextStyle(fontSize: 13),
+        prefixIcon: Icon(Icons.numbers, size: 18, color: Colors.blue.shade700),
+      ),
+      style: const TextStyle(fontSize: 13),
+      onChanged: (value) {
+        setState(() {
+          //demandNo = value.isEmpty ? null : value;
+        });
+      },
+    );
+  }
+
+  Widget _buildActionButton(
+      String text,
+      Color color, {
+        VoidCallback? onPressed,
+        bool isOutlined = false,
+      }) {
+    return SizedBox(
+      width: double.infinity,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isOutlined ? Colors.white : color,
+            foregroundColor: isOutlined ? color : Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: isOutlined ? BorderSide(color: color, width: 1.5) : BorderSide.none,
+            ),
+            elevation: isOutlined ? 0 : 2,
+          ),
+          onPressed: onPressed,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: isOutlined ? color : Colors.white,
+            ),
+          ),
+        ),
+      ),
     );
   }
 

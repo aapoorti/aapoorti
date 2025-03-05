@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_app/udm/ns_demand_summary/view/view_demand_screen.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
@@ -120,7 +121,7 @@ class UdmUtilities {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
                   gradient: LinearGradient(
-                    colors: [Colors.red[300]!, Colors.orange[400]!],
+                    colors: [AapoortiConstants.primary!, Colors.orange[400]!],
                     stops: [0.4, 1],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -138,7 +139,7 @@ class UdmUtilities {
                             padding: const EdgeInsets.all(8.0),
                             child: InkWell(onTap: (){
                               Navigator.of(context).pop();
-                            }, child: Container(height: 30, width: 30, alignment: Alignment.center, child: Icon(Icons.clear, color: Colors.red.shade300), decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0), color: Colors.white))),
+                            }, child: Container(height: 30, width: 30, alignment: Alignment.center, child: Icon(Icons.clear, color: AapoortiConstants.primary), decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0), color: Colors.white))),
                           )
                         ],
                       ),
@@ -163,9 +164,9 @@ class UdmUtilities {
                                     UdmUtilities.openPdf(context, fileUrl, fileName);
                                   }
                                 },
-                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0), side: BorderSide(color: Colors.red.shade300)))),
-                                icon: Icon(Icons.open_in_new, color: Colors.red.shade300),
-                                label: Text(" Open", style: TextStyle(color: Colors.red.shade300))
+                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0), side: BorderSide(color: AapoortiConstants.primary)))),
+                                icon: Icon(Icons.open_in_new, color: AapoortiConstants.primary),
+                                label: Text(" Open", style: TextStyle(color: AapoortiConstants.primary))
                             ),
                           ),
                           const SizedBox(width: 30),
@@ -181,9 +182,9 @@ class UdmUtilities {
                                   ));
                                   UdmUtilities.download(fileUrl, fileName, context);
                                 },
-                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0), side: BorderSide(color: Colors.red.shade300)))),
-                                icon: Icon(Icons.file_download, color: Colors.red.shade300),
-                                label: Text(" Download", style: TextStyle(color: Colors.red.shade300))),
+                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0), side: BorderSide(color: AapoortiConstants.primary)))),
+                                icon: Icon(Icons.file_download, color: AapoortiConstants.primary),
+                                label: Text(" Download", style: TextStyle(color: AapoortiConstants.primary))),
                           ),
                         ],
                       ),
@@ -309,7 +310,7 @@ class UdmUtilities {
                             padding: const EdgeInsets.all(8.0),
                             child: InkWell(onTap: (){
                               Navigator.of(context).pop();
-                            }, child: Container(height: 30, width: 30, alignment: Alignment.center, child: Icon(Icons.clear, color: Colors.white), decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0), color: Colors.red.shade300))),
+                            }, child: Container(height: 30, width: 30, alignment: Alignment.center, child: Icon(Icons.clear, color: Colors.white), decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.0), color: AapoortiConstants.primary))),
                           )
                         ],
                       ),
@@ -323,7 +324,7 @@ class UdmUtilities {
                         height: 40,
                         width: double.infinity,
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), color: Colors.red.shade300),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), color: AapoortiConstants.primary),
                         child: Text("OK", textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 16)),
                       ),
                     ))

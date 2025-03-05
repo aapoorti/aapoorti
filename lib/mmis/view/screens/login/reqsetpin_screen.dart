@@ -414,12 +414,73 @@ class _ReqSetPinScreen extends State<ReqSetPinScreen> {
                                     ),
                                   ),
                                 )),
-                            Positioned(right: 20, left: 20, bottom: -80, child: RichText(text: TextSpan(children: [
-                              TextSpan(text: "This is not ",style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black,fontSize: 17, letterSpacing: 1.0)),
-                              TextSpan(text: '"iMMS Application"\n', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontSize: 17,letterSpacing: 1.0)),
-                              TextSpan(text: "This is for Internal users of ", style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black,fontSize: 17,letterSpacing: 1.0)),
-                              TextSpan(text: '"CRIS Employees only."', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black, fontSize: 17,letterSpacing: 1.0))
-                            ]))),
+                            Positioned(
+                              bottom: -80,
+                              left: 10,
+                              right: 10,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 10),
+                                  Text("Note:", style: TextStyle(color: Colors.red, fontSize: 18)),
+                                  RichText(
+                                      textAlign: TextAlign.start,
+                                      text: TextSpan(children: [
+                                        TextSpan(
+                                            text: "1. ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                letterSpacing: 0.0)),
+                                        TextSpan(
+                                            text: "This is not ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                letterSpacing: 0.0)),
+                                        TextSpan(
+                                            text: '"iMMS Application"\n',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.brown.shade600,
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 15,
+                                                letterSpacing: 1.0)),
+                                        TextSpan(
+                                            text: "2. ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                letterSpacing: 0.0)),
+                                        TextSpan(
+                                            text: "This is for ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                letterSpacing: 1.0)),
+                                        TextSpan(
+                                            text: '"CRIS Employees only."',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.brown.shade600,
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 15,
+                                                letterSpacing: 1.0))
+                                      ])),
+                                ],
+                              ),
+                            )
+                            // Positioned(right: 20, left: 20, bottom: -80, child: RichText(textAlign: TextAlign.center,text: TextSpan(children: [
+                            //   TextSpan(text: "This is not ",style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black,fontSize: 17, letterSpacing: 1.0)),
+                            //   TextSpan(text: '"iMMS Application"\n', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontSize: 17,letterSpacing: 1.0)),
+                            //   TextSpan(text: "This is for Internal users of ", style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black,fontSize: 17,letterSpacing: 1.0)),
+                            //   TextSpan(text: '"CRIS Employees only."', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black, fontSize: 17,letterSpacing: 1.0))
+                            // ]))),
                           ],
                         ),
                       ),

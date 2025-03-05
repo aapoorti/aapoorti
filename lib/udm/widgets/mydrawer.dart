@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 
 import 'package:flutter_app/udm/helpers/shared_data.dart';
@@ -20,17 +21,17 @@ class MyDrawer extends StatelessWidget {
                     DrawerHeader(
                     margin: EdgeInsets.zero,
                      decoration: BoxDecoration(
-          color: Colors.red[300],
+          color: AapoortiConstants.primary,
         ),
                     child: UserAccountsDrawerHeader(
                      decoration: BoxDecoration(
-          color: Colors.red[300],
+          color: AapoortiConstants.primary,
         ), 
                       margin: EdgeInsets.zero,
                       accountEmail: Text('usermailid'),
                       accountName: Text('User name'),
                       currentAccountPicture: CircleAvatar(
-                        backgroundColor: Colors.red[300],
+                        backgroundColor: AapoortiConstants.primary,
                         backgroundImage: AssetImage('assets/name.png'),
                         radius: 150,
                       ),

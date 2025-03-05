@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:flutter_app/udm/helpers/database_helper.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
@@ -64,7 +65,7 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         leading: IconButton(
           splashRadius: 30,
           icon: Icon(
@@ -549,7 +550,7 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
         //             style: TextStyle(
         //               fontSize: 18,
         //               fontWeight: FontWeight.bold,
-        //               color: Colors.red[300],
+        //               color: AapoortiConstants.primary,
         //             )),
         //       ),
         //     ),
@@ -569,7 +570,7 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
         //           style: TextStyle(
         //             fontSize: 18,
         //             fontWeight: FontWeight.bold,
-        //             color: Colors.red[300],
+        //             color: AapoortiConstants.primary,
         //           ),
         //         ),
         //       ),

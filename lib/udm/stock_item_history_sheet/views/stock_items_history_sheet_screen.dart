@@ -3,6 +3,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/stock_item_history_sheet/providers/stockhistory_updatechange_screen_provider.dart';
@@ -60,7 +61,7 @@ class _StockItemHistorySheetScreenState
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey.shade100,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           iconTheme: IconThemeData(color: Colors.white),
           automaticallyImplyLeading: false,
           // leading: Consumer<StockHistoryupdateChangesScreenProvider>(builder: (context, value, child){
@@ -133,10 +134,10 @@ class _StockItemHistorySheetScreenState
                     height: 40,
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                     child: Center(child: TextField(
-                      cursorColor: Colors.red[300],
+                      cursorColor: AapoortiConstants.primary,
                       controller: _textsearchController,
                       decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                          prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                           suffixIcon: IconButton(
                             icon: Icon(Icons.clear, color: Colors.red[300]),
                             onPressed: () {

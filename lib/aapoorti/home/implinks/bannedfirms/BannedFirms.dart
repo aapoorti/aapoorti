@@ -474,8 +474,7 @@ class _BannedFirmsState extends State<BannedFirms> {
 
   void onTap() {
     fetchPostTap();
-    if (AapoortiConstants.count == '0' ||
-        DateTime.now().toString().compareTo(AapoortiConstants.date2) > 0)
+    if (AapoortiConstants.count == '0' || DateTime.now().toString().compareTo(AapoortiConstants.date2) > 0)
       fetchSavedBF();
   }
 
@@ -508,23 +507,28 @@ class _BannedFirmsState extends State<BannedFirms> {
   }
 
   void fetchPost() async {
-    var v = "https://ireps.gov.in/Aapoorti/ServiceCallHD/bannedFirms?TYPE=0";
-    if (AapoortiConstants.jsonResult2 != null && DateTime.now().toString().compareTo(AapoortiConstants.date2) < 0) {
-      jsonResult = AapoortiConstants.jsonResult2;
-    } else if (DateTime.now().toString().compareTo(AapoortiConstants.date2) > 0) {
-      AapoortiConstants.count = '0';
-      await dbHelper.deleteBanned(1);
-      final response = await http.post(Uri.parse(v)).timeout(Duration(seconds: 30));
-      debugPrint("banned firm ${json.decode(response.body)}");
-      jsonResult = json.decode(response.body);
-      _duplicatejsonResult = json.decode(response.body);
-    } else {
-      await dbHelper.deleteBanned(1);
-      final response = await http.post(Uri.parse(v)).timeout(Duration(seconds: 30));
-      jsonResult = json.decode(response.body);
-      _duplicatejsonResult = json.decode(response.body);
+    try {
+      var v = "https://ireps.gov.in/Aapoorti/ServiceCallHD/bannedFirms?TYPE=0";
+      if (AapoortiConstants.jsonResult2 != null && DateTime.now().toString().compareTo(AapoortiConstants.date2) < 0) {
+        jsonResult = AapoortiConstants.jsonResult2;
+      }
+      else if (DateTime.now().toString().compareTo(AapoortiConstants.date2) > 0) {
+        AapoortiConstants.count = '0';
+        await dbHelper.deleteBanned(1);
+        final response = await http.post(Uri.parse(v)).timeout(Duration(seconds: 30));
+        debugPrint("banned firm ${json.decode(response.body)}");
+        jsonResult = json.decode(response.body);
+        _duplicatejsonResult = json.decode(response.body);
+      } else {
+        await dbHelper.deleteBanned(1);
+        final response = await http.post(Uri.parse(v)).timeout(Duration(seconds: 30));
+        jsonResult = json.decode(response.body);
+        _duplicatejsonResult = json.decode(response.body);
+      }
+      setState(() {});
     }
-    setState(() {});
+    on SocketException catch(ex){}
+    on Exception catch(e){}
   }
 
   void fetchPostTap() async {

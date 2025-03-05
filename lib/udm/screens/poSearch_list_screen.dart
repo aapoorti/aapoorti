@@ -1,5 +1,6 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
 import 'package:flutter_app/udm/models/poSearch.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
@@ -689,7 +690,7 @@ class ProductBox extends StatelessWidget {
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 shape: CircleBorder(),
-                                backgroundColor: Colors.red.shade300),
+                                backgroundColor: AapoortiConstants.primary),
                             onPressed: () {
                               Future.delayed(Duration.zero, () {
                                 if(item!.vIEWPDF!.isEmpty) {
@@ -712,7 +713,7 @@ class ProductBox extends StatelessWidget {
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 shape: CircleBorder(),
-                                backgroundColor: Colors.red.shade300),
+                                backgroundColor: AapoortiConstants.primary),
                             onPressed: () {
                               Future.delayed(Duration.zero, () {
                                 Navigator.push(
@@ -730,7 +731,7 @@ class ProductBox extends StatelessWidget {
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 shape: CircleBorder(),
-                                backgroundColor: Colors.red.shade300),
+                                backgroundColor: AapoortiConstants.primary),
                             onPressed: () => _onShareData(
                                 "Railway : " +
                                     item!.rAINAME! +
@@ -773,7 +774,7 @@ class ProductBox extends StatelessWidget {
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 shape: CircleBorder(),
-                                backgroundColor: Colors.red.shade300),
+                                backgroundColor: AapoortiConstants.primary),
                             onPressed: () {
                               Future.delayed(Duration.zero, () {
                                 Navigator.push(
@@ -792,7 +793,7 @@ class ProductBox extends StatelessWidget {
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 shape: CircleBorder(),
-                                backgroundColor: Colors.red.shade300),
+                                backgroundColor: AapoortiConstants.primary),
                             onPressed: () {
                               Future.delayed(Duration.zero, () {
                                 Navigator.push(

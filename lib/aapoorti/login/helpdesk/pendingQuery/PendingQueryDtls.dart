@@ -116,7 +116,7 @@ class _PendingQueryDtlsState extends State<PendingQueryDtls> {
     String inputParam2 = AapoortiUtilities.user!.MAP_ID + "~" + quid!;
     print(inputParam2);
     jsonResult = await AapoortiUtilities.fetchPostPostLogin(
-        'HDPostLogin/QueryDetails', 'input', inputParam1, inputParam2);
+        'HDPostLogin/QueryDetails', 'input', inputParam1, inputParam2, context);
     if (jsonResult!.length == 0) {
       jsonResult = null;
       Navigator.pop(context);
@@ -141,7 +141,7 @@ class _PendingQueryDtlsState extends State<PendingQueryDtls> {
         "~" +
         "$queryrowid^$seqid^$_query^$ipaddress";
     jsonResult2 = await AapoortiUtilities.fetchPostPostLogin(
-        'HDPostLogin/ReplyToHDByExpert', 'input', inputParam1, inputParam2);
+        'HDPostLogin/ReplyToHDByExpert', 'input', inputParam1, inputParam2, context);
     setState(() {
       replytohelp = false;
       forwardtoexp = false;
@@ -160,7 +160,7 @@ class _PendingQueryDtlsState extends State<PendingQueryDtls> {
         "$_myselection^$queryrowid^$_query^$ipaddress";
     print(inputParam2);
     jsonResult3 = await AapoortiUtilities.fetchPostPostLogin(
-        'HDPostLogin/FwrdToExpertByExpert', 'input', inputParam1, inputParam2);
+        'HDPostLogin/FwrdToExpertByExpert', 'input', inputParam1, inputParam2, context);
     setState(() {
       replytohelp = false;
       forwardtoexp = false;

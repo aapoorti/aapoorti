@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/mmis/controllers/login_controller.dart';
 import 'package:flutter_app/mmis/controllers/network_controller.dart';
 import 'package:flutter_app/mmis/utils/toast_message.dart';
@@ -136,7 +137,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
                                           borderSide: const BorderSide(color: Colors.grey, width: 1.0),
                                           borderRadius: BorderRadius.circular(10.0),
                                         ),
-                                        focusColor: Colors.red[300],
+                                        focusColor: AapoortiConstants.primary,
                                       ),
                                     ),
                                     const SizedBox(height: 20),
@@ -162,7 +163,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
                                           borderSide: const BorderSide(color: Colors.grey, width: 1.0),
                                           borderRadius: BorderRadius.circular(10.0),
                                         ),
-                                        focusColor: Colors.red[300],
+                                        focusColor: AapoortiConstants.primary,
                                       ),
                                       validator: ValidationBuilder().minLength(6).maxLength(12).build(),
                                     ),
@@ -189,7 +190,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
                                           borderSide: const BorderSide(color: Colors.grey, width: 1.0),
                                           borderRadius: BorderRadius.circular(10.0),
                                         ),
-                                        focusColor: Colors.red[300],
+                                        focusColor: AapoortiConstants.primary,
                                       ),
                                       validator: ValidationBuilder().minLength(6).maxLength(12).build(),
                                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/rejection_warranty/providers/search_rwfcscreen_provider.dart';
 import 'package:provider/provider.dart';
@@ -65,7 +66,7 @@ class _WarrantyComplaintDataScreenState extends State<WarrantyComplaintDataScree
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           title: Consumer<SearchRWFCScreenProvider>(
               builder: (context, value, child) {
@@ -75,12 +76,12 @@ class _WarrantyComplaintDataScreenState extends State<WarrantyComplaintDataScree
                     height: 40,
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                     child: Center(child: TextField(
-                      cursorColor: Colors.red[300],
+                      cursorColor: AapoortiConstants.primary,
                       controller: _textsearchController,
                       decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                          prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.clear, color: Colors.red[300]),
+                            icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                             onPressed: () {
                               //Provider.of<SearchRWFCScreenProvider>(context, listen: false).updateScreen(false);
                               _textsearchController.text = "";

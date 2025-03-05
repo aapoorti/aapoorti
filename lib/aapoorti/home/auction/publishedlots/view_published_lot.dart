@@ -267,23 +267,7 @@ class _PublishedLotState extends State<PublishedLot> {
           appBar: AppBar(
               iconTheme: IconThemeData(color: Colors.white),
               backgroundColor: AapoortiConstants.primary,
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                      child: Text('Published Lots (Sale)', style: TextStyle(color: Colors.white, fontSize: 18))),
-                  IconButton(
-                    icon: Icon(
-                      Icons.home,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, "/common_screen", (route) => false);
-                    },
-                  ),
-                ],
-              )),
+              title: Text('Published Lots (Sale)', style: TextStyle(color: Colors.white, fontSize: 18))),
           body: Builder(
             builder: (context) => Material(
               child: jsonResult == null

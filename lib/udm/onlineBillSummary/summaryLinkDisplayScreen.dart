@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:flutter_app/udm/onlineBillSummary/summaryLinkDisplayModel.dart';
@@ -1052,7 +1053,7 @@ class _ProductBoxState extends State<ProductBox>
                                           ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               shape: const CircleBorder(),
-                                              backgroundColor: Colors.red.shade300
+                                              backgroundColor: AapoortiConstants.primary
                                             ),
                                             onPressed: () {
                                               //_formKey.currentState.save();

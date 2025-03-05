@@ -65,7 +65,7 @@ class _RnoteDetailsState extends State<RnoteDetails> {
     String inputParam1 = AapoortiUtilities.user!.C_TOKEN + "," +AapoortiUtilities.user!.S_TOKEN + ",Flutter,0,0";
     String inputParam2 = AapoortiUtilities.user!.MAP_ID + "," + "-1" + "," + "-1" + "," + "-1" + "," + year;
 
-    jsonResult = await AapoortiUtilities.fetchPostPostLogin('Rpt/RNoteReport', 'RNoteReport' ,inputParam1, inputParam2) ;
+    jsonResult = await AapoortiUtilities.fetchPostPostLogin('Rpt/RNoteReport', 'RNoteReport' ,inputParam1, inputParam2, context) ;
     if(jsonResult!.length==0)
     {
       jsonResult=null;

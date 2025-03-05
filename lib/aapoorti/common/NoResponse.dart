@@ -28,7 +28,7 @@ class NoResponse extends StatelessWidget{
             fontWeight: FontWeight.bold,),),
 
         ),
-      body:new Center(
+      body: new Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
        crossAxisAlignment: CrossAxisAlignment.stretch,

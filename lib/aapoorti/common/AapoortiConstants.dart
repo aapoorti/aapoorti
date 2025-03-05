@@ -9,7 +9,7 @@ class AapoortiConstants{
   static const accent = Color(0xFFF47852);
   static const textColor = Color(0xFF1a237e);
   static const cardColor1 = Color(0xFFE6E3FF);
-  static const cardColor2 = Color(0xFFE8F5E9);
+  static const cardColor2 = Color(0xFFDAEFDC);
   static const cardColor3 = Color(0xFFFFE0B2);
   static const backgroundLight = Color(0xFFF7F7FD);
   static const dividerColor = Color(0xFFE0E0E0);

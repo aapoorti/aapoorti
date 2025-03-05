@@ -4,6 +4,7 @@ import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/widgets/custom_progress_indicator.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -174,7 +175,7 @@ class IRUDMConstants {
       shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(200.0))),
       elevation: MaterialStateProperty.all(7.0),
       side: MaterialStateProperty.all(
-          BorderSide(color: Colors.red[300]!, width: 2.0)),
+          BorderSide(color: AapoortiConstants.primary, width: 2.0)),
     );
   }
 
@@ -195,7 +196,7 @@ class IRUDMConstants {
             ),
             child: ((_scrollController.offset != 0 && !_isScrolling)) ? FloatingActionButton(
               heroTag: null,
-              backgroundColor: Colors.red[300],
+              backgroundColor: AapoortiConstants.primary,
               child: Icon(
                 Icons.expand_less,
                 color: Colors.white,
@@ -244,7 +245,7 @@ class IRUDMConstants {
               ],
             ),
             backgroundColor: Colors.blue,
-            targetColor: Colors.red[300]!,
+            targetColor: AapoortiConstants.primary,
             textColor: Colors.white,
             onComplete: () async {
               _isDiscovering = false;
@@ -257,7 +258,7 @@ class IRUDMConstants {
                 scale: animation,
               ),
               child: (_scrollController.offset != _scrollController.position.maxScrollExtent && !_isScrolling) ? FloatingActionButton(
-                backgroundColor: Colors.red[300],
+                backgroundColor: AapoortiConstants.primary,
                 elevation: 0, heroTag: null,
                 child: Icon(
                   Icons.expand_more,

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:flutter_app/udm/transaction/transaction_screen.dart';
@@ -507,7 +508,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async{
-        AapoortiUtilities.alertDialog(context, "UDM");
+        AapoortiUtilities.showAlertDailog(context, "UDM");
         return true;
       },
       //onWillPop: _onButtonPressed,
@@ -516,10 +517,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
           appBar: AppBar(
               title: Text(language.text('udmFull'), style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w700)),
               elevation: 0.0,
-              backgroundColor: Colors.red[300],
-              leading: IconButton(
-                  icon: SvgPicture.asset('assets/images/dashboard.svg', color: Colors.white, height: 22, width: 22),
-                  onPressed: () => _scaffoldKey.currentState!.openDrawer()),
+              backgroundColor: AapoortiConstants.primary,
+              leading: IconButton(icon: SvgPicture.asset('assets/images/dashboard.svg', color: Colors.white, height: 22, width: 22), onPressed: () => _scaffoldKey.currentState!.openDrawer()),
               actions: <Widget>[
                 SwitchLanguageButton(),
               ]
@@ -569,7 +568,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
           children: <Widget>[
             Icon(
               Icons.vpn_key,
-              color: Colors.red[300],
+              color: AapoortiConstants.primary,
               size: 24,
             ),
             SizedBox(width: 5.0),
@@ -597,7 +596,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
                   language.text('cancel'),
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.red[300],
+                color: AapoortiConstants.primary,
                 minWidth: 150,
               ),
               MaterialButton(
@@ -615,7 +614,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
                   language.text('confirm'),
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.red[300],
+                color: AapoortiConstants.primary,
                 minWidth: 150,
               )
             ],
@@ -631,15 +630,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
                  WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
                 }, child: Text(language.text('changeLogin'), style: TextStyle(
                 decoration: TextDecoration.underline,
-                decorationColor: Colors.red.shade300,
+                decorationColor: AapoortiConstants.primary,
                 fontSize: 15,
-                color: Colors.red[300],
+                color: AapoortiConstants.primary,
               ))),
               TextButton(onPressed: (){ IRUDMConstants.launchURL(play_store_url);}, child: Text(language.text('rateUs'), style: TextStyle(
                 decoration: TextDecoration.underline,
-                decorationColor: Colors.red.shade300,
+                decorationColor: AapoortiConstants.primary,
                 fontSize: 15,
-                color: Colors.red[300],
+                color: AapoortiConstants.primary,
               ))),
             ],
           ),
@@ -662,7 +661,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
                     constraints: BoxConstraints.expand(height: size.height * 0.25),
                     padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
                     decoration: BoxDecoration(
-                      color: Colors.red.shade300,
+                      color: AapoortiConstants.primary,
                       // image: DecorationImage(
                       //   colorFilter: ColorFilter.mode(
                       //     Colors.black38,
@@ -689,7 +688,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
                                 child: Icon(
                                   Icons.person,
                                   size: 40,
-                                  color: Colors.red.shade300,
+                                  color: AapoortiConstants.primary,
                                 ),
                               ),
                               Text(language.text('welcome'), style: TextStyle(color: Colors.white, fontSize: 15.0)),
@@ -769,7 +768,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
                     },
                     child: Container(
                       height: 45,
-                      color: Colors.red.shade300,
+                      color: AapoortiConstants.primary,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

@@ -1,5 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/rejection_warranty/providers/search_rwscreen_provider.dart';
@@ -50,7 +51,7 @@ class _WarrantyRejectionScreenState extends State<WarrantyRejectionScreen> with 
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           elevation: 0,
           title: Consumer<SearchRWScreenProvider>(
@@ -61,12 +62,12 @@ class _WarrantyRejectionScreenState extends State<WarrantyRejectionScreen> with 
                     height: 40,
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                     child: Center(child: TextField(
-                      cursorColor: Colors.red[300],
+                      cursorColor: AapoortiConstants.primary,
                       controller: _textsearchController,
                       decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                          prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.clear, color: Colors.red[300]),
+                            icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                             onPressed: () {
                               Provider.of<SearchRWScreenProvider>(context, listen: false).updateScreen(false);
                               _textsearchController.text = "";
@@ -127,7 +128,7 @@ class _WarrantyRejectionScreenState extends State<WarrantyRejectionScreen> with 
               Container (
                 width: size.width,
                 decoration: BoxDecoration(
-                  color: Colors.red.shade300,
+                  color: AapoortiConstants.primary,
                   borderRadius: BorderRadius.circular(0),
                 ),
                 child: Column(

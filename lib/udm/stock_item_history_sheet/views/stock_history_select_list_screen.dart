@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/providers/change_visibility_provider.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/screens/pdfVIewForPoSeach.dart';
@@ -111,7 +112,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         automaticallyImplyLeading: false,
         actions: [
           Consumer<StockHistoryupdateChangesScreenProvider>(builder: (context, value, child){
@@ -171,12 +172,12 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
               child: Center(
                 child: TextField(
-                  cursorColor: Colors.red[300],
+                  cursorColor: AapoortiConstants.primary,
                   controller: _textsearchController,
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                      prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                       suffixIcon: IconButton(
-                        icon: Icon(Icons.clear, color: Colors.red[300]),
+                        icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                         onPressed: () {
                           updatechangeprovider.updateScreen(false);
                         },
@@ -607,7 +608,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
                                                             alignment: Alignment.center,
                                                             decoration: BoxDecoration(
                                                                 borderRadius: BorderRadius.circular(20),
-                                                                color: value.getChangeColorValue == false ? Colors.blue.shade300 : Colors.red.shade300
+                                                                color: value.getChangeColorValue == false ? Colors.blue.shade300 : AapoortiConstants.primary
                                                             ),
                                                             child: Icon(Icons.arrow_forward, color: Colors.white),
                                                           ),
@@ -847,7 +848,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
                                                            alignment: Alignment.center,
                                                            decoration: BoxDecoration(
                                                                borderRadius: BorderRadius.circular(20),
-                                                               color: value.getChangeColorValue == false ? Colors.blue.shade300 : Colors.red.shade300
+                                                               color: value.getChangeColorValue == false ? Colors.blue.shade300 : AapoortiConstants.primary
                                                            ),
                                                            child: Icon(Icons.arrow_forward, color: Colors.white),
                                                          ),
@@ -1030,7 +1031,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
                                                            alignment: Alignment.center,
                                                            decoration: BoxDecoration(
                                                                borderRadius: BorderRadius.circular(20),
-                                                               color: value.changeColorValue == false ? Colors.blue.shade300 : Colors.red.shade300
+                                                               color: value.changeColorValue == false ? Colors.blue.shade300 : AapoortiConstants.primary
                                                            ),
                                                            child: Icon(Icons.arrow_forward, color: Colors.white),
                                                          ),
@@ -1229,7 +1230,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
                                                            alignment: Alignment.center,
                                                            decoration: BoxDecoration(
                                                                borderRadius: BorderRadius.circular(20),
-                                                               color: value.changeColorValue == false ? Colors.blue.shade300 : Colors.red.shade300
+                                                               color: value.changeColorValue == false ? Colors.blue.shade300 : AapoortiConstants.primary
                                                            ),
                                                            child: Icon(Icons.arrow_forward, color: Colors.white),
                                                          ),
@@ -1428,7 +1429,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
                                                             alignment: Alignment.center,
                                                             decoration: BoxDecoration(
                                                                 borderRadius: BorderRadius.circular(20),
-                                                                color: value.changeColorValue == false ? Colors.blue.shade300 : Colors.red.shade300
+                                                                color: value.changeColorValue == false ? Colors.blue.shade300 : AapoortiConstants.primary
                                                             ),
                                                             child: Icon(Icons.arrow_forward, color: Colors.white),
                                                           ),
@@ -1563,7 +1564,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
                                                            alignment: Alignment.center,
                                                            decoration: BoxDecoration(
                                                                borderRadius: BorderRadius.circular(20),
-                                                               color: value.changeColorValue == false ? Colors.blue.shade300 : Colors.red.shade300
+                                                               color: value.changeColorValue == false ? Colors.blue.shade300 : AapoortiConstants.primary
                                                            ),
                                                            child: Icon(Icons.arrow_forward, color: Colors.white),
                                                          ),
@@ -1697,7 +1698,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
                                                           alignment: Alignment.center,
                                                           decoration: BoxDecoration(
                                                               borderRadius: BorderRadius.circular(20),
-                                                              color: value.changeColorValue == false ? Colors.blue.shade300 : Colors.red.shade300
+                                                              color: value.changeColorValue == false ? Colors.blue.shade300 : AapoortiConstants.primary
                                                           ),
                                                           child: Icon(Icons.arrow_forward, color: Colors.white),
                                                         ),
@@ -1937,7 +1938,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
                                                           alignment: Alignment.center,
                                                           decoration: BoxDecoration(
                                                               borderRadius: BorderRadius.circular(20),
-                                                              color: value.changeColorValue == false ? Colors.blue.shade300 : Colors.red.shade300
+                                                              color: value.changeColorValue == false ? Colors.blue.shade300 : AapoortiConstants.primary
                                                           ),
                                                           child: Icon(Icons.arrow_forward, color: Colors.white),
                                                         ),
@@ -2133,7 +2134,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
                                                              alignment: Alignment.center,
                                                              decoration: BoxDecoration(
                                                                  borderRadius: BorderRadius.circular(20),
-                                                                 color: value.changeColorValue == false ? Colors.blue.shade300 : Colors.red.shade300
+                                                                 color: value.changeColorValue == false ? Colors.blue.shade300 : AapoortiConstants.primary
                                                              ),
                                                              child: Icon(Icons.arrow_forward, color: Colors.white),
                                                            ),

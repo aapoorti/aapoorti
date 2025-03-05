@@ -1,9 +1,13 @@
+import 'dart:io';
+
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 
 List<dynamic>? jsonResult;
 
@@ -35,22 +39,25 @@ class EdocsWorksDATAState extends State<EdocsWorksDATA> {
   }
 
   Future<void> fetchPostOrganisation() async {
-    var u = AapoortiConstants.webServiceUrl +
-        'Docs/PublicDocs?ORGCODE=${this.item1}&ORGZONE=${this.item2}&DEPTCODE=${this.item3}';
-    print("ur1-----" + u);
-    //  var u=AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,${myselection1}';
+    try{
+      var u = AapoortiConstants.webServiceUrl + 'Docs/PublicDocs?ORGCODE=${this.item1}&ORGZONE=${this.item2}&DEPTCODE=${this.item3}';
 
-    final response1 = await http.post(Uri.parse(u));
-    //  final response1 =   await http.post(u);
-    jsonResult = json.decode(response1.body);
+      final response1 = await http.post(Uri.parse(u));
+      jsonResult = json.decode(response1.body);
 
-    setState(() {
-      data = jsonResult!;
-//data1=jsonResult1;
-    });
+      setState(() {
+        data = jsonResult!;
+      });
+    }
+    on SocketException catch(ex){
+      AapoortiUtilities.showInSnackBar(context, "Please check your internet connection!!");
+    }
+    on Exception catch(e){
+      AapoortiUtilities.showInSnackBar(context, "Something went wrong, please try later");
+    }
+
   }
 
-  var _snackKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -60,43 +67,33 @@ class EdocsWorksDATAState extends State<EdocsWorksDATA> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        //resizeToAvoidBottomPadding: true,
         appBar: AppBar(
-            iconTheme: new IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
-            title: new Row(
+            iconTheme: IconThemeData(color: Colors.white),
+            backgroundColor: AapoortiConstants.primary,
+            title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                    child: Text('Public Documents',
-                        style: TextStyle(color: Colors.white))),
-                // new Padding(padding: new EdgeInsets.only(right: 40.0)),
-                new IconButton(
-                  icon: new Icon(
+                Container(child: Text('Public Documents', style: TextStyle(color: Colors.white))),
+                IconButton(
+                  icon: Icon(
                     Icons.home,
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, "/common_screen", (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, "/common_screen", (route) => false);
                   },
                 ),
               ],
             )),
-        /* MaterialApp(
-        debugShowCheckedModeBanner: false,
-
-        title: "About Us",*/
-
         body: Container(
           child: Column(
             children: <Widget>[
               Container(
-                width: 370.0,
+                width: MediaQuery.of(context).size.width,
                 height: 25.0,
-                padding: EdgeInsets.only(top: 5.0),
+                alignment: Alignment.center,
                 child: Text(
-                  "   Works >> Document List",
+                  "Works >> Document List",
                   style: TextStyle(fontSize: 15, color: Colors.white),
                   textAlign: TextAlign.start,
                 ),
@@ -106,10 +103,9 @@ class EdocsWorksDATAState extends State<EdocsWorksDATA> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                        child: jsonResult == null
-                            ? SpinKitFadingCircle(
-                                color: Colors.cyan,
-                                size: 80.0,
+                        child: jsonResult == null ? SpinKitFadingCircle(
+                                color: AapoortiConstants.primary,
+                                size: 120.0,
                               )
                             : _myListView(context))
                   ],
@@ -123,30 +119,29 @@ class EdocsWorksDATAState extends State<EdocsWorksDATA> {
   }
 
   Widget _myListView(BuildContext context) {
-    //Dismiss spinner
     SpinKitWave(color: Colors.red, type: SpinKitWaveType.end);
-    print("jsonresult");
     return jsonResult!.isEmpty
         ? Center(
-            child: Column(
-            children: <Widget>[
-              Image.asset("assets/nodatafound.png"),
-              Text(
-                ' No Response Found ',
-                style: TextStyle(
-                    color: Colors.indigo,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600),
-              )
-            ],
-          ))
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset('assets/json/no_data.json',height: 120, width: 120),
+          AnimatedTextKit(
+              isRepeatingAnimation: false,
+              animatedTexts: [
+                TyperAnimatedText('Data not found', speed: Duration(milliseconds: 150), textStyle: TextStyle(fontWeight: FontWeight.bold)),
+              ])
+        ],
+      ),
+    )
         : ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: jsonResult != null ? jsonResult!.length : 0,
             itemBuilder: (context, index) {
               return Container(
-                  child: Column(
+                color: Colors.white, child: Column(
                 children: <Widget>[
                   Padding(padding: EdgeInsets.only(top: 10.0)),
                   Row(
@@ -283,9 +278,6 @@ class EdocsWorksDATAState extends State<EdocsWorksDATA> {
                                       url.substring(url.lastIndexOf("/"));
                                   AapoortiUtilities.ackAlert(
                                       context, url, fileName);
-
-                                  //Dismiss dialog
-                                  //  Navigator.of(context, rootNavigator: true).pop('dialog');
                                 } else {
                                   AapoortiUtilities.showInSnackBar(context,
                                       "No PDF attached with this Tender!!");
@@ -306,8 +298,8 @@ class EdocsWorksDATAState extends State<EdocsWorksDATA> {
                     ),
                   ]),
                   Container(
-                    color: Colors.cyan[600],
-                    height: 2.0,
+                    color: Colors.brown,
+                    height: 1.5,
                   )
                 ],
               ));

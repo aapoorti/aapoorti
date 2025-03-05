@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fluttericon/typicons_icons.dart';
 import 'package:intl/intl.dart';
@@ -175,7 +176,7 @@ class _CrnFinalizedScreenState extends State<CrnFinalizedScreen> with SingleTick
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4.0),
                                   side: BorderSide(
-                                    color: Colors.red.shade300,
+                                    color: AapoortiConstants.primary,
                                     width: 1.0,
                                   )
                               ),
@@ -323,8 +324,8 @@ class _CrnFinalizedScreenState extends State<CrnFinalizedScreen> with SingleTick
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(language.text('dropremarks'), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 14)),
-                                        value.crnfinaliseddatalist[index].dropcomment != null ? Text(value.crnfinaliseddatalist[index].dropcomment.toString(), maxLines: 5, style: TextStyle(color: Colors.red.shade300, fontSize: 14))
-                                            : Text("NA", style: TextStyle(color: Colors.red.shade300, fontSize: 14))
+                                        value.crnfinaliseddatalist[index].dropcomment != null ? Text(value.crnfinaliseddatalist[index].dropcomment.toString(), maxLines: 5, style: TextStyle(color: AapoortiConstants.primary, fontSize: 14))
+                                            : Text("NA", style: TextStyle(color: AapoortiConstants.primary, fontSize: 14))
                                       ],
                                     ),
                                     SizedBox(height: 5.0),
@@ -358,7 +359,7 @@ class _CrnFinalizedScreenState extends State<CrnFinalizedScreen> with SingleTick
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             ElevatedButton(
-                                                style: ElevatedButton.styleFrom(shape: CircleBorder(), backgroundColor: Colors.red.shade300),
+                                                style: ElevatedButton.styleFrom(shape: CircleBorder(), backgroundColor: AapoortiConstants.primary),
                                                 onPressed: () async{
                                                   bool check = await UdmUtilities.checkconnection();
                                                   if(check == true) {
@@ -386,7 +387,7 @@ class _CrnFinalizedScreenState extends State<CrnFinalizedScreen> with SingleTick
                                 top: 1,
                                 left: 2,
                                 child: CircleAvatar(
-                                  backgroundColor: Colors.red[300],
+                                  backgroundColor: AapoortiConstants.primary,
                                   radius: 12,
                                   child: Text(
                                     '${index+1}',

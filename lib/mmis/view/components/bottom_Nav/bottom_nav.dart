@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/mmis/utils/dimensions.dart';
 import 'package:flutter_app/mmis/utils/my_color.dart';
 import 'package:flutter_app/mmis/utils/my_images.dart';
@@ -53,9 +54,9 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            iconList[index].contains("svg") ? SvgPicture.asset(iconList[index], height: 22, width: 22, color: isActive ? MyColor.primaryColor : Colors.black) : Image.asset(iconList[index], height: 22, width: 22, color: isActive ? MyColor.primaryColor : Colors.black),
+            iconList[index].contains("svg") ? SvgPicture.asset(iconList[index], height: 22, width: 22, color: isActive ? AapoortiConstants.primary : Colors.black) : Image.asset(iconList[index], height: 22, width: 22, color: isActive ? MyColor.primaryColor : Colors.black),
             const SizedBox(height: Dimensions.space5),
-            Text(textList[index], style: interRegularSmall.copyWith(color: isActive ? MyColor.primaryColor : Colors.black),
+            Text(textList[index], style: interRegularSmall.copyWith(color: isActive ? AapoortiConstants.primary : Colors.black),
             )
           ],
         );
@@ -77,8 +78,9 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
 
   void _onTap(int index) {
     if (index == 0) {
-      if (!(widget.currentIndex == 0)) {
-        Get.toNamed(Routes.homeScreen);
+      if(!(widget.currentIndex == 0)) {
+        Get.back();
+        //Get.toNamed(Routes.homeScreen);
       }
     }
     else if (index == 1) {
@@ -86,16 +88,16 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
         Get.toNamed(Routes.performanceDB);
       }
     }
-    else if (index == 2) {
-      if (!(widget.currentIndex == 2)) {
-        Get.toNamed(Routes.profileScreen);
-      }
-    }
-    else if (index == 3) {
-      if (!(widget.currentIndex == 3)) {
-        Get.toNamed(Routes.menuScreen);
-      }
-    }
+    // else if (index == 2) {
+    //   if (!(widget.currentIndex == 2)) {
+    //     Get.toNamed(Routes.profileScreen);
+    //   }
+    // }
+    // else if (index == 3) {
+    //   if (!(widget.currentIndex == 3)) {
+    //     Get.toNamed(Routes.menuScreen);
+    //   }
+    // }
 
   }
 }

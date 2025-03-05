@@ -54,26 +54,22 @@ class _upcoming2State extends State<upcoming2> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                    child: Text('Upcoming Auctions(Sale)',
-                        style: TextStyle(color: Colors.white))),
-                IconButton(
-                  icon: Icon(
-                    Icons.home,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, "/common_screen", (route) => false);
-                    // Navigator.of(context, rootNavigator: true).pop();
-                  },
+            backgroundColor: AapoortiConstants.primary,
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.home,
+                  color: Colors.white,
                 ),
-              ],
-            )),
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, "/common_screen", (route) => false);
+                  // Navigator.of(context, rootNavigator: true).pop();
+                },
+              ),
+            ],
+            title: Text('Upcoming Auctions(Sale)',
+                style: TextStyle(color: Colors.white))),
         body: Container(
           child: Column(
             children: <Widget>[
@@ -82,8 +78,9 @@ class _upcoming2State extends State<upcoming2> {
                 height: 30,
                 color: Colors.cyan.shade600,
                 padding: const EdgeInsets.only(top: 10),
+                alignment: Alignment.center,
                 child: Text(
-                  '   Auction Catalogue',
+                  'Auction Catalogue',
                   style: TextStyle(
                       color: Colors.white,
                       backgroundColor: Colors.cyan.shade600,
@@ -95,7 +92,7 @@ class _upcoming2State extends State<upcoming2> {
               Expanded(
                   child: jsonResult == null
                       ? SpinKitFadingCircle(
-                          color: Colors.cyan,
+                          color: AapoortiConstants.primary,
                           size: 120.0,
                         )
                       : _myListView(context))

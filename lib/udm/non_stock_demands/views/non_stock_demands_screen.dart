@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/non_stock_demands/providers/change_ui_provider.dart';
 import 'package:flutter_app/udm/non_stock_demands/providers/search_screen_provider.dart';
 import 'package:flutter_app/udm/non_stock_demands/tabs_views/awaiting_action_screen.dart';
@@ -56,7 +57,7 @@ class _NonStockDemandsScreenState extends State<NonStockDemandsScreen> {
       length: 3,
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.red[300],
+            backgroundColor: AapoortiConstants.primary,
             automaticallyImplyLeading: false,
             title: Consumer<ChangeUiProvider>(
                 builder: (context, value, child) {
@@ -67,12 +68,12 @@ class _NonStockDemandsScreenState extends State<NonStockDemandsScreen> {
                         height: 40,
                         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                         child: Center(child: TextField(
-                          cursorColor: Colors.red[300],
+                          cursorColor: AapoortiConstants.primary,
                           controller: _textsearchController,
                           decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                              prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                               suffixIcon: IconButton(
-                                icon: Icon(Icons.clear, color: Colors.red[300]),
+                                icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                                 onPressed: () {
                                   Provider.of<SearchScreenProvider>(context, listen: false).updateScreen(false);
                                   _textsearchController.text = "";

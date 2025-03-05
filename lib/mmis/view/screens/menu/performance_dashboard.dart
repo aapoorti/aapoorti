@@ -1,3 +1,4 @@
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/mmis/controllers/dashboard_controller.dart';
 import 'package:flutter_app/mmis/controllers/network_controller.dart';
@@ -52,14 +53,14 @@ class _PerformanceDashBoardState extends State<PerformanceDashBoard> with Single
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async{
-        AapoortiUtilities.alertDialog(context, "MMIS");
+        AapoortiUtilities.showAlertDailog(context, "MMIS");
         //_onBackPressed();
         return true;
       },
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-            backgroundColor: MyColor.primaryColor,
+            backgroundColor: AapoortiConstants.primary,
             iconTheme: IconThemeData(color: Colors.white),
             centerTitle: true,
             title: Text("CRIS MMIS", style : TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontStyle: FontStyle.italic,fontSize: 18.0))),
@@ -69,7 +70,7 @@ class _PerformanceDashBoardState extends State<PerformanceDashBoard> with Single
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
-            color: Colors.indigo.shade400,
+            color: Colors.blue.shade400,
             borderRadius: BorderRadius.circular(0),
           ),
           child: Column(
@@ -125,7 +126,7 @@ Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Da
                   alignment: Alignment.bottomLeft,
                   padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
                   decoration: BoxDecoration(
-                    color: Colors.indigo.shade300,
+                    color: AapoortiConstants.primary,
                     //image: DecorationImage(image: AssetImage('assets/welcome.jpg'), fit: BoxFit.cover),
                   ),
                   child: GestureDetector(
@@ -145,7 +146,7 @@ Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Da
                               child: Icon(
                                 Icons.person,
                                 size: 40,
-                                color: Colors.indigo,
+                                color: AapoortiConstants.primary,
                               ),
                             ),
                             Text(
@@ -221,7 +222,7 @@ Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Da
               onTap: () {
                 if (_scaffoldKey.currentState!.isDrawerOpen) {
                   _scaffoldKey.currentState!.closeDrawer();
-                  AapoortiUtilities.alertDialog(context, "MMIS");
+                  AapoortiUtilities.showAlertDailog(context, "MMIS");
                   //_showConfirmationDialog(context);
                   //WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
                   //callWebServiceLogout();
@@ -229,7 +230,7 @@ Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Da
               },
               child: Container(
                 height: 45,
-                color: Colors.indigo.shade500,
+                color: AapoortiConstants.primary,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

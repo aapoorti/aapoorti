@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/stocking_proposal_summary/view_model/stocking_prosposal_summary_provider.dart';
 import 'package:lottie/lottie.dart';
@@ -98,21 +99,21 @@ class _StockingProposalSummaryDatalinkScreenState extends State<StockingProposal
                         borderRadius: BorderRadius.circular(5)),
                     child: Center(
                       child: TextField(
-                        cursorColor: Colors.red[300],
+                        cursorColor: AapoortiConstants.primary,
                         controller: _textsearchController,
                         decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                            prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                             suffixIcon: IconButton(
-                              icon: Icon(Icons.clear, color: Colors.red[300]),
+                              icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                               onPressed: () {
                                 Provider.of<StockingProposalSummaryProvider>(context, listen: false).updatelinkScreen(false);
                                 _textsearchController.text = "";
                                 Provider.of<StockingProposalSummaryProvider>(context, listen: false).getSearchStkSummarylinkData(_textsearchController.text, context);
                               },
                             ),
-                            focusColor: Colors.red[300],
+                            focusColor: AapoortiConstants.primary,
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.red.shade300, width: 1.0),
+                              borderSide: BorderSide(color: AapoortiConstants.primary, width: 1.0),
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             errorBorder: OutlineInputBorder(

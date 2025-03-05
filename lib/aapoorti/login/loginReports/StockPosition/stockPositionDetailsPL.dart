@@ -45,12 +45,12 @@ class StockPLDetailsState extends State<StockPLDetails> {
         AapoortiUtilities.user!.S_TOKEN + ",Flutter,0,0";
     String inputParam2 = AapoortiUtilities.user!.MAP_ID + "," + plno! + "," +
         selection! + "," + "P" + ",";
-    print("inputparam1----" + inputParam1);
-    print("inputparam2----" + inputParam2);
+    debugPrint("inputparam1----" + inputParam1);
+    debugPrint("inputparam2----" + inputParam2);
     try{
     jsonResult = await AapoortiUtilities.fetchPostPostLogin(
-        'Rpt/StockReport', 'StockReport', inputParam1, inputParam2);
-    print("jsonResult====" + jsonResult.toString());
+        'Rpt/StockReport', 'StockReport', inputParam1, inputParam2, context);
+    debugPrint("jsonResult====" + jsonResult.toString());
     if(jsonResult!.length >0){
     if(jsonResult![0]['ErrorCode']==3)
       {

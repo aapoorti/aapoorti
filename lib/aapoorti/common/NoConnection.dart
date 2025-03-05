@@ -40,10 +40,10 @@ class _LottieDemoState extends State<LottieDemo> with SingleTickerProviderStateM
     _repeat = false;
     _loadButtonPressed(assetNames.last);
     _controller = AnimationController(duration: const Duration(milliseconds: 1), vsync: this,);
-    _controller?.addListener(() => setState(()
-    {
-      _controller?.repeat(reverse: false);
-    }));
+    // _controller?.addListener(() => setState(()
+    // {
+    //   _controller?.repeat(reverse: false);
+    // }));
   }
 
   void _loadButtonPressed(String assetName) {
@@ -52,7 +52,6 @@ class _LottieDemoState extends State<LottieDemo> with SingleTickerProviderStateM
         _assetName = assetName;
         _composition = composition;
         _controller?.forward();
-        print( _controller?.status);
       });
     });
   }

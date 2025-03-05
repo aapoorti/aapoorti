@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
@@ -69,7 +70,7 @@ class WebViewInFlutterState extends State<WebViewInFlutter> {
         iconTheme: IconThemeData(color: Colors.white),
         //automaticallyImplyLeading: false,
         centerTitle: true,
-        backgroundColor: Colors.cyan[400],
+        backgroundColor: AapoortiConstants.primary,
         title: Text("IREPS", style: TextStyle(color: Colors.white)),
       ),
       body: SafeArea(

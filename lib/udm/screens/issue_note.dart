@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:provider/provider.dart';
+import '../../aapoorti/common/AapoortiConstants.dart';
 import '../widgets/item_receipt_text_widget.dart';
 
 class IssueNoteDetails extends StatelessWidget {
@@ -17,7 +18,7 @@ class IssueNoteDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(language.text('issueNote')),
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
       ),
       body: FutureBuilder(future: getApiData('TransactionViewIssueNote', transCode ?? ''),
         builder: (context, snapshot) {

@@ -57,8 +57,8 @@ class _PendingQueryState extends State<PendingQuery> {
     String inputParam1 = AapoortiUtilities.user!.C_TOKEN + "," +AapoortiUtilities.user!.S_TOKEN + ",Flutter,0,0";
     String inputParam2 = AapoortiUtilities.user!.MAP_ID + "~" +" "+","+AapoortiUtilities.user!.CUSTOM_WK_AREA;
 
-         List? var1 = await AapoortiUtilities.fetchPostPostLogin('HDPostLogin/PendingQueryListDev', 'input' ,inputParam1, inputParam2) ;
-       List? var2 = await AapoortiUtilities.fetchPostPostLogin('HDPostLogin/RepliedQueryListDev', 'input' ,inputParam1, inputParam2) ;
+         List? var1 = await AapoortiUtilities.fetchPostPostLogin('HDPostLogin/PendingQueryListDev', 'input' ,inputParam1, inputParam2, context) ;
+       List? var2 = await AapoortiUtilities.fetchPostPostLogin('HDPostLogin/RepliedQueryListDev', 'input' ,inputParam1, inputParam2, context) ;
   if(var1.length==0)
     {
      var1=null;

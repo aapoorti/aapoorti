@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_app/udm/utils/NoConnection.dart';
 import 'package:flutter_app/udm/utils/UdmUtilities.dart';
@@ -257,20 +258,20 @@ class _RejectionAdviceRegisterScreenState extends State<RejectionAdviceRegisterS
                                   Provider.of<WarrantyRejectionRegisterViewModel>(context, listen: false).updateScreen(false);
                                 },
                               ),
-                              focusColor: Colors.red[300],
+                              focusColor: AapoortiConstants.primary,
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.red.shade300, width: 1.0),
+                                    color: AapoortiConstants.primary, width: 1.0),
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               errorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.red.shade300, width: 1.0),
+                                    color: AapoortiConstants.primary, width: 1.0),
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.red.shade300, width: 1.0),
+                                    color: AapoortiConstants.primary, width: 1.0),
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               hintText: language.text('search'),

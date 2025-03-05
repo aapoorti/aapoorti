@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -61,7 +62,7 @@ class Help extends StatelessWidget {
               surfaceTintColor: Colors.white,
               color: Colors.white,
               shape: RoundedRectangleBorder(
-                side: BorderSide(color:Colors.cyan.shade300, width: 1),
+                side: BorderSide(color: AapoortiConstants.primary, width: 1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Padding(
@@ -149,7 +150,7 @@ class Help extends StatelessWidget {
                 surfaceTintColor: Colors.white,
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
-                  side: BorderSide(color:Colors.cyan.shade300, width: 1),
+                  side: BorderSide(color: AapoortiConstants.primary, width: 1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
@@ -168,7 +169,7 @@ class Help extends StatelessWidget {
                           },
                           child: Text("Click Here", style: TextStyle(color: Colors.white, fontSize: 16)),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.cyan,
+                            backgroundColor: Colors.lightBlue[700]!,
                             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                             shape: RoundedRectangleBorder( // Shape of the button
                               borderRadius: BorderRadius.circular(30),

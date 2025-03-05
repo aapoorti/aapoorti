@@ -1,9 +1,11 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 
 List<dynamic>? jsonResult;
 
@@ -67,6 +69,7 @@ class HighValueStatusState extends State<HighValueStatus> {
   var _snackKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context, rootNavigator: true).pop();
@@ -94,21 +97,45 @@ class HighValueStatusState extends State<HighValueStatus> {
              child: Column(
               children: <Widget>[
                 Container(
-                width: 400,
+                width: size.width,
                 height: 30,
                 color: Colors.cyan.shade50,
-                padding: const EdgeInsets.only(top: 9),
+                alignment: Alignment.center,
                 child: Text(
                   'High Value Tenders( Above 100 Cr.)',
                   style: TextStyle(
                       color: Colors.indigo,
                       backgroundColor: Colors.cyan.shade50,
                       fontWeight: FontWeight.bold,
-                      fontSize: 17),
+                      fontSize: 15),
                   textAlign: TextAlign.center,
                 ),
               ),
-                Expanded(child: jsonResult == null ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : _myListView(context))
+              Expanded(child: jsonResult == null ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : jsonResult!.isEmpty ? Container(
+                  height: size.height,
+                  width: size.width,
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 120,
+                          width: 120,
+                          child: Lottie.asset('assets/json/no_data.json'),
+                        ),
+                        AnimatedTextKit(
+                            isRepeatingAnimation: false,
+                            animatedTexts: [
+                              TyperAnimatedText("Data not found",
+                                  speed: Duration(milliseconds: 150),
+                                  textStyle: TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                            ])
+                      ],
+                    ),
+                  ),
+                ) : _myListView(context))
             ],
           ),
         ),
@@ -118,21 +145,11 @@ class HighValueStatusState extends State<HighValueStatus> {
 
   Widget _myListView(BuildContext context) {
 
-    return jsonResult!.isEmpty ? Container(height: 40.0, width: 500,
-            child: Container(
-              margin: EdgeInsets.only(top: 20.0, left: 15, right: 15),
-              child: Text(
-                "Oops no data  found!!!!! ",
-                style: TextStyle(fontSize: 17, color: Colors.indigo),
-                textAlign: TextAlign.center,
-              ),
-            ))
-        : ListView.separated(
-            //scrollDirection: Axis.vertical,
-            //shrinkWrap: true,
+    return ListView.separated(
             itemCount: jsonResult != null ? jsonResult!.length : 0,
             itemBuilder: (context, index) {
               return Container(
+                  color: Colors.white,
                   child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[

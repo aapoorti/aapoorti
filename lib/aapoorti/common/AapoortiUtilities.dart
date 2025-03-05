@@ -5,6 +5,8 @@ import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/CommonScreen.dart';
+import 'package:flutter_app/aapoorti/widgets/confirm_dialog.dart';
+import 'package:flutter_app/aapoorti/widgets/logout.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
 
 import 'package:flutter_app/udm/widgets/delete_dialog.dart';
@@ -103,8 +105,8 @@ class AapoortiUtilities {
       var v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,01';
       final response = await http.post(Uri.parse(v));
       dataZone = json.decode(response.body);
-      if(response == null || response.statusCode != 200)
-        throw Exception('HTTP request failed, statusCode: ${response?.statusCode}');
+      if(response.statusCode != 200)
+        throw Exception('HTTP request failed, statusCode: ${response.statusCode}');
       stopProgress(pr);
       setStateL(() {
         dataZone = dataZone;
@@ -485,7 +487,7 @@ class AapoortiUtilities {
                 onTap: () {
                   if(_scaffoldKey.currentState!.isDrawerOpen) {
                     _scaffoldKey.currentState!.closeDrawer();
-                    alertDialog(context, "IREPS");
+                    showAlertDailog(context, "IREPS");
                     //_showConfirmationDialog(context);
                     //WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
                     //callWebServiceLogout();
@@ -594,6 +596,7 @@ class AapoortiUtilities {
     else{
       AapoortiUtilities.openPdf(context, fileUrl, fileName);
     }
+    return null;
   }
 
   static Future<void> openPdf(BuildContext context, String fileUrl, String fileName) async {
@@ -884,6 +887,30 @@ class AapoortiUtilities {
     }
   }
 
+  static showAlertDailog(BuildContext context, String? appName) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black54,
+      builder: (BuildContext context) => const ConfirmDialog(),
+    ).then((value) {
+      if(value != null){
+        if(value == false){
+          appName == "UDM"  || appName == "MMIS" ? Navigator.push(context, MaterialPageRoute(builder: (context) => CommonScreen())) : exit(0);
+        }
+      }
+    });
+  }
+
+  static showLogOutDialog(BuildContext context, VoidCallback press){
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierColor: Colors.black54,
+        builder: (BuildContext context) => Logout(press: press)
+    );
+  }
+
   static alertDialog(BuildContext context, String? appName) {
     showDialog(
         context: context,
@@ -973,7 +1000,7 @@ class AapoortiUtilities {
   static void downloadpdf(String fileurl, String filename, BuildContext context) async {
     // Show a ProgressDialog or loading indicator before downloading
     ProgressDialog progressDialog = ProgressDialog(context);
-    progressDialog.style(progressWidget: SizedBox(height: 25, width: 25, child: CircularProgressIndicator(backgroundColor: Colors.cyan, strokeWidth: 2.0)));
+    //progressDialog.style(progressWidget: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(backgroundColor: Colors.cyan, strokeWidth: 2.0)));
     progressDialog.show();
 
     downloadFile(fileurl, context).then((filepath) {
@@ -1093,7 +1120,7 @@ class AapoortiUtilities {
     String inputParam2 = AapoortiUtilities.user!.MAP_ID + ",,";
     bool check = await checkConnection();
     if(check == true) {
-      jsonResult = await AapoortiUtilities.fetchPostPostLogin('Log/Logout', 'Logout', inputParam1, inputParam2);
+      jsonResult = await AapoortiUtilities.fetchPostPostLogin('Log/Logout', 'Logout', inputParam1, inputParam2, context);
       debugPrint("logOut result ${jsonResult.toString()}");
       if (jsonResult[0]['LOGOUTSTATUS'] == "You have been successfully logged out.") {
         debugPrint("successfully logout");
@@ -1164,7 +1191,7 @@ class AapoortiUtilities {
                   alignment: Alignment.bottomLeft,
                   padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
                   decoration: BoxDecoration(
-                    color: Colors.cyan.shade300,
+                    color: Colors.teal,
                     //image: DecorationImage(image: AssetImage('assets/welcome.jpg'), fit: BoxFit.cover),
                   ),
                   child: Row(
@@ -1180,7 +1207,7 @@ class AapoortiUtilities {
                             child: Icon(
                               Icons.person,
                               size: 40,
-                              color: Colors.cyan,
+                              color: Colors.teal,
                             ),
                           ),
                           SizedBox(height: 4.0),
@@ -1737,37 +1764,46 @@ class AapoortiUtilities {
     return initials;
   }
 
-  static Future<List<dynamic>> fetchPostPostLogin(String webServiceModuleUrl, String inputParamName, String inputParam1, String inputParam2) async {
-    //Json Values For Post Param
-    Map<String, dynamic> urlinput = {
-      "param1": "$inputParam1",
-      "param2": "$inputParam2"
-    };
-    debugPrint(urlinput.toString());
-    String urlInputString = json.encode(urlinput);
-    //Form Body For URL
-    String formBody = inputParamName + '=' + Uri.encodeQueryComponent(urlInputString);
-    var url = AapoortiConstants.webServiceUrl + webServiceModuleUrl;
-    debugPrint("url = " + url);
+  static Future<List<dynamic>> fetchPostPostLogin(String webServiceModuleUrl, String inputParamName, String inputParam1, String inputParam2, BuildContext context) async {
+    try{
+      Map<String, dynamic> urlinput = {
+        "param1": "$inputParam1",
+        "param2": "$inputParam2"
+      };
+      debugPrint(urlinput.toString());
+      String urlInputString = json.encode(urlinput);
+      //Form Body For URL
+      String formBody = inputParamName + '=' + Uri.encodeQueryComponent(urlInputString);
+      var url = AapoortiConstants.webServiceUrl + webServiceModuleUrl;
+      debugPrint("url = " + url);
 
-    final response = await http.post(Uri.parse(url),
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: formBody, encoding: Encoding.getByName("utf-8"));
-    debugPrint("resp##### ${response.body}");
-    if(!response.body.contains('[{"ErrorCode')) {
-      debugPrint(response.body);
-      List<dynamic> jsonResult = json.decode(response.body);
-      debugPrint("Form body = " + json.encode(formBody).toString());
-      debugPrint("Json result = " + jsonResult.toString());
-      debugPrint("Response code = " + response.statusCode.toString());
-      return jsonResult;
-    } else {
-      jsonResult = [];
-      return jsonResult!;
+      final response = await http.post(Uri.parse(url),
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: formBody, encoding: Encoding.getByName("utf-8"));
+      debugPrint("resp##### ${response.body}");
+      if(!response.body.contains('[{"ErrorCode')) {
+        debugPrint(response.body);
+        List<dynamic> jsonResult = json.decode(response.body);
+        debugPrint("Form body = " + json.encode(formBody).toString());
+        debugPrint("Json result = " + jsonResult.toString());
+        debugPrint("Response code = " + response.statusCode.toString());
+        return jsonResult;
+      }
+      else {
+        jsonResult = [];
+        return jsonResult!;
+      }
     }
+    on FormatException catch(e){
+      AapoortiUtilities.showInSnackBar(context, "Something went wrong, please try again");
+    }
+    on Exception catch(ex){
+      AapoortiUtilities.showInSnackBar(context, "Something went wrong, please try again");
+    }
+    return [];
   }
 
   static Future<bool> checkConnection() async {

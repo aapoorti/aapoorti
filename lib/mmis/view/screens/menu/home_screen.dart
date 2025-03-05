@@ -1,3 +1,4 @@
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/mmis/extention/extension_util.dart';
 import 'package:flutter_app/mmis/utils/my_color.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_app/mmis/view/screens/noInternet.dart';
 import 'package:flutter_app/mmis/widgets/logout_dialog.dart';
 import 'package:flutter_app/mmis/widgets/switch_language_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:fluttericon/iconic_icons.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_app/mmis/controllers/theme_controller.dart';
 import 'package:flutter_app/mmis/controllers/network_controller.dart';
 import 'package:flutter_app/mmis/routes/routes.dart';
 import 'package:flutter_app/mmis/utils/toast_message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //poonam.crismmis@gmail.com
 
@@ -27,272 +30,198 @@ class HomeScreen extends StatelessWidget {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String? deptId = Get.arguments[0];
+  String? postId = Get.arguments[1];
+  String? crismmispendingcases = Get.arguments[2];
+  String? oldimmspendingcases = Get.arguments[3];
+
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (bool onPop) {
-        AapoortiUtilities.alertDialog(context, "MMIS");
+    return WillPopScope(
+      onWillPop: () async {
+        Get.back();
+        return false;
       },
-      child: Obx(() => networkController.connectionStatus.value == 0 ? const NoInternet() : Scaffold(
-              key: _scaffoldKey,
-              backgroundColor: Colors.grey.shade400,
-              drawer: navDrawer(context, _scaffoldKey, controller, themeController),
-              bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
-              appBar: AppBar(
-               backgroundColor: MyColor.primaryColor,
-               iconTheme: IconThemeData(color: Colors.white),
-               centerTitle: true,
-               title: Text('appName'.tr, style : TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontStyle: FontStyle.italic,fontSize: 18.0))),
-               body: Container(
-                 height: Get.height,
-                 width: Get.width,
-                 color: Colors.white,
-                 child: Column(
-                   children: [
-                      Container(
-                       width: Get.width,
-                       height: 200,
-                       child: Padding(
-                         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                         child: GridView.count(
-                           crossAxisCount: 2,
-                           crossAxisSpacing: 16.0,
-                           mainAxisSpacing: 16.0,
-                           children: [
-                             _buildTile(
-                               context,
-                               title: 'Search Demand',
-                               icon: Icons.analytics_outlined,
-                               color: Colors.lightBlue.shade100,
-                               onTap: () {
-                                 Get.toNamed(Routes.searchDemandsScreen);
-                               },
-                             ),
-                             _buildTile(
-                               context,
-                               title: 'Search PO',
-                               icon: Icons.receipt_long_outlined,
-                               color: Colors.lightGreen.shade100,
-                               onTap: () {
-                                 //poonam.mishra@cris.gov.in
-                                 ToastMessage.showSnackBar("Information!!","Comming Soon", Colors.blue);
-                               },
-                             ),
-                           ],
-                         ),
-                       )
-                      ),
-                      Column(
-                        children: [
-                          Text("Pending Cases", style: TextStyle(color: Colors.black, fontSize: 21, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                       children: [
-                         Container(
-                           height: 60,
-                           width: Get.width * 0.50,
-                           child: InkWell(
-                             onTap: (){
-                                if(controller.crismmispendingcases.value == "0" || controller.crismmispendingcases.value == "0.0"){
-                                   AapoortiUtilities.showInSnackBar(context, "No Pending Demands in CRIS MMIS");
-                                }else {
-                                    Get.toNamed(Routes.crismmispendingcaseScreen);
-                                }
-                             },
-                             child: Card(
-                               color: Colors.white,
-                               shape: RoundedRectangleBorder(
-                                 side: BorderSide(color: Colors.grey, width: 1),
-                                 borderRadius: BorderRadius.circular(10),
-                               ),
-                               child: Column(
-                                 mainAxisAlignment: MainAxisAlignment.center,
-                                 children: [
-                                   Text("CRIS MMIS"),
-                                   PendingCaseState.success == controller.pendingcaseState.value ?
-                                     Text(controller.crismmispendingcases.value == "0" ? "No Pending Demands" : controller.crismmispendingcases.value, style: TextStyle(color: controller.crismmispendingcases.value == "0" ? Colors.red : Colors.blue, fontWeight: FontWeight.bold)) :
-                                     Text("----", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))
-                                 ],
-                               ),
-                             ),
-                           ),
-                         ),
-                         Container(
-                           height: 60,
-                           width: Get.width * 0.50,
-                           child: InkWell(
-                             onTap: (){
-                               if(controller.oldimmspendingcases.value == "0" || controller.oldimmspendingcases.value == "0.0") {
+      child: Obx(() => networkController.connectionStatus.value == 0 ? const NoInternet() :  Scaffold(
+        appBar: AppBar(
+            backgroundColor: AapoortiConstants.primary,
+            iconTheme: IconThemeData(color: Colors.white),
+            centerTitle: true,
+            title: Text('appName'.tr, style : TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontStyle: FontStyle.italic,fontSize: 18.0))),
+        bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
+        key: _scaffoldKey,
+        drawer: navDrawer(context, _scaffoldKey, controller, themeController),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  const Spacer(),
+                  SizedBox(
+                    height: 120,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _buildCard(
+                            'Search Demand',
+                            Icons.analytics_outlined,
+                            Colors.lightBlue.shade100,
+                            onTap: () async{
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+                              if(providedTime.isBefore(DateTime.now())){
+                                await fetchToken(context);
+                                Get.toNamed(Routes.searchDemandsScreen);
+                              }
+                              else{
+                                Get.toNamed(Routes.searchDemandsScreen);
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildCard(
+                            'Search PO',
+                            Icons.receipt_long,
+                            Colors.green.shade100,
+                            onTap: () {
+                              //poonam.mishra@cris.gov.in
+                              ToastMessage.showSnackBar("Information!!","Comming Soon", Colors.blue);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  const Text(
+                    'Pending Cases',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF000080), // Navy blue color for "Pending Cases"
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 120,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _buildPendingCard(
+                            'CRIS MMIS',
+                            crismmispendingcases == "0" || crismmispendingcases == "0.0" ? "0" : crismmispendingcases!.contains('.') ? crismmispendingcases!.split('.')[1] == '0' ? crismmispendingcases!.split('.')[0] : crismmispendingcases! : crismmispendingcases!,
+                            onTap: () async{
+                              if(crismmispendingcases == "0" || crismmispendingcases == "0.0"){
+                                AapoortiUtilities.showInSnackBar(context, "No Pending Demands in CRIS MMIS");
+                              }else {
+                                Get.toNamed(Routes.crismmispendingcaseScreen, arguments: [postId]);
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildPendingCard(
+                            'OLD iMMS',
+                            oldimmspendingcases == "0" || oldimmspendingcases == "0.0" ? "0" : oldimmspendingcases!.contains('.') ? oldimmspendingcases!.split('.')[1] == '0' ? oldimmspendingcases!.split('.')[0] : oldimmspendingcases!: oldimmspendingcases!,
+                            onTap: () {
+                              if(oldimmspendingcases == "0" || oldimmspendingcases == "0.0") {
                                 AapoortiUtilities.showInSnackBar(context, "No Pending Demands in Old iMMS");
-                               }
+                              }
                               else {
                                 Get.toNamed(Routes.oldimmspendingcaseScreen);
-                               }
-                             },
-                             child: Card(
-                               color: Colors.white,
-                               shape: RoundedRectangleBorder(
-                                 side: BorderSide(color: Colors.grey, width: 1),
-                                 borderRadius: BorderRadius.circular(10),
-                               ),
-                               child: Column(
-                                 mainAxisAlignment: MainAxisAlignment.center,
-                                 children: [
-                                   Text("OLD iMMS"),
-                                   PendingCaseState.success == controller.pendingcaseState.value ?
-                                   Text(controller.oldimmspendingcases.value == "0" ? "No Pending Demands" : controller.oldimmspendingcases.value, style: TextStyle(color: controller.oldimmspendingcases.value == "0" ? Colors.red : Colors.blue, fontWeight: FontWeight.bold)) :
-                                   Text("----", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))
-                                 ],
-                               ),
-                             ),
-                           ),
-                         ),
-                         //Text("Pending Cases:", style: TextStyle(color: Colors.black, fontSize: 21, fontWeight: FontWeight.bold)),
-                         // SizedBox(width: 5),
-                         // Column(
-                         //   //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                         //   children: [
-                         //     Obx((){
-                         //       if(controller.pendingcaseState == PendingCaseState.loading){
-                         //         return Text("CRIS MMIS [...]");
-                         //       }
-                         //       else if(controller.pendingcaseState == PendingCaseState.success){
-                         //         return InkWell(
-                         //           onTap: (){
-                         //             if(controller.crismmispendingcases.value == "0" || controller.crismmispendingcases.value == "0.0"){
-                         //               AapoortiUtilities.showInSnackBar(context, "No Pending Demands in CRIS MMIS");
-                         //               //Get.toNamed(Routes.crismmispendingcaseScreen);
-                         //             }
-                         //             else {
-                         //               Get.toNamed(Routes.crismmispendingcaseScreen);
-                         //             }
-                         //           },
-                         //           child: RichText(text: TextSpan(
-                         //             text: 'CRIS-MMIS:- ',
-                         //             style: TextStyle(color: Colors.black, fontSize: 18),
-                         //             children: <TextSpan>[
-                         //               TextSpan(
-                         //                 text: controller.crismmispendingcases.value,
-                         //                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
-                         //               ),
-                         //               // TextSpan(
-                         //               //   text: ']',
-                         //               //   style: TextStyle(color: Colors.black, fontSize: 18),
-                         //               // ),
-                         //             ],
-                         //           )),
-                         //         );
-                         //       }
-                         //       else if(controller.pendingcaseState == PendingCaseState.failure){
-                         //         return Text("CRIS MMIS [...]");
-                         //       }
-                         //       return Text("CRIS MMIS [...]");
-                         //     }),
-                         //     SizedBox(height: 8.0),
-                         //     Obx((){
-                         //       if(controller.pendingcaseState == PendingCaseState.loading){
-                         //         return Text("OLD iMMS [...]");
-                         //       }
-                         //       else if(controller.pendingcaseState == PendingCaseState.success){
-                         //         return InkWell(
-                         //           onTap: (){
-                         //             if(controller.oldimmspendingcases.value == "0" || controller.oldimmspendingcases.value == "0.0"){
-                         //               AapoortiUtilities.showInSnackBar(context, "No Pending Demands in Old iMMS");
-                         //               //Get.toNamed(Routes.oldimmspendingcaseScreen);
-                         //             }
-                         //             else {
-                         //               Get.toNamed(Routes.oldimmspendingcaseScreen);
-                         //             }
-                         //           },
-                         //           child: RichText(text: TextSpan(
-                         //             text: 'OLD iMMS:- ',
-                         //             style: TextStyle(color: Colors.black, fontSize: 18),
-                         //             children: <TextSpan>[
-                         //               TextSpan(
-                         //                 text: controller.oldimmspendingcases.value,
-                         //                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
-                         //               ),
-                         //               // TextSpan(
-                         //               //   text: ']',
-                         //               //   style: TextStyle(color: Colors.black, fontSize: 18),
-                         //               // ),
-                         //             ],
-                         //           )),
-                         //         );
-                         //       }
-                         //       else if(controller.pendingcaseState == PendingCaseState.failure){
-                         //         return Text("OLD iMMS [...]");
-                         //       }
-                         //       return Text("OLD iMMS [...]");
-                         //     }),
-                         //   ],
-                         // ),
-                       ],
-                     ),
-                      //Divider(color: Colors.black),
-                      // Expanded(child: GridView.builder(
-                      //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      //       childAspectRatio: 1.0,
-                      //       crossAxisCount: 2, // Number of items per row
-                      //       crossAxisSpacing: 10.0, // Horizontal space between items
-                      //       mainAxisSpacing: 10.0, // Vertical space between items
-                      //     ),
-                      //     itemCount: controller.getlist.length,
-                      //     padding: EdgeInsets.zero,
-                      //     itemBuilder: (BuildContext ctx, index) {
-                      //       return Padding(
-                      //         padding: const EdgeInsets.all(5.0),
-                      //         child: InkWell(
-                      //           onTap: () {
-                      //             if (index == 0) {
-                      //               Get.toNamed(Routes.searchDemandsScreen);
-                      //             }
-                      //             else if (index == 1) {
-                      //               Get.toNamed(Routes.nonStockDemandsScreen);
-                      //             }
-                      //           },
-                      //           child: Card(
-                      //             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(strokeAlign: 1.0, color: Colors.indigo)),
-                      //             //clipBehavior: Clip.antiAlias,
-                      //             elevation: 4.0,
-                      //             child: Stack(
-                      //               children: [
-                      //                 Image.asset(controller.getlist[index]['icon']!,height: 200, width: 200, fit: BoxFit.cover),
-                      //                 Align(
-                      //                   alignment: Alignment.bottomCenter,
-                      //                   child: Container(
-                      //                     width: double.infinity,
-                      //                     decoration: BoxDecoration(
-                      //                         color: Colors.indigo.withOpacity(0.8),
-                      //                         border: Border.all(color: Colors.indigo, strokeAlign: 1.0)
-                      //                     ),
-                      //                     padding: EdgeInsets.all(5),
-                      //                     child: Text(
-                      //                       controller.getlist[index]['label']!.tr,
-                      //                       textAlign: TextAlign.center,
-                      //                       style: TextStyle(
-                      //                         color: Colors.white,
-                      //                         fontSize: 12,
-                      //                         fontWeight: FontWeight.bold,
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //           ),
-                      //         ),
-                      //       );
-                      //     }))
-                   ],
-                 )
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  //_buildBottomNav(),
+                ],
               ),
-            )),
+            );
+          },
+        ),
+      )),
     );
   }
+}
+
+Widget _buildCard(String title, IconData icon, Color backgroundColor, {required VoidCallback onTap}) {
+  return Card(
+    color: backgroundColor,
+    elevation: 2,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 40, color: Colors.grey[700]),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF000080), // Navy blue color for card titles
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _buildPendingCard(String title, String count, {required VoidCallback onTap}) {
+  return Card(
+    elevation: 2,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF000080), // Navy blue color for pending card titles
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              count,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0073CF),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, HomeController homeController, ThemeController themeController) {
@@ -309,7 +238,7 @@ Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Ho
                   alignment: Alignment.bottomLeft,
                   padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
                   decoration: BoxDecoration(
-                    color: Colors.indigo.shade300,
+                    color: AapoortiConstants.primary,
                     //image: DecorationImage(image: AssetImage('assets/welcome.jpg'), fit: BoxFit.cover),
                   ),
                   child: GestureDetector(
@@ -329,7 +258,7 @@ Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Ho
                               child: Icon(
                                 Icons.person,
                                 size: 40,
-                                color: Colors.indigo,
+                                color: AapoortiConstants.primary,
                               ),
                             ),
                             Text(
@@ -405,7 +334,7 @@ Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Ho
               onTap: () {
                 if (_scaffoldKey.currentState!.isDrawerOpen) {
                   _scaffoldKey.currentState!.closeDrawer();
-                  AapoortiUtilities.alertDialog(context, "MMIS");
+                  AapoortiUtilities.showAlertDailog(context, "MMIS");
                   //_showConfirmationDialog(context);
                   //WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
                   //callWebServiceLogout();
@@ -413,7 +342,7 @@ Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Ho
               },
               child: Container(
                 height: 45,
-                color: Colors.indigo.shade500,
+                color: AapoortiConstants.primary,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

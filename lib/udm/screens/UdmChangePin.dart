@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
@@ -148,7 +149,7 @@ class _UdmChangePinState extends State<UdmChangePin> {
           style: const TextStyle(color: Colors.white),
         ),
         iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
       ),
       //bottomNavigationBar: const CustomBottomNav(currentIndex: 2),
       body: SingleChildScrollView(
@@ -165,7 +166,7 @@ class _UdmChangePinState extends State<UdmChangePin> {
                   Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 0.0, color: Colors.red.shade300),
+                        side: BorderSide(width: 0.0, color: AapoortiConstants.primary),
                         borderRadius: BorderRadius.circular(10.0)),
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
@@ -195,7 +196,7 @@ class _UdmChangePinState extends State<UdmChangePin> {
                   Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 0.0, color: Colors.red.shade300),
+                        side: BorderSide(width: 0.0, color: AapoortiConstants.primary),
                         borderRadius: BorderRadius.circular(10.0)),
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
@@ -356,7 +357,7 @@ class _UdmChangePinState extends State<UdmChangePin> {
                   //                           BorderRadius.circular(200.0))),
                   //               elevation: MaterialStateProperty.all(7.0),
                   //               side: MaterialStateProperty.all(BorderSide(
-                  //                   color: Colors.red[300]!, width: 2.0))),
+                  //                   color: AapoortiConstants.primary!, width: 2.0))),
                   //           onPressed: () {
                   //             _formKey.currentState!.reset();
                   //             setState(() {
@@ -368,7 +369,7 @@ class _UdmChangePinState extends State<UdmChangePin> {
                   //             language.text('reset'),
                   //             textAlign: TextAlign.center,
                   //             style: style.copyWith(
-                  //                 color: Colors.red[300],
+                  //                 color: AapoortiConstants.primary,
                   //                 fontWeight: FontWeight.bold,
                   //                 fontSize: 18),
                   //           ),
@@ -390,10 +391,10 @@ class _UdmChangePinState extends State<UdmChangePin> {
                   //                   RoundedRectangleBorder(
                   //                       borderRadius:
                   //                           BorderRadius.circular(200.0))),
-                  //               //overlayColor: MaterialStateProperty.resolveWith((color) => Colors.red[300])
+                  //               //overlayColor: MaterialStateProperty.resolveWith((color) => AapoortiConstants.primary)
                   //               elevation: MaterialStateProperty.all(7.0),
                   //               side: MaterialStateProperty.all(BorderSide(
-                  //                   color: Colors.red[300]!, width: 2.0))),
+                  //                   color: AapoortiConstants.primary!, width: 2.0))),
                   //           onPressed: () async {
                   //             FocusScope.of(context).unfocus();
                   //             _formKey.currentState!.save();
@@ -412,7 +413,7 @@ class _UdmChangePinState extends State<UdmChangePin> {
                   //             language.text('submit'),
                   //             textAlign: TextAlign.center,
                   //             style: style.copyWith(
-                  //                 color: Colors.red[300],
+                  //                 color: AapoortiConstants.primary,
                   //                 fontWeight: FontWeight.bold,
                   //                 fontSize: 18),
                   //           ),

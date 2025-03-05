@@ -253,7 +253,7 @@ class CatalogueSumState extends State<CatalogueSum> {
     String inputParam2 = AapoortiUtilities.user!.MAP_ID + "," + _mySelection2!;
 
     jsonResult3 = await AapoortiUtilities.fetchPostPostLogin(
-        'AFLAuction/ACNO', 'ACNO', inputParam1, inputParam2);
+        'AFLAuction/ACNO', 'ACNO', inputParam1, inputParam2, context);
     print(jsonResult3);
     AapoortiUtilities.stopProgress(pr!);
     setState(() {

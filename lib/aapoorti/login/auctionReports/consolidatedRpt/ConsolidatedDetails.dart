@@ -50,7 +50,7 @@ class _ConsolidatedDetailsState extends State<ConsolidatedDetails> {
     String inputParam1 = AapoortiUtilities.user!.C_TOKEN + "," +AapoortiUtilities.user!.S_TOKEN + ",Flutter,0,0";
     String inputParam2 = AapoortiUtilities.user!.MAP_ID + "," +_railid+","+_catalogueid+","+_valuefrom+","+_valueto;
 
-    jsonResult = await AapoortiUtilities.fetchPostPostLogin('AFLAuction/CONSOLIDATED', 'CONSOLIDATED' ,inputParam1, inputParam2) ;
+    jsonResult = await AapoortiUtilities.fetchPostPostLogin('AFLAuction/CONSOLIDATED', 'CONSOLIDATED' ,inputParam1, inputParam2, context) ;
     print(jsonResult);
     jsonResultexp=jsonResult;
     _check = [];

@@ -1,5 +1,6 @@
 import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/gemorder/gem_OrderDetails/providers/gemscreen_update_changes.dart';
 import 'package:flutter_app/udm/gemorder/gem_OrderDetails/view/gemOrderdetailsScreen.dart';
 import 'package:flutter_app/udm/gemorder/gem_OrderDetails/view_model/gemViewModel1.dart';
@@ -49,7 +50,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           iconTheme: IconThemeData(color: Colors.white),
           actions: [
@@ -102,12 +103,12 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                     height: 40,
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                     child: Center(child: TextField(
-                      cursorColor: Colors.red[300],
+                      cursorColor:AapoortiConstants.primary,
                       controller: _textsearchController,
                       decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                          prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.clear, color: Colors.red[300]),
+                            icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                             onPressed: () {
                               updatechangeprovider.updateScreen(false);
                               _textsearchController.text = "";
@@ -238,7 +239,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                           width: size.width * 0.30,
                           height: 40,
                           alignment: Alignment.center,
-                          decoration: BoxDecoration(color: Colors.red[300], borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                          decoration: BoxDecoration(color: AapoortiConstants.primary, borderRadius: BorderRadius.all(Radius.circular(8.0))),
                           child: Text(language.text('search1'), style: TextStyle(color: Colors.white, fontSize: 17.5)),
                         ),
                       )
@@ -344,7 +345,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                         alignment: Alignment.centerLeft,
                                                         decoration: BoxDecoration(
                                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                                                            color: Colors.red[300]
+                                                            color:AapoortiConstants.primary
                                                         ),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -414,7 +415,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                                           fontSize: 14, fontWeight: FontWeight.w500
                                                                       ),
                                                                       trimLines: 2,
-                                                                      colorClickableText: Colors.red[300],
+                                                                      colorClickableText: AapoortiConstants.primary,
                                                                       trimMode: TrimMode.Line,
                                                                       trimCollapsedText: ' ...${language.text('more')}',
                                                                       trimExpandedText: ' ...${language.text('less')}',
@@ -482,7 +483,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                         alignment: Alignment.centerLeft,
                                                         decoration: BoxDecoration(
                                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                                                            color: Colors.red[300]
+                                                            color: AapoortiConstants.primary
                                                         ),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -554,7 +555,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                                           fontSize: 14, fontWeight: FontWeight.w500
                                                                       ),
                                                                       trimLines: 2,
-                                                                      colorClickableText: Colors.red[300],
+                                                                      colorClickableText: AapoortiConstants.primary,
                                                                       trimMode: TrimMode.Line,
                                                                       trimCollapsedText:
                                                                       ' ...${language.text('more')}',
@@ -736,7 +737,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                         alignment: Alignment.centerLeft,
                                                         decoration: BoxDecoration(
                                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                                                            color: Colors.red[300]
+                                                            color: AapoortiConstants.primary
                                                         ),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -806,7 +807,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                                           fontSize: 14, fontWeight: FontWeight.w500
                                                                       ),
                                                                       trimLines: 2,
-                                                                      colorClickableText: Colors.red[300],
+                                                                      colorClickableText: AapoortiConstants.primary,
                                                                       trimMode: TrimMode.Line,
                                                                       trimCollapsedText:
                                                                       ' ...${language.text('more')}',
@@ -841,7 +842,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                                   child: Text(language.text('itemdtls'),
                                                                       textAlign: TextAlign.center,
                                                                       style: TextStyle(
-                                                                        color: Colors.red[300],
+                                                                        color: AapoortiConstants.primary,
                                                                         fontWeight: FontWeight.bold,
                                                                         fontSize: 16,
                                                                       )
@@ -881,7 +882,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                                           fontSize: 14, fontWeight: FontWeight.w500
                                                                       ),
                                                                       trimLines: 2,
-                                                                      colorClickableText: Colors.red[300],
+                                                                      colorClickableText: AapoortiConstants.primary,
                                                                       trimMode: TrimMode.Line,
                                                                       trimCollapsedText:
                                                                       ' ...${language.text('more')}',
@@ -951,7 +952,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                         alignment: Alignment.centerLeft,
                                                         decoration: BoxDecoration(
                                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                                                            color: Colors.red[300]
+                                                            color: AapoortiConstants.primary
                                                         ),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -1105,7 +1106,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                         alignment: Alignment.centerLeft,
                                                         decoration: BoxDecoration(
                                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                                                            color: Colors.red[300]
+                                                            color: AapoortiConstants.primary
                                                         ),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -1377,7 +1378,7 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                                                         alignment: Alignment.centerLeft,
                                                         decoration: BoxDecoration(
                                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                                                            color: Colors.red[300]
+                                                            color: AapoortiConstants.primary
                                                         ),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,

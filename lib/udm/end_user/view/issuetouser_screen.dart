@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/end_user/view_models/to_end_user_view_model.dart';
@@ -81,7 +82,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           title: Text(language.text('endusertitle'),
               style: TextStyle(color: Colors.white)),
           iconTheme: IconThemeData(color: Colors.white)),
@@ -387,7 +388,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
                            const BorderSide(color: Colors.grey, width: 1.0),
                            borderRadius: BorderRadius.circular(10.0),
                          ),
-                         focusColor: Colors.red[300],
+                         focusColor: AapoortiConstants.primary,
                          focusedErrorBorder: OutlineInputBorder(
                            borderSide:
                            const BorderSide(color: Colors.red, width: 1.0),
@@ -470,7 +471,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
                            const BorderSide(color: Colors.grey, width: 1.0),
                            borderRadius: BorderRadius.circular(10.0),
                          ),
-                         focusColor: Colors.red[300],
+                         focusColor: AapoortiConstants.primary,
                          focusedErrorBorder: OutlineInputBorder(
                            borderSide:
                            const BorderSide(color: Colors.red, width: 1.0),
@@ -526,7 +527,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
                            const BorderSide(color: Colors.grey, width: 1.0),
                            borderRadius: BorderRadius.circular(10.0),
                          ),
-                         focusColor: Colors.red[300],
+                         focusColor: AapoortiConstants.primary,
                          focusedErrorBorder: OutlineInputBorder(
                            borderSide:
                            const BorderSide(color: Colors.red, width: 1.0),
@@ -584,7 +585,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
                              const BorderSide(color: Colors.grey, width: 1.0),
                              borderRadius: BorderRadius.circular(10.0),
                            ),
-                           focusColor: Colors.red[300],
+                           focusColor: AapoortiConstants.primary,
                            focusedErrorBorder: OutlineInputBorder(
                              borderSide:
                              const BorderSide(color: Colors.red, width: 1.0),
@@ -641,7 +642,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
                            const BorderSide(color: Colors.grey, width: 1.0),
                            borderRadius: BorderRadius.circular(10.0),
                          ),
-                         focusColor: Colors.red[300],
+                         focusColor: AapoortiConstants.primary,
                          focusedErrorBorder: OutlineInputBorder(
                            borderSide:
                            const BorderSide(color: Colors.red, width: 1.0),
@@ -698,7 +699,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
                            const BorderSide(color: Colors.grey, width: 1.0),
                            borderRadius: BorderRadius.circular(10.0),
                          ),
-                         focusColor: Colors.red[300],
+                         focusColor: AapoortiConstants.primary,
                          focusedErrorBorder: OutlineInputBorder(
                            borderSide:
                            const BorderSide(color: Colors.red, width: 1.0),
@@ -755,7 +756,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
                            const BorderSide(color: Colors.grey, width: 1.0),
                            borderRadius: BorderRadius.circular(10.0),
                          ),
-                         focusColor: Colors.red[300],
+                         focusColor: AapoortiConstants.primary,
                          focusedErrorBorder: OutlineInputBorder(
                            borderSide:
                            const BorderSide(color: Colors.red, width: 1.0),
@@ -891,7 +892,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
                                    const BorderSide(color: Colors.grey, width: 1.0),
                                    borderRadius: BorderRadius.circular(10.0),
                                  ),
-                                 focusColor: Colors.red[300],
+                                 focusColor: AapoortiConstants.primary,
                                  focusedErrorBorder: OutlineInputBorder(
                                    borderSide:
                                    const BorderSide(color: Colors.red, width: 1.0),
@@ -954,7 +955,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
                            const BorderSide(color: Colors.grey, width: 1.0),
                            borderRadius: BorderRadius.circular(10.0),
                          ),
-                         focusColor: Colors.red[300],
+                         focusColor: AapoortiConstants.primary,
                          focusedErrorBorder: OutlineInputBorder(
                            borderSide:
                            const BorderSide(color: Colors.red, width: 1.0),
@@ -1093,7 +1094,7 @@ class _IssueToEndUserScreenState extends State<IssueToEndUserScreen> {
                                                                const BorderSide(color: Colors.grey, width: 1.0),
                                                                borderRadius: BorderRadius.circular(10.0),
                                                              ),
-                                                             focusColor: Colors.red[300],
+                                                             focusColor: AapoortiConstants.primary,
                                                              focusedErrorBorder: OutlineInputBorder(
                                                                borderSide:
                                                                const BorderSide(color: Colors.red, width: 1.0),

@@ -40,7 +40,7 @@ class _SafetyDetailsState extends State<SafetyDetails> {
     String inputParam2 = AapoortiUtilities.user!.MAP_ID + "," + year;
 
     jsonResult = await AapoortiUtilities.fetchPostPostLogin(
-        'Rpt/SReport', 'SReport', inputParam1, inputParam2);
+        'Rpt/SReport', 'SReport', inputParam1, inputParam2, context);
     if (jsonResult!.length == 0) {
       jsonResult = null;
       Navigator.pop(context);

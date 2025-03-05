@@ -51,6 +51,24 @@ class LoginProvider with ChangeNotifier {
     return _user;
   }
 
+  bool _rememberMe = false;
+  void setRememberMe(bool rem){
+    _rememberMe = rem;
+    notifyListeners();
+  }
+  bool get remValue{
+    return _rememberMe;
+  }
+
+  int _selectedDays = 5;
+  void setSelectDays(int seldays){
+    _selectedDays = seldays;
+    notifyListeners();
+  }
+  int get selectdaysValue{
+    return _selectedDays;
+  }
+
   Future<void> autologin(BuildContext context) async {
     try {
       dbResult = await dbHelper.fetchSaveLoginUser();
@@ -60,7 +78,7 @@ class LoginProvider with ChangeNotifier {
         DateTime dateTimeNow = DateTime.now();
         final difference = dateTimeNow.difference(dbDate).inDays;
         if(difference<=5){
-           await authenticateUser(dbResult![0][DatabaseHelper.Tb3_col5_emailid], dbResult![0][DatabaseHelper.Tbl3_Col1_Hash], true, true, context);
+          await authenticateUser(dbResult![0][DatabaseHelper.Tb3_col5_emailid], dbResult![0][DatabaseHelper.Tbl3_Col1_Hash], true, true, context);
         }else{
           await dbHelper.deleteSaveLoginUser();
           dbResult!.clear();
@@ -311,7 +329,7 @@ class LoginProvider with ChangeNotifier {
   Future<void> userDetails(String emailid, BuildContext context) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try{
-    var response = await Network.postDataWithAPIM('app/Common/GetListDefaultValue/V1.0.0/GetListDefaultValue','GetListDefaultValue', emailid, prefs.getString('token'));
+      var response = await Network.postDataWithAPIM('app/Common/GetListDefaultValue/V1.0.0/GetListDefaultValue','GetListDefaultValue', emailid, prefs.getString('token'));
       if(response.statusCode == 200) {
         //IRUDMConstants.removeProgressIndicator(context);
         var jsonResult = json.decode(response.body);

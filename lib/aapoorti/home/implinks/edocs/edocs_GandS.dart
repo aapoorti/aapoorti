@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/aapoorti/home/implinks/edocs/EdocsWorksDATA.dart';
 import 'package:http/http.dart' as http;
 //import'package:flutter_app/aapoorti/home/tender/tenderstatus/tender_status_view.dart';
@@ -9,141 +12,110 @@ import 'package:intl/intl.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 import 'EdocsGSdata.dart';
-//import 'package:flutter_app/aapoorti/home/tender/highvaluetender/high_value_tender_details.dart';
 
 class edocs_GandS extends StatefulWidget {
   edocs_GandS() : super();
 
-  final String title = "DropDown Demo";
 
   @override
   edocs_GandSState createState() => edocs_GandSState();
 }
 
 class edocs_GandSState extends State<edocs_GandS> {
-  int? _user;
+
   ProgressDialog? pr;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   bool _autoValidate = false;
 
-  String? txt1, txt2;
-  var users = <String>[
-    'Goods & Services',
-    'Works',
-    'Earning& Leasing',
-  ];
 
   navigate() async {
-    if (_mySelection1 != null &&
-        _mySelection2 != null &&
-        _mySelection3 != null) {
+    if(selectedOrganization != null && selectedZone != null && selectedDepartment != null) {
       try {
-        // await Future.delayed(const Duration(milliseconds: 100));
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EdocsGSdata(
-                item1: _mySelection1!,
-                item2: _mySelection2!,
-                item3: _mySelection3!,
-              ),
-            ));
-      } catch (exception) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => EdocsGSdata(item1: orgCode!, item2: zoneCode!.split(";").last, item3: deptCode!)));
       }
+      catch (exception) {}
     } else {
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
     }
   }
 
-  @override
-  _onClear() {
-    setState(() {
-      _formKey.currentState!.reset();
-      _formKey.currentState!.save();
-      _autoValidate = false;
-
-      _mySelection1 = null;
-      _mySelection2 = null;
-      _mySelection3 = null;
-    });
-  }
-
   _progressShow() {
-    pr = new ProgressDialog(context,
-        type: ProgressDialogType.normal, isDismissible: true, showLogs: true);
+    pr = ProgressDialog(context, type: ProgressDialogType.normal, isDismissible: true, showLogs: true);
     pr!.show();
   }
 
   _progressHide() {
     Future.delayed(Duration(milliseconds: 100), () {
-      pr!.hide().then((isHidden) {
-        print(isHidden);
-      });
+      pr!.hide().then((isHidden) {});
     });
   }
-
-  String? _mySelection1, _mySelection2, _mySelection3;
-  List<dynamic>? jsonResult1;
-  List<dynamic>? jsonResult2;
-  List<dynamic>? jsonResult3;
-  List<dynamic>? jsonResult4;
-
-  int counter = 0;
-
-  Text? txtfirst, txtsecond;
 
   @override
   void initState() {
     super.initState();
-    fetchPostOrganisation();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchPostOrganisation();
+    });
+
   }
 
-  List dataOrganisation = [];
-  List dataZone = [];
-  List dataDepartment = [];
-  List data = [];
+  String? selectedOrganization, orgCode = "-1";
+  String? selectedZone, zoneCode = "-1;-1";
+  String? selectedDepartment, deptCode = "-1";
+
+
+  final Color primaryBlue = Colors.blue[800]!;
+  late List organizations = [];
+  late List zones = [];
+  late List departments = [];
 
   Future<void> fetchPostOrganisation() async {
-    var u = AapoortiConstants.webServiceUrl +
-        '/getData?input=SPINNERS,ORGANIZATION';
     _progressShow();
-    final response1 = await http.post(Uri.parse(u));
-    //  final response1 =   await http.post(u);
-    jsonResult1 = json.decode(response1.body);
-    // jsonResult1 = json.decode(response1.body);
+    try {
+      var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ORGANIZATION';
 
-    _progressHide();
-    setState(() {
-      dataOrganisation = jsonResult1!;
-    });
+      final response1 = await http.post(Uri.parse(u));
+      var jsonResult1 = json.decode(response1.body);
+      setState(() {
+        organizations = jsonResult1!;
+      });
+
+      _progressHide();
+    }
+    on SocketException catch(e){
+      _progressHide();
+      AapoortiUtilities.showInSnackBar(context, "Please check your internet connection!!");
+    }
+    on Exception catch(ex){
+      _progressHide();
+      AapoortiUtilities.showInSnackBar(context, "Something unexpected happened, please try again.");
+    }
   }
 
   Future<String> fetchPostZone() async {
-    var v = AapoortiConstants.webServiceUrl +
-        '/getData?input=SPINNERS,ZONE,${this._mySelection1}';
+    debugPrint("org code $orgCode");
+    var v = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,ZONE,${this.orgCode}';
     _progressShow();
     final response = await http.post(Uri.parse(v));
-    jsonResult2 = json.decode(response.body);
+    var jsonResult2 = json.decode(response.body);
 
     _progressHide();
     setState(() {
-      dataZone = jsonResult2!;
+      zones = jsonResult2!;
     });
     return "Success";
   }
 
   Future<void> fetchPostDepartment() async {
-    var u = AapoortiConstants.webServiceUrl +
-        '/getData?input=SPINNERS,DEPARTMENT,${this._mySelection1},${this._mySelection2}';
+    var u = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,DEPARTMENT,${this.orgCode},${this.zoneCode!.split(";").first}';
     _progressShow();
     final response1 = await http.post(Uri.parse(u));
-    //  final response1 =   await http.post(u);
-    jsonResult3 = json.decode(response1.body);
+    var jsonResult3 = json.decode(response1.body);
     _progressHide();
 
     setState(() {
-      dataDepartment = jsonResult3!;
+      departments = jsonResult3!;
     });
   }
 
@@ -179,163 +151,284 @@ class edocs_GandSState extends State<edocs_GandS> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        width: 370.0,
-                        height: 25.0,
-                        padding: EdgeInsets.only(top: 5.0),
-                        child: Text(
-                          "   Goods and Services",
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                          textAlign: TextAlign.start,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        color: Colors.blueAccent,
+                        width: double.infinity,
+                        child: const Text(
+                          'Goods and Services',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                        color: Colors.cyan[700],
                       ),
-                      Form(
-                        key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        child: FormUI(),
+                      // Container(
+                      //   padding: const EdgeInsets.all(16),
+                      //   color: Colors.blue[800]!,
+                      //   child: Container(
+                      //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.blue[900],
+                      //       borderRadius: BorderRadius.circular(8),
+                      //     ),
+                      //     child: const Row(
+                      //       children: [
+                      //         Icon(Icons.inventory_2, color: Colors.white),
+                      //         SizedBox(width: 12),
+                      //         Text(
+                      //           'Goods and Services',
+                      //           style: TextStyle(
+                      //             color: Colors.white,
+                      //             fontSize: 18,
+                      //             fontWeight: FontWeight.w500,
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 10.0, left: 5, right: 5, bottom: 10),
+                              child: DropdownSearch<String>(
+                                  selectedItem: selectedOrganization ?? "Select Organization",
+                                  // items: (filter, loadProps) => dataRly.map((e) {
+                                  //     return e['NAME'].toString().trim();
+                                  //   }).toList(),
+                                  items: (filter, loadProps) => organizations.map((e) {
+                                    return e['NAME'].toString().trim();
+                                  }).toList(),
+                                  decoratorProps: DropDownDecoratorProps(
+                                    decoration: InputDecoration(
+                                      //labelText: "Organization",
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8.0)
+                                      ),
+                                      prefixIcon: Icon(Icons.list, color: Colors.blue[800]),
+                                    ),
+                                  ),
+                                  popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
+                                  onChanged: (String? newValue) {
+                                    debugPrint("Select Organization test $newValue");
+                                    try {
+                                      setState(() {
+                                        zoneCode = "-1;-1";
+                                        deptCode = "-1";
+                                        selectedZone = null;
+                                        selectedDepartment = null;
+                                        zones.clear();
+                                        departments.clear();
+                                        organizations.forEach((element) {
+                                          if(newValue.toString() == element['NAME'].toString()) {
+                                            selectedOrganization = newValue.toString();
+                                            orgCode = element['ID'].toString();
+                                          }
+                                        });
+                                        // dataRly.forEach((element) {
+                                        //   if(newValue.toString() == element['NAME'].toString()) {
+                                        //     orgName = newValue.toString();
+                                        //     orgCode = element['ID'].toString();
+                                        //   }
+                                        // });
+                                        debugPrint("orgname $selectedOrganization  orgcode $orgCode");
+                                      });
+                                    } catch (e) {
+                                      debugPrint("execption resp " + e.toString());
+                                    }
+                                    //getZone();
+                                    fetchPostZone();
+                                  }
+                              ),
+                            ),
+                            // _buildDropdownField(
+                            //   icon: Icons.business,
+                            //   label: 'Organization',
+                            //   value: selectedOrganization,
+                            //   items: organizations,
+                            //   onChanged: (value) {
+                            //     setState(() {
+                            //       selectedOrganization = value;
+                            //       departments.clear();
+                            //       selectedDepartment = null;
+                            //       zones.clear();
+                            //       selectedZone = null;
+                            //       fetchPostZone();
+                            //     });
+                            //   },
+                            // ),
+                            const SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(top: 10.0, left: 5, right: 5, bottom: 10),
+                              child: DropdownSearch<String>(
+                                selectedItem: selectedZone ?? "Select Zone",
+                                // items: (filter, loadProps) => dataZone.map((e) {
+                                //   return e['NAME'].toString().trim();
+                                // }).toList(),
+                                items: (filter, loadProps) => zones.map((e) {
+                                  return e['NAME'].toString().trim();
+                                }).toList(),
+                                decoratorProps: DropDownDecoratorProps(
+                                  decoration: InputDecoration(
+                                    //labelText: "Zone",
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8.0)
+                                    ),
+                                    prefixIcon: Icon(Icons.train, color: Colors.blue[800]),
+                                  ),
+                                ),
+                                popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
+                                onChanged: (newVal) {
+                                  setState(() {
+                                    deptCode = "-1";
+                                    selectedDepartment = null;
+                                    departments.clear();
+                                    zones.forEach((element) {
+                                      if(newVal.toString() == element['NAME'].toString()) {
+                                        zoneCode = element['ACCID'].toString() + ";" + element['ID'].toString();
+                                        selectedZone = newVal.toString();
+
+                                        debugPrint("zone code nsnns $zoneCode");
+                                      }
+                                      debugPrint("zone code nanna $zoneCode");
+                                    });
+                                  });
+                                  //getDept();
+                                  fetchPostDepartment();
+                                },
+                              ),
+                            ),
+                            // _buildDropdownField(
+                            //   icon: Icons.location_on,
+                            //   label: 'Zone',
+                            //   value: selectedZone,
+                            //   items: zones,
+                            //   onChanged: (value) {
+                            //     setState(() {
+                            //       selectedZone = value;
+                            //       departments.clear();
+                            //       selectedDepartment = null;
+                            //       fetchPostDepartment();
+                            //     });
+                            //   },
+                            // ),
+                            const SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(top: 10.0, left: 5, right: 5, bottom: 10),
+                              child: DropdownSearch<String>(
+                                  selectedItem: selectedDepartment ?? "Select Department",
+                                  items: (filter, loadProps) => departments.map((e) {
+                                    return e['NAME'].toString().trim();
+                                  }).toList(),
+                                  // items: (filter, loadProps) => dataDept.map((e) {
+                                  //   return e['NAME'].toString().trim();
+                                  // }).toList(),
+                                  decoratorProps: DropDownDecoratorProps(
+                                    decoration: InputDecoration(
+                                      //labelText: "Department",
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8.0)
+                                      ),
+                                      prefixIcon: Icon(Icons.account_balance, color: Colors.blue[800]),
+                                    ),
+                                  ),
+                                  popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      departments.forEach((element){
+                                        if(newValue.toString() == element['NAME'].toString()) {
+                                          deptCode = element['ID'].toString();
+                                          selectedDepartment = newValue.toString();
+                                        }
+                                      });
+                                      // dataDept.forEach((element){
+                                      //   if(newValue.toString() == element['NAME'].toString()) {
+                                      //     deptCode = element['ID'].toString();
+                                      //     deptName = newValue.toString();
+                                      //   }
+                                      // });
+                                    });
+                                  }
+                              ),
+                            ),
+                            // _buildDropdownField(
+                            //   icon: Icons.account_balance,
+                            //   label: 'Department',
+                            //   value: selectedDepartment,
+                            //   items: departments,
+                            //   onChanged: (value) {
+                            //     setState(() => selectedDepartment = value);
+                            //   },
+                            // ),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: () {
+                                if(selectedOrganization != null && selectedZone != null && selectedDepartment != null){
+                                  //_validateInputs();
+                                  navigate();
+                                }
+                                else{
+                                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue[800]!,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                'Show Results',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            OutlinedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedOrganization = null;
+                                  selectedZone = null;
+                                  selectedDepartment = null;
+                                });
+                              },
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                side: BorderSide(color: Colors.blue[800]!),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: Text(
+                                'Reset',
+                                style: TextStyle(
+                                  color: Colors.blue[800]!,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                      // Form(
+                      //   key: _formKey,
+                      //   autovalidateMode: AutovalidateMode.onUserInteraction,
+                      //   child: FormUI(),
+                      // ),
                     ],
                   ),
                 ),
               ),
             )));
-  }
-
-  void _validateInputs() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-    } else {
-      setState(() {
-        _autoValidate = true;
-      });
-    }
-  }
-
-  Widget FormUI() {
-    return Column(
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(top: 10.0, left: 15, right: 15),
-          child: DropdownButtonFormField(
-            hint: Text(
-                _mySelection1 != null ? _mySelection1! : "Select Organization"),
-            decoration: InputDecoration(
-                errorStyle: TextStyle(color: Colors.red),
-                icon: Icon(Icons.train, color: Colors.black)),
-            items: dataOrganisation.map((item) {
-              return DropdownMenuItem(
-                  child: Text(item['NAME']), value: item['ID'].toString());
-            }).toList(),
-
-            onChanged: (newVal1) {
-              setState(() {
-                _mySelection2 = null;
-                _mySelection3 = null;
-                dataZone.clear();
-                dataDepartment.clear();
-
-                _mySelection1 = newVal1;
-              });
-              this.fetchPostZone();
-            },
-            value: _mySelection1,
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 10.0, left: 15, right: 15),
-          child: DropdownButtonFormField(
-            hint: Text('Select Zone '),
-            decoration:
-                InputDecoration(icon: Icon(Icons.camera, color: Colors.black)),
-            items: dataZone.map((item) {
-              return DropdownMenuItem(
-                  child: Text(item['NAME']), value: item['ID'].toString());
-            }).toList(),
-            onChanged: (newVal1) {
-              setState(() {
-                _mySelection3 = null;
-
-                dataDepartment.clear();
-                _mySelection2 = newVal1;
-              });
-              fetchPostDepartment();
-            },
-            value: _mySelection2,
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 10.0, left: 15, right: 15),
-          child: DropdownButtonFormField(
-            hint: Text('Select Department '),
-            decoration: InputDecoration(
-                icon: Icon(Icons.account_balance, color: Colors.black)),
-            items: dataDepartment.map((item) {
-              return DropdownMenuItem(
-                  child: Text(item['NAME']), value: item['ID'].toString());
-            }).toList(),
-            onChanged: (newVal1) {
-              setState(() {
-                _mySelection3 = newVal1;
-              });
-            },
-            value: _mySelection3,
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 8,
-              ),
-              ButtonTheme(
-                minWidth: double.infinity,
-                child: MaterialButton(
-                  onPressed: () {
-                    _validateInputs();
-                    navigate();
-                  },
-                  textColor: Colors.white,
-                  color: Colors.cyan,
-                  child: Text(
-                    "Show Results",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          margin: const EdgeInsets.only(top: 5.0),
-          child: Column(
-            children: <Widget>[
-              ButtonTheme(
-                minWidth: double.infinity,
-                child: MaterialButton(
-                  onPressed: () => _onClear(),
-                  textColor: Colors.white,
-                  color: Colors.cyan,
-                  child: Text(
-                    "Reset",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        /*],
-        ),*/
-      ],
-    );
   }
 
   final snackbar = SnackBar(
@@ -352,6 +445,68 @@ class edocs_GandSState extends State<edocs_GandS> {
       onPressed: () {
         // Some code to undo the change.
       },
+    ),
+  );
+}
+
+Widget _buildDropdownField({
+  required IconData icon,
+  required String label,
+  required String? value,
+  required List<dynamic> items,
+  required Function(dynamic) onChanged,
+}) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: Colors.blue[800]!.withOpacity(0.2)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.blue[800]!.withOpacity(0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.blue[800]!),
+          const SizedBox(width: 16),
+          Expanded(
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<dynamic>(
+                value: value,
+                menuMaxHeight: 350,
+                hint: Text(
+                  'Select $label',
+                  style: TextStyle(
+                    color: Colors.blue[800]!.withOpacity(0.6),
+                    fontSize: 16,
+                  ),
+                ),
+                isExpanded: true,
+                icon: Icon(Icons.arrow_drop_down, color: Colors.blue[800]!),
+                items: items.map((item) {
+                  return DropdownMenuItem(
+                    value: label == 'Zone' ? "${item['ACCID'].toString()};${item['ID'].toString()}" : item['ID'].toString(),
+                    child: Text(
+                      item['NAME'],
+                      style: TextStyle(
+                        color: Colors.blue[800]!,
+                        fontSize: 16,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: onChanged,
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }

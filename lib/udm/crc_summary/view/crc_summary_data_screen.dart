@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_app/udm/crc_summary/view/crc_summary_link_data_screen.dart';
 import 'package:flutter_app/udm/crc_summary/view_model/crc_summary_viewmodel.dart';
@@ -171,7 +172,7 @@ class _CrcSummaryDataScreenState extends State<CrcSummaryDataScreen> with Single
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.red[300],
+            backgroundColor: AapoortiConstants.primary,
             automaticallyImplyLeading: false,
             title: Consumer<CrcSummaryViewModel>(
                 builder: (context, value, child) {
@@ -184,13 +185,13 @@ class _CrcSummaryDataScreenState extends State<CrcSummaryDataScreen> with Single
                           borderRadius: BorderRadius.circular(5)),
                       child: Center(
                         child: TextField(
-                          cursorColor: Colors.red[300],
+                          cursorColor: AapoortiConstants.primary,
                           controller: _textsearchController,
                           decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                              prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                               suffixIcon: value.getchangetextlistener == false
                                   ? IconButton(
-                                icon: Icon(Icons.mic, color: Colors.red[300]),
+                                icon: Icon(Icons.mic, color: AapoortiConstants.primary),
                                 onPressed: () async {
                                   hideSoftKeyBoard(KeyboardVisibilityProvider.isKeyboardVisible(context));
                                   bool isAvailable = await _isAvailable();
@@ -201,7 +202,7 @@ class _CrcSummaryDataScreenState extends State<CrcSummaryDataScreen> with Single
                                   }
                                 },
                               ) : IconButton(
-                                icon: Icon(Icons.clear, color: Colors.red[300]),
+                                icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                                 onPressed: () {
                                   Provider.of<CrcSummaryViewModel>(context, listen: false).updateScreen(false);
                                   _textsearchController.text = "";
@@ -209,20 +210,20 @@ class _CrcSummaryDataScreenState extends State<CrcSummaryDataScreen> with Single
                                   Provider.of<CrcSummaryViewModel>(context, listen: false).updatetextchangeScreen(false);
                                 },
                               ),
-                              focusColor: Colors.red[300],
+                              focusColor: AapoortiConstants.primary,
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.red.shade300, width: 1.0),
+                                    color: AapoortiConstants.primary, width: 1.0),
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               errorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.red.shade300, width: 1.0),
+                                    color: AapoortiConstants.primary, width: 1.0),
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.red.shade300, width: 1.0),
+                                    color: AapoortiConstants.primary, width: 1.0),
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               hintText: language.text('search'),

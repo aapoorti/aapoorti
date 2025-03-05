@@ -1,9 +1,11 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 
 class EdocAucDetails extends StatefulWidget {
   final String? id;
@@ -17,8 +19,6 @@ class EdocAucDetailsState extends State<EdocAucDetails> {
   @override
   String? ID;
   List<dynamic>? jsonResult;
-
-  //PublishedLotDetailsState(int id);
 
   EdocAucDetailsState(String id) {
     this.ID = id;
@@ -50,38 +50,27 @@ class EdocAucDetailsState extends State<EdocAucDetails> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        //resizeToAvoidBottomPadding: true,
         appBar: AppBar(
-            iconTheme: new IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
-            title: new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                    child: Text('Public Documents',
-                        style: TextStyle(color: Colors.white))),
-                // new Padding(padding: new EdgeInsets.only(right: 40.0)),
-                new IconButton(
-                  icon: new Icon(
-                    Icons.home,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, "/common_screen", (route) => false);
-                  },
-                ),
-              ],
-            )),
-        /* MaterialApp(
-        debugShowCheckedModeBanner: false,
-
-        title: "About Us",*/
-
+            iconTheme: IconThemeData(color: Colors.white),
+            backgroundColor: AapoortiConstants.primary,
+            // actions: [
+            //   IconButton(
+            //     icon: new Icon(
+            //       Icons.home,
+            //       color: Colors.white,
+            //     ),
+            //     onPressed: () {
+            //       Navigator.pushNamedAndRemoveUntil(
+            //           context, "/common_screen", (route) => false);
+            //     },
+            //   ),
+            // ],
+            title: Text('Public Documents',
+                style: TextStyle(color: Colors.white))),
         body: Center(
             child: jsonResult == null
                 ? SpinKitFadingCircle(
-                    color: Colors.cyan,
+                    color: AapoortiConstants.primary,
                     size: 120.0,
                   )
                 : _myListView(context)),
@@ -94,18 +83,23 @@ class EdocAucDetailsState extends State<EdocAucDetails> {
 
     return jsonResult!.isEmpty
         ? Center(
-            child: Column(
-            children: <Widget>[
-              Image.asset("assets/nodatafound.png"),
-              Text(
-                ' No Response Found ',
-                style: TextStyle(
-                    color: Colors.indigo,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600),
-              )
-            ],
-          ))
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset('assets/json/no_data.json', height: 120, width: 120),
+          AnimatedTextKit(
+              isRepeatingAnimation: false,
+              animatedTexts: [
+                TyperAnimatedText('Data not found',
+                    speed: Duration(milliseconds: 150),
+                    textStyle:
+                    TextStyle(fontWeight: FontWeight.bold)),
+              ]
+          )
+        ],
+      ),
+    )
         : ListView.separated(
             itemCount: jsonResult != null ? jsonResult!.length : 0,
             itemBuilder: (context, index) {
@@ -124,16 +118,13 @@ class EdocAucDetailsState extends State<EdocAucDetails> {
                                 children: <Widget>[
                               Row(children: <Widget>[
                                 Container(
-                                  // height: 30,
-
                                   child: Text(
                                     "Dept Name   ",
                                     style: TextStyle(
                                         color: Colors.indigo, fontSize: 16),
                                   ),
                                 ),
-                                Container(
-                                  // height: 30,
+                                Expanded(
                                   child: Text(
                                     jsonResult![index]['DEPOT_NAME'] != null
                                         ? jsonResult![index]['DEPOT_NAME']

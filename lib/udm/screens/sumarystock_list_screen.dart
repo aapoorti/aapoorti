@@ -1,5 +1,6 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
 import 'package:flutter_app/udm/models/summaryStock.dart';
@@ -509,7 +510,7 @@ class ProductBox extends StatelessWidget {
                                       ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             shape: CircleBorder(),
-                                            backgroundColor: Colors.red.shade300
+                                            backgroundColor: AapoortiConstants.primary
                                           ),
                                           onPressed: () => _onShareData(
                                               "Consignee Depot : " +
@@ -558,7 +559,7 @@ class ProductBox extends StatelessWidget {
                                       ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             shape: CircleBorder(),
-                                              backgroundColor: Colors.red.shade300
+                                              backgroundColor: AapoortiConstants.primary
                                           ),
                                           onPressed: () {
                                             Future.delayed(Duration.zero, () {
@@ -574,7 +575,7 @@ class ProductBox extends StatelessWidget {
                                       ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             shape: CircleBorder(),
-                                              backgroundColor: Colors.red.shade300
+                                              backgroundColor: AapoortiConstants.primary
                                           ),
                                           onPressed: () {
                                             DateTime frdate = DateTime.now().subtract(const Duration(days: 31));

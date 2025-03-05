@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +47,7 @@ class _CustomItemDtailsState extends State<ItemDetails> {
     Size mq = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         iconTheme: IconThemeData(color: Colors.white),
         leading: IconButton(
           splashRadius: 30,
@@ -72,7 +73,7 @@ class _CustomItemDtailsState extends State<ItemDetails> {
                 Icons.share,
                 color: Colors.white,
               ),
-              backgroundColor: Colors.red[300],
+              backgroundColor: AapoortiConstants.primary,
               onPressed: () {
                 _onShareData(
                     "Details of User Depot \n"

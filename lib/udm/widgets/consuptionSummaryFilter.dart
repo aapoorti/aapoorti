@@ -4,6 +4,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
@@ -70,7 +71,7 @@ class _ConsumtionSummaryFilterState extends State<ConsumtionSummaryFilter> {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         iconTheme: IconThemeData(color: Colors.white),
         leading: IconButton(
           splashRadius: 30,
@@ -920,7 +921,7 @@ class _ConsumtionSummaryFilterState extends State<ConsumtionSummaryFilter> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.red[300],
+                          color: AapoortiConstants.primary,
                         )),
                   ),
                 ),
@@ -945,7 +946,7 @@ class _ConsumtionSummaryFilterState extends State<ConsumtionSummaryFilter> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.red[300],
+                          color: AapoortiConstants.primary,
                         )),
                   ),
                 ),

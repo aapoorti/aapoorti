@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/mmis/controllers/choose_dept_controller.dart';
+import 'package:flutter_app/mmis/controllers/dashboard_controller.dart';
+import 'package:flutter_app/mmis/controllers/network_controller.dart';
+import 'package:flutter_app/mmis/controllers/theme_controller.dart';
 import 'package:flutter_app/mmis/routes/routes.dart';
 import 'package:flutter_app/mmis/utils/my_color.dart';
 import 'package:flutter_app/udm/helpers/wso2token.dart';
@@ -15,29 +20,42 @@ class ChooseDepartScreen extends StatefulWidget {
 
 class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
 
-  List<String> departlist = ['CRIS-HQ-EPS', 'CRIS-HQ-ADMINISTRATION'];
-
   final choosedeptcontroller = Get.put<ChooseDeptController>(ChooseDeptController());
-
   int selectedIndex = 0;
+
+  final controller = Get.put(DashBoardController());
+
+  final themeController =  Get.find<ThemeController>();
+  final networkController = Get.put(NetworkController());
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  late TabController _tabController;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchDepart();
   }
 
   Future<void> fetchDepart() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    choosedeptcontroller.fetchDepartmentCount(prefs.getString('userid')!);
+    DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+    if(providedTime.isBefore(DateTime.now())){
+      await fetchToken(context);
+      choosedeptcontroller.fetchDepartmentCount(prefs.getString('userid')!);
+    }
+    else{
+      choosedeptcontroller.fetchDepartmentCount(prefs.getString('userid')!);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('CRIS MMIS',style: TextStyle(color: Colors.white)),backgroundColor: Colors.lightBlue[800]!,
-          iconTheme: IconThemeData(color: Colors.white)),
+      appBar: AppBar(title: Text('CRIS MMIS',style: TextStyle(color: Colors.white)),backgroundColor: Colors.lightBlue[800]!, iconTheme: IconThemeData(color: Colors.white)),
+      key: _scaffoldKey,
+      drawer: navDrawer(context, _scaffoldKey, controller, themeController),
       body: Container(
         height: Get.height,
         width: Get.width,
@@ -55,7 +73,7 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                   alignment: Alignment.center,
                   child: Text("Choose your Department", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 5.0),
                 Obx((){
                   if(choosedeptcontroller.choosedeptState == ChooseDeptState.idle){
                     return SizedBox();
@@ -70,13 +88,10 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                         padding: EdgeInsets.all(10),
                         itemBuilder: (BuildContext context, int index){
                           return InkWell(
-                            onTap: () async{
-                              setState(() {
-                                selectedIndex = index;
+                            onTap: () {
+                              Future.delayed(Duration(milliseconds: 0), (){
+                                Get.toNamed(Routes.homeScreen, arguments: [choosedeptcontroller.departlist[index].key1, choosedeptcontroller.departlist[index].key6, choosedeptcontroller.departlist[index].key8,choosedeptcontroller.departlist[index].key9]);
                               });
-                              fetchToken(context);
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              choosedeptcontroller.selectDept();
                             },
                             child: Card(
                               margin: EdgeInsets.all(10.0),
@@ -266,10 +281,163 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                   }
                   return SizedBox();
                 })
-
              ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, DashBoardController dashBoardController, ThemeController themeController) {
+    return Drawer(
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  Container(
+                    constraints: BoxConstraints.expand(height: 180.0),
+                    alignment: Alignment.bottomLeft,
+                    padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
+                    decoration: BoxDecoration(
+                      color: AapoortiConstants.primary,
+                      //image: DecorationImage(image: AssetImage('assets/welcome.jpg'), fit: BoxFit.cover),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Get.toNamed(Routes.profileScreen);
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.person,
+                                  size: 40,
+                                  color: AapoortiConstants.primary,
+                                ),
+                              ),
+                              Text(
+                                'Welcome',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0),
+                              ),
+                              //SizedBox(height: 4.0),
+                              Obx(() => Text(
+                                  dashBoardController.username.value,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0))),
+                              SizedBox(height: 2.0),
+                              Obx(() => Text(dashBoardController.email.value,
+                                  style:
+                                  TextStyle(color: Colors.white, fontSize: 15.0)))
+                            ],
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.white,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    thickness: 0.5,
+                    color: Colors.black,
+                    height: 2.0,
+                  ),
+                  // drawerTile(Iconic.lock, 'changepin'.tr, () {
+                  //   //Navigator.pop(context);
+                  //   _scaffoldKey.currentState!.closeDrawer();
+                  //   Get.toNamed(Routes.changepinScreen);
+                  // }),
+                  // drawerTile(Iconic.star, 'rateus'.tr, () {
+                  //   //Navigator.pop(context);
+                  //   _scaffoldKey.currentState!.closeDrawer();
+                  //   AapoortiUtilities.openStore(context);
+                  // }),
+                ],
+              ),
+            ),
+          ),
+          Column(
+            children: [
+              // Align(
+              //   alignment: Alignment.topRight,
+              //   child: Padding(
+              //     padding: EdgeInsets.symmetric(horizontal: 5.0),
+              //     child: Container(
+              //       height: 80.0,
+              //       width: 80.0,
+              //       decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey), borderRadius: BorderRadius.circular(40)),
+              //       child: Image.asset('assets/images/crisnew.png', fit: BoxFit.cover, width: 80, height: 80),
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 2.0),
+              InkWell(
+                onTap: () {
+                  if (_scaffoldKey.currentState!.isDrawerOpen) {
+                    _scaffoldKey.currentState!.closeDrawer();
+                    AapoortiUtilities.showAlertDailog(context, "MMIS");
+                    //_showConfirmationDialog(context);
+                    //WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
+                    //callWebServiceLogout();
+                  }
+                },
+                child: Container(
+                  height: 45,
+                  color: AapoortiConstants.primary,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.logout, color: Colors.white),
+                      SizedBox(width: 10),
+                      Text("Logout",
+                          style: TextStyle(fontSize: 16, color: Colors.white))
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          //SizedBox(height: 15),
+        ],
+      ),
+    );
+  }
+
+  ListTile drawerTile(IconData icon, String title, VoidCallback ontap) {
+    return ListTile(
+      onTap: ontap,
+      contentPadding: EdgeInsets.symmetric(horizontal: 10),
+      horizontalTitleGap: 10,
+      leading: Icon(
+        icon,
+        color: Colors.black,
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(color: Colors.black),
       ),
     );
   }

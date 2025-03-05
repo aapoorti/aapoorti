@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 
 class Constants{
   Constants._();
-  static const double padding =20;
-  static const double avatarRadius =45;
+  static const double padding = 20;
+  static const double avatarRadius = 45;
 }
 
 class CommonDailog extends StatelessWidget {
@@ -20,24 +21,15 @@ class CommonDailog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      //Set to remove dailog from icon
-      insetPadding: EdgeInsets.only(top:100,left:40,right:40) ,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(Constants.padding),
-  ),
-  elevation: 0,
-  backgroundColor: Colors.transparent,
+    return Dialog(insetPadding: EdgeInsets.only(top: 100, left: 40, right: 40) ,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Constants.padding)), elevation: 0, backgroundColor: Colors.transparent,
   child: contentBox(context),
-);
-  }
+);}
   contentBox(context){
   return Stack(
     children: <Widget>[
-      Container(
-  padding: EdgeInsets.only(left: Constants.padding,top: Constants.avatarRadius
-      + Constants.padding, right: Constants.padding,bottom: Constants.padding
-  ),
+   Container(
+      padding: EdgeInsets.only(left: Constants.padding,top: Constants.avatarRadius + Constants.padding, right: Constants.padding,bottom: Constants.padding),
   margin: EdgeInsets.only(top: Constants.avatarRadius),
   decoration: BoxDecoration(
     shape: BoxShape.rectangle,
@@ -92,13 +84,13 @@ class CommonDailog extends StatelessWidget {
       Positioned(left: Constants.padding,
       right: Constants.padding,
       child: CircleAvatar(
-      backgroundColor: type != 'Error' ? Colors.red[300] : Colors.white,
+      backgroundColor: type != 'Error' ? AapoortiConstants.primary : Colors.white,
       radius: Constants.avatarRadius,
       child: ClipRRect(
          borderRadius: BorderRadius.all(Radius.circular(Constants.avatarRadius)),
          child: Icon( type=='Error' ? Icons.error: Icons.warning_outlined,
          size: Constants.avatarRadius+45,
-         color: Colors.red[300])))),// top part
+         color: AapoortiConstants.primary)))),// top part
     ],
   );
 }

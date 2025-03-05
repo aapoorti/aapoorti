@@ -12,60 +12,13 @@ class SearchPoOtherZonalScreen extends StatefulWidget {
 
 class _SearchPoOtherZonalScreenState extends State<SearchPoOtherZonalScreen> with SingleTickerProviderStateMixin{
 
-  // late TabController tabController;
-  //
-  // int _activeindex = 0;
-  //
-  // @override
-  // void initState() {
-  //   tabController = TabController(length: 2, vsync: this);
-  //   super.initState();
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   tabController.dispose();
-  //   super.dispose();
-  // }
-
   late TabController _tabController;
-  final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _supplierController = TextEditingController();
-  final TextEditingController _plNoController = TextEditingController();
-  DateTime? _startDate;
-  DateTime? _endDate;
-  // Initialize with default values
-  double _minValue = 0;
-  double _maxValue = 100;
-
-  String? _selectedRailway;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    _supplierController.dispose();
-    _plNoController.dispose();
-    super.dispose();
-  }
-
-  void _resetForm() {
-    setState(() {
-      _formKey.currentState?.reset();
-      _supplierController.clear();
-      _plNoController.clear();
-      _startDate = null;
-      _endDate = null;
-      _minValue = 0;
-      _maxValue = 100;
-      _selectedRailway = null;
-    });
   }
 
   @override
@@ -133,32 +86,88 @@ class _SearchPoOtherZonalScreenState extends State<SearchPoOtherZonalScreen> wit
     //   )
     // );
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        centerTitle: true,
-        title: Text(
-            'Search PO',
-            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home, color: Colors.white),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-          ),
-        ],
-        backgroundColor: Colors.blue.shade800,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Search PO (Zonal)'),
-            Tab(text: 'Search PO (Other)'),
+      // appBar: AppBar(
+      //   iconTheme: IconThemeData(color: Colors.white),
+      //   centerTitle: true,
+      //   title: Text(
+      //       'Search PO',
+      //       style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+      //   ),
+      //   // actions: [
+      //   //   IconButton(
+      //   //     icon: const Icon(Icons.home, color: Colors.white),
+      //   //     onPressed: () {
+      //   //       Navigator.of(context, rootNavigator: true).pop();
+      //   //     },
+      //   //   ),
+      //   // ],
+      //   backgroundColor: Colors.blue.shade800,
+      //   // bottom: TabBar(
+      //   //   controller: _tabController,
+      //   //   tabs: const [
+      //   //     Tab(text: 'Search PO (Zonal)'),
+      //   //     Tab(text: 'Search PO (Other)'),
+      //   //   ],
+      //   //   labelColor: Colors.white,
+      //   //   unselectedLabelColor: Colors.white70,
+      //   //   indicatorColor: Colors.white,
+      //   //   labelStyle: const TextStyle(fontSize: 14),
+      //   // ),
+      // ),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(110), // Increased height to accommodate both bars
+        child: Column(
+          children: [
+            // Main AppBar
+            AppBar(
+              toolbarHeight: 60, // Increased height for main AppBar
+              iconTheme: IconThemeData(color: Colors.white),
+              centerTitle: true,
+              title: Text(
+                'Search PO',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+              // actions: [
+              //   IconButton(
+              //     icon: const Icon(Icons.home, color: Colors.white),
+              //     onPressed: () {
+              //       // Handle home button press
+              //     },
+              //   ),
+              // ],
+              backgroundColor: Colors.blue.shade800,
+            ),
+            // Separate TabBar with lighter color
+            Container(
+              height: 50, // Fixed height for TabBar
+              color: Colors.blue.shade700, // Lighter blue color
+              child: TabBar(
+                controller: _tabController,
+                tabs: const [
+                  Tab(
+                    child: Text(
+                      'Search PO (Zonal)',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      'Search PO (Other)',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                ],
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white70,
+                indicatorColor: Colors.white,
+                indicatorWeight: 3,
+                indicatorSize: TabBarIndicatorSize.tab,
+              ),
+            ),
           ],
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          indicatorColor: Colors.white,
-          labelStyle: const TextStyle(fontSize: 14),
         ),
       ),
       body: TabBarView(
@@ -170,6 +179,4 @@ class _SearchPoOtherZonalScreenState extends State<SearchPoOtherZonalScreen> wit
       ),
     );
   }
-
-
 }

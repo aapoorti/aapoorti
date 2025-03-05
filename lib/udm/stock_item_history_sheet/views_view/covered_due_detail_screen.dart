@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/providers/change_visibility_provider.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/stock_item_history_sheet/view_model/StockHistoryViewModel.dart';
@@ -54,7 +55,7 @@ class _CoveredDueDetailScreenState extends State<CoveredDueDetailScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         iconTheme: IconThemeData(color: Colors.white),
         title : Text(language.text('coveredduedetail'), style: TextStyle(color: Colors.white)),
         actions: [

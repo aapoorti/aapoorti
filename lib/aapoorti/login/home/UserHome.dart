@@ -334,7 +334,7 @@ class _UserHomeState extends State<UserHome> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () {
-          //_onButtonPressed(context);
+          //AapoortiUtilities.showLogOutDialog(context, () {AapoortiUtilities.callWebServiceLogout1(context);});
           WarningAlertDialog().logOut(context, () {AapoortiUtilities.callWebServiceLogout1(context);});
           return Future.value(false);
         },
@@ -696,7 +696,6 @@ class _UserHomeState extends State<UserHome> {
                                         context, "/IrepsProgress");
                                   },
                                   padding: EdgeInsets.all(0.0),
-                                  //child: Image.asset('assets/avg_time_report.png',width: 50,height: 60,)),
                                   child: Image.asset(
                                     'assets/highvaluetender.png',
                                     width: 50,
@@ -706,13 +705,12 @@ class _UserHomeState extends State<UserHome> {
                           ),
                         ),
                         Center(
-                            child: Row(
+                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             Text('Stock Position', style: TextStyle(color: Colors.black, fontSize: 12),
                             ),
-                            Text('IREPS Progress', style: TextStyle(color: Colors.black, fontSize: 12),
-                            ),
+                            //Text('IREPS Progress', style: TextStyle(color: Colors.black, fontSize: 12)),
                           ],
                         )),
                         Padding(padding: EdgeInsets.all(20.0)),

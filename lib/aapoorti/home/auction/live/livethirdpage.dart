@@ -26,7 +26,6 @@ class _live3State extends State<live3> {
         'Auction/LotDesc?LOTID=${widget.value.lotid}';
     final response = await http.post(Uri.parse(v));
     jsonResult = json.decode(response.body);
-    print(jsonResult);
     setState(() {});
   }
 
@@ -40,14 +39,13 @@ class _live3State extends State<live3> {
       child: Scaffold(
         appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
+            backgroundColor: AapoortiConstants.primary,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                     child: Text('Live Auctions(Sale)',
                         style: TextStyle(color: Colors.white))),
-                // new Padding(padding: new EdgeInsets.only(right: 80.0)),
                 IconButton(
                   icon: Icon(
                     Icons.home,
@@ -68,10 +66,11 @@ class _live3State extends State<live3> {
                 width: MediaQuery.of(context).size.width,
                 height: 30,
                 color: Colors.cyan.shade600,
+                alignment: Alignment.center,
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
-                  '   Auction Catalogue>> Lot Details',
-                  style: new TextStyle(
+                  'Auction Catalogue>> Lot Details',
+                  style: TextStyle(
                       color: Colors.white,
                       backgroundColor: Colors.cyan.shade600,
                       fontWeight: FontWeight.bold,
@@ -82,7 +81,7 @@ class _live3State extends State<live3> {
               Expanded(
                   child: jsonResult == null
                       ? SpinKitFadingCircle(
-                          color: Colors.cyan,
+                          color: AapoortiConstants.primary,
                           size: 120.0,
                         )
                       : _myListView(context))
@@ -129,7 +128,7 @@ class _live3State extends State<live3> {
                         ),
                       )
                     ]),
-                    new Divider(
+                    Divider(
                       color: Colors.grey,
                     ),
                     Padding(
@@ -240,7 +239,6 @@ class _live3State extends State<live3> {
                           )),
                         ],
                       ),
-//
                     ]),
                     Divider(
                       color: Colors.grey,
@@ -296,7 +294,7 @@ class _live3State extends State<live3> {
                         ),
                       )
                     ]),
-                    new Divider(
+                    Divider(
                       color: Colors.grey,
                     ),
                     Padding(
@@ -318,7 +316,7 @@ class _live3State extends State<live3> {
                         ),
                       )
                     ]),
-                    new Divider(
+                    Divider(
                       color: Colors.grey,
                     ),
                     Padding(

@@ -36,6 +36,10 @@ class LoginController extends GetxController{
   bool get checkValue => _checkValue.value;
   set checkValue(bool value) => _checkValue.value = value;
 
+  final _checkValuedays = 5.obs;
+  int get checkValuedays => _checkValuedays.value;
+  set checkValuedays(int value) => _checkValuedays.value = value;
+
   final _isVisible = true.obs;
   bool get isVisible => _isVisible.value;
   set isVisible(bool value) => _isVisible.value = value;
@@ -73,7 +77,7 @@ class LoginController extends GetxController{
     super.onClose();
   }
 
-  Future<void> loginUsers(String email, String pin, bool isLoginSaved) async  {
+  Future<void> loginUsers(String email, String pin, bool isLoginSaved, int days) async  {
     try {
       loginState.value = LoginState.loading;
       //SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -85,6 +89,7 @@ class LoginController extends GetxController{
         //ToastMessage.success("Successfully login!!");
         loginState.value = LoginState.success;
         await prefs.setBoolValue('ismmisLoginSaved', isLoginSaved);
+        await prefs.setStringValue("days", days.toString());
         await prefs.setStringValue('orgzone', loginResponse[0].orgZone!);
         await prefs.setStringValue('userid', loginResponse[0].userType!.split("~").last);
         Timer(const Duration(milliseconds: 0), () {
@@ -330,8 +335,8 @@ class LoginController extends GetxController{
       if(prefs.containsKey('ismmisLoginSaved')) {
         if(prefs.get('ismmisLoginSaved') == true) {
           debugPrint("last log time ${box.get(0)!.lastLogTime.toString()}");
-          if(getDaysDifference(box.get(0)!.lastLogTime.toString())<=5) {
-            loginUsers(prefs.getString('mmisemail')!, prefs.getString('mmismpin')!, true);
+          if(getDaysDifference(box.get(0)!.lastLogTime.toString())<=10) {
+            loginUsers(prefs.getString('mmisemail')!, prefs.getString('mmismpin')!, true, int.parse(prefs.getString("days")!));
           }
         }
       }

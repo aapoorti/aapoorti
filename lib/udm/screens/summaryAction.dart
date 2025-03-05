@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
@@ -69,7 +70,7 @@ class _SearchScreenState extends State<SummaryDetails>
         labelData: 'UserDepotOfStock',
       ),
       // appBar: AppBar(
-      //   backgroundColor: Colors.red[300],
+      //   backgroundColor: AapoortiConstants.primary,
       //   leading: IconButton(
       //     splashRadius: 30,
       //     icon: Icon(
@@ -151,7 +152,7 @@ class _SearchScreenState extends State<SummaryDetails>
                                  1
                                ],
                                colors: [
-                                 Colors.red[300]!,
+                                 AapoortiConstants.primary,
                                  Colors.orange[400]!,
                                ]),
                          ),
@@ -384,7 +385,7 @@ class _SearchScreenState extends State<SummaryDetails>
                                             ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
                                                   shape: CircleBorder(),
-                                                  backgroundColor: Colors.red.shade300
+                                                  backgroundColor: AapoortiConstants.primary
                                                 ),
                                                 onPressed: () => _onShareData(
                                                     "Railway : " +
@@ -418,7 +419,7 @@ class _SearchScreenState extends State<SummaryDetails>
                                                 )),
                                             ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                  shape: CircleBorder(), backgroundColor: Colors.red.shade300
+                                                  shape: CircleBorder(), backgroundColor: AapoortiConstants.primary
                                                 ),
                                                 onPressed: () {
                                                   Future.delayed(Duration.zero,

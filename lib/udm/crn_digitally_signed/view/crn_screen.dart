@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'package:flutter_app/udm/crn_digitally_signed/providers/crnscreen_update_changes.dart';
@@ -84,7 +85,7 @@ class _CrnScreenState extends State<CrnScreen>
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.red[300],
+        backgroundColor:AapoortiConstants.primary,
         automaticallyImplyLeading: false,
         iconTheme: IconThemeData(color: Colors.white),
         // leading: Consumer<CrnupdateChangesScreenProvider>(
@@ -117,12 +118,12 @@ class _CrnScreenState extends State<CrnScreen>
                   color: Colors.white, borderRadius: BorderRadius.circular(5)),
               child: Center(
                 child: TextField(
-                  cursorColor: Colors.red[300],
+                  cursorColor: AapoortiConstants.primary,
                   controller: _textsearchController,
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                      prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                       suffixIcon: IconButton(
-                        icon: Icon(Icons.clear, color: Colors.red[300]),
+                        icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                         onPressed: () {
                           if (_activeindex == 0 && gradecode == "N") {
                             _textsearchController.text = "";
@@ -190,8 +191,8 @@ class _CrnScreenState extends State<CrnScreen>
                     },
                     child: Icon(Icons.arrow_back, color: Colors.white)),
                 SizedBox(width: 10),
-                Text(language.text('crndigisigned').length > 25
-                    ? '${language.text('crndigisigned').substring(0, 25)}...'
+                Text(language.text('crndigisigned').length > 20
+                    ? '${language.text('crndigisigned').substring(0, 20)}...'
                     : language.text('crndigisigned'), style: TextStyle(color: Colors.white))
               ],
             );
@@ -238,7 +239,7 @@ class _CrnScreenState extends State<CrnScreen>
             Container(
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: Colors.red[300],
+                color: AapoortiConstants.primary,
                 borderRadius: BorderRadius.circular(0),
               ),
               child: Column(

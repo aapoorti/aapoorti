@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/ns_demand_summary/providers/search_nsdscreen_provider.dart';
@@ -96,7 +97,7 @@ class _NSDemandtotallinkScreenState extends State<NSDemandtotallinkScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           title: Consumer<SearchNSDScreenProvider>(
               builder: (context, value, child) {
@@ -109,21 +110,21 @@ class _NSDemandtotallinkScreenState extends State<NSDemandtotallinkScreen> {
                         borderRadius: BorderRadius.circular(5)),
                     child: Center(
                       child: TextField(
-                        cursorColor: Colors.red[300],
+                        cursorColor: AapoortiConstants.primary,
                         controller: _textsearchController,
                         decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                            prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                             suffixIcon: IconButton(
-                              icon: Icon(Icons.clear, color: Colors.red[300]),
+                              icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                               onPressed: () {
                                 Provider.of<SearchNSDScreenProvider>(context, listen: false).updatelinkScreen(false);
                                 _textsearchController.text = "";
                                 Provider.of<NSDemandSummaryViewModel>(context, listen: false).searchingNSDMDtotallink(_textsearchController.text, context);
                               },
                             ),
-                            focusColor: Colors.red[300],
+                            focusColor: AapoortiConstants.primary,
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.red.shade300, width: 1.0),
+                              borderSide: BorderSide(color: AapoortiConstants.primary, width: 1.0),
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             errorBorder: OutlineInputBorder(
@@ -398,7 +399,7 @@ class _NSDemandtotallinkScreenState extends State<NSDemandtotallinkScreen> {
                                                           fontSize: 16),
                                                       trimLines: 3,
                                                       colorClickableText:
-                                                      Colors.red[300],
+                                                      AapoortiConstants.primary,
                                                       trimMode: TrimMode.Line,
                                                       trimCollapsedText:
                                                       ' ...${language.text('more')}',

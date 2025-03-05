@@ -32,7 +32,7 @@ class _SoldLotsState extends State<SoldLots> {
     String inputParam1 = AapoortiUtilities.user!.C_TOKEN + "," +AapoortiUtilities.user!.S_TOKEN + ",Flutter,0,0";
     String inputParam2 = AapoortiUtilities.user!.MAP_ID ;
 
-    jsonResult = await AapoortiUtilities.fetchPostPostLogin('AFLAuction/SOLD_LOT', 'SOLD_LOT' ,inputParam1, inputParam2) ;
+    jsonResult = await AapoortiUtilities.fetchPostPostLogin('AFLAuction/SOLD_LOT', 'SOLD_LOT' ,inputParam1, inputParam2, context) ;
     if(jsonResult!.length==0)
     {
       Navigator.pop(context);

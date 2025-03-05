@@ -34,7 +34,7 @@ class _AvgSetTimeNEXTpageState extends State<AvgSetTimeNEXTpage> {
     }
     String inputParam1 = AapoortiUtilities.user!.C_TOKEN + "," +AapoortiUtilities.user!.S_TOKEN + ",Flutter,0,0";
     String inputParam2 = AapoortiUtilities.user!.MAP_ID+","+From_date!+","+To_date!+","+"PT" ;
-    jsonResult = await AapoortiUtilities.fetchPostPostLogin('Rpt/AvgSetTimeReport', 'AvgSetTimeReport' ,inputParam1, inputParam2) ;
+    jsonResult = await AapoortiUtilities.fetchPostPostLogin('Rpt/AvgSetTimeReport', 'AvgSetTimeReport' ,inputParam1, inputParam2, context) ;
     if(jsonResult!.length==0)    {
       jsonResult=null;
       Navigator.pop(context);

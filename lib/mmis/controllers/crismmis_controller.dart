@@ -23,7 +23,7 @@ class CrisMMISController extends GetxController{
   List<CrisMmisData> newcrismmisData = [];
   List<CrisMmisData> duplicatenewcrismmisData = [];
 
-  Future<void> fetchCrismmisData(BuildContext context) async{
+  Future<void> fetchCrismmisData(BuildContext context, String postId) async{
     fetchToken(context);
     crismmisState.value = CrisMmmisState.Busy;
     try{
@@ -36,8 +36,8 @@ class CrisMMISController extends GetxController{
       };
       final body = json.encode({
         "input_type" : "CRIS_MMIS_PENDING_DEMAND_NEW",
-        //"input": "1030586",
-        "input": "${prefs.getString('userid')!}",
+        //"input": '1213717~93257',
+        "input": "${prefs.getString('userid')!}~$postId",
         "key_ver" : "V3"
       });
       debugPrint("user id ${prefs.getString('userid')!}");

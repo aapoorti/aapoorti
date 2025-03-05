@@ -37,6 +37,7 @@ class ChooseDeptController extends GetxController{
       };
       final body = json.encode({
         "input_type" : "CRIS_MMIS_CHOOSE_DEPT",
+        //"input": '1213717',
         "input": "$userId",
         "key_ver" : "V1"
       });
@@ -48,10 +49,11 @@ class ChooseDeptController extends GetxController{
           var listJson = listdata['data'];
           departlist = listJson.map<DepartData>((val) => DepartData.fromJson(val)).toList();
           choosedeptState.value = ChooseDeptState.success;
-          //ToastMessage.success("Choose Department Successfully!!");
-          // Future.delayed(Duration(milliseconds: 0), (){
-          //   Get.offAndToNamed(Routes.homeScreen);
-          // });
+          if(departlist.length == 1){
+            Future.delayed(Duration(milliseconds: 0), (){
+              Get.toNamed(Routes.homeScreen, arguments: [departlist[0].key1, departlist[0].key6, departlist[0].key8,departlist[0].key9]);
+            });
+          }
         }
         else{
           choosedeptState.value = ChooseDeptState.failed;
@@ -68,44 +70,44 @@ class ChooseDeptController extends GetxController{
     }
   }
 
-  Future<void> selectDept() async{
-    selectdeptState.value = SelectDeptState.loading;
-    try{
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P3/V1/GetData");
-      final headers = {
-        'accept': '*/*',
-        'Content-Type': 'application/json',
-        'Authorization': '${prefs.getString('token')}',
-      };
-      final body = json.encode({
-        "input_type" : "CRIS_MMIS_SELECT_DEPT",
-        "input": "",
-        "key_ver" : "V1"
-      });
-      final response = await http.post(url, headers: headers, body: body);
-      debugPrint("response sdd ${json.decode(response.body)}");
-      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success'){
-        var listdata = json.decode(response.body);
-        if(listdata['status'] == 'Success'){
-          selectdeptState.value = SelectDeptState.success;
-          //ToastMessage.success("Choose Department Successfully!!");
-          Future.delayed(Duration(milliseconds: 0), (){
-            Get.offAndToNamed(Routes.homeScreen);
-          });
-        }
-        else{
-          selectdeptState.value = SelectDeptState.failed;
-          ToastMessage.error("Something went wrong, please try again");
-        }
-      }
-      else{
-        selectdeptState.value = SelectDeptState.failed;
-        //IRUDMConstants().showSnack('Data not found.', context);
-      }
-    }
-    on Exception{
-      selectdeptState.value = SelectDeptState.failedWithError;
-    }
-  }
+  // Future<void> selectDept() async{
+  //   selectdeptState.value = SelectDeptState.loading;
+  //   try{
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P3/V1/GetData");
+  //     final headers = {
+  //       'accept': '*/*',
+  //       'Content-Type': 'application/json',
+  //       'Authorization': '${prefs.getString('token')}',
+  //     };
+  //     final body = json.encode({
+  //       "input_type" : "CRIS_MMIS_SELECT_DEPT",
+  //       "input": "",
+  //       "key_ver" : "V1"
+  //     });
+  //     final response = await http.post(url, headers: headers, body: body);
+  //     debugPrint("response sdd ${json.decode(response.body)}");
+  //     if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success'){
+  //       var listdata = json.decode(response.body);
+  //       if(listdata['status'] == 'Success'){
+  //         selectdeptState.value = SelectDeptState.success;
+  //         //ToastMessage.success("Choose Department Successfully!!");
+  //         Future.delayed(Duration(milliseconds: 0), (){
+  //           Get.offAndToNamed(Routes.homeScreen);
+  //         });
+  //       }
+  //       else{
+  //         selectdeptState.value = SelectDeptState.failed;
+  //         ToastMessage.error("Something went wrong, please try again");
+  //       }
+  //     }
+  //     else{
+  //       selectdeptState.value = SelectDeptState.failed;
+  //       //IRUDMConstants().showSnack('Data not found.', context);
+  //     }
+  //   }
+  //   on Exception{
+  //     selectdeptState.value = SelectDeptState.failedWithError;
+  //   }
+  // }
 }

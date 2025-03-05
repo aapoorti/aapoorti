@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/helpers/database_helper.dart';
 import 'package:flutter_app/udm/widgets/bottom_Nav/bottom_nav.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -81,7 +82,7 @@ class _ProfileScreenState extends State<Profile> {
       //   ),
       // ),
       appBar: AppBar(
-        backgroundColor: Colors.red.shade300,
+        backgroundColor: AapoortiConstants.primary,
         iconTheme: IconThemeData(color: Colors.white),
         title: Text("Profile", style: TextStyle(color: Colors.white)),
         elevation: 4,
@@ -101,14 +102,14 @@ class _ProfileScreenState extends State<Profile> {
                     children: [
                       CircleAvatar(
                         radius: 45,
-                        backgroundColor: Colors.red.shade200,
+                        backgroundColor: AapoortiConstants.primary,
                         child: CircleAvatar(
                           radius: 40,
                           backgroundColor: Colors.white,
                           child: Icon(
                             Icons.person,
                             size: 45,
-                            color: Colors.red.shade200,
+                            color: AapoortiConstants.primary,
                           ),
                         ),
                       ),

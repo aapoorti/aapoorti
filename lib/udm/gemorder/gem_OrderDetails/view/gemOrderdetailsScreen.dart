@@ -1,6 +1,7 @@
 import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:fluttericon/typicons_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -50,7 +51,7 @@ class _GeMBillDetailsScreenState extends State<GeMBillDetailsScreen> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           actions: [
             Consumer<GemOrderupdateChangesScreenProvider>(
@@ -96,12 +97,12 @@ class _GeMBillDetailsScreenState extends State<GeMBillDetailsScreen> {
                     height: 40,
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                     child: Center(child: TextField(
-                      cursorColor: Colors.red[300],
+                      cursorColor: AapoortiConstants.primary,
                       controller: _textsearchController,
                       decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                          prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.clear, color: Colors.red[300]),
+                            icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                             onPressed: () {
                               updatechangeprovider.updateScreen(false);
                               _textsearchController.text = "";
@@ -229,7 +230,7 @@ class _GeMBillDetailsScreenState extends State<GeMBillDetailsScreen> {
                                                         alignment: Alignment.centerLeft,
                                                         decoration: BoxDecoration(
                                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                                                            color: Colors.red[300]
+                                                            color: AapoortiConstants.primary
                                                         ),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,

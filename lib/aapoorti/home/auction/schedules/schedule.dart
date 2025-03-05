@@ -8,7 +8,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-//import "package:equatable/equatable.dart";
 class Users {
   final String? sid, category;
   const Users({
@@ -57,7 +56,6 @@ class _scheduleState extends State<schedule> {
       rowcount = (await dbHelper.rowCountSchedule())!;
       debugPrint(rowcount.toString());
       debugPrint(AapoortiConstants.common);
-      // ignore: unrelated_type_equality_checks
       if (AapoortiConstants.common.compareTo(rowcount.toString()) == 0) {
         debugPrint("Equal..fetching from database");
         jsonResult = await dbHelper.fetchSchedule();
@@ -72,8 +70,6 @@ class _scheduleState extends State<schedule> {
         jsonResult = json.decode(response.body);
         debugPrint("jsonresult===");
         debugPrint(jsonResult.toString());
-        // print(jsonResult1.toString());
-        //print(jsonResult1[0]['Count']);
         await dbHelper.deleteSchedule(1);
         debugPrint("saved function called");
         for (int index = 0; index < jsonResult!.length; index++) {
@@ -108,40 +104,39 @@ class _scheduleState extends State<schedule> {
         appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
             backgroundColor: AapoortiConstants.primary,
-            actions: [
-              IconButton(
-                icon: Icon(
-                  Icons.home,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                },
-              ),
-            ],
-            title: Text('Auction Schedule (Sale)', style: TextStyle(color: Colors.white,fontSize: 18))),
+            // actions: [
+            //   IconButton(
+            //     icon: Icon(
+            //       Icons.home,
+            //       color: Colors.white,
+            //     ),
+            //     onPressed: () {
+            //       Navigator.of(context, rootNavigator: true).pop();
+            //     },
+            //   ),
+            // ],
+        title: Text('Auction Schedule (Sale)', style: TextStyle(color: Colors.white,fontSize: 18))),
         body: Container(
           child: Column(
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 40,
-                color: Colors.cyan.shade600,
-                padding: const EdgeInsets.only(top: 10),
+                color: Colors.cyan[50],
+                alignment: Alignment.center,
                 child: Text(
                   'Total Records',
                   style: TextStyle(
-                      color: Colors.white,
-                      backgroundColor: Colors.cyan.shade600,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17),
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
                   textAlign: TextAlign.center,
                 ),
               ),
               Expanded(
                   child: jsonResult == null
                       ? SpinKitFadingCircle(
-                          color: Colors.cyan,
+                          color: AapoortiConstants.primary,
                           size: 120.0,
                         )
                       : _myListView(context))

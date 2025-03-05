@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/end_user/models/checkverification.dart';
@@ -68,7 +69,7 @@ class _EndUserScreenState extends State<EndUserScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           title: Consumer<ToEndUSerViewModel>(
               builder: (context, value, child) {
@@ -81,21 +82,21 @@ class _EndUserScreenState extends State<EndUserScreen> {
                         borderRadius: BorderRadius.circular(5)),
                     child: Center(
                       child: TextField(
-                        cursorColor: Colors.red[300],
+                        cursorColor: AapoortiConstants.primary,
                         controller: _textsearchController,
                         decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                            prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                             suffixIcon: IconButton(
-                              icon: Icon(Icons.clear, color: Colors.red[300]),
+                              icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                               onPressed: () {
                                 Provider.of<ToEndUSerViewModel>(context, listen: false).updateendusersearchScreen(false);
                                 _textsearchController.text = "";
                                 //Provider.of<ToEndUSerViewModel>(context, listen: false).searchingNSDMDlink(_textsearchController.text, context);
                               },
                             ),
-                            focusColor: Colors.red[300],
+                            focusColor: AapoortiConstants.primary,
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.red.shade300, width: 1.0),
+                              borderSide: BorderSide(color: AapoortiConstants.primary, width: 1.0),
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             errorBorder: OutlineInputBorder(
@@ -433,7 +434,7 @@ class _EndUserScreenState extends State<EndUserScreen> {
                                                   children: [
                                                 ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.red.shade300,
+                                                backgroundColor: AapoortiConstants.primary,
                                                   side: BorderSide(color: Colors.white30, width: 1),
                                                   textStyle: const TextStyle(
                                                       color: Colors.white, fontSize: 20, fontStyle: FontStyle.normal),

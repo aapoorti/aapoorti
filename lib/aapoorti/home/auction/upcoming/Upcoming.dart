@@ -51,19 +51,7 @@ class _UpcomingState extends State<Upcoming> {
         appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
             backgroundColor: AapoortiConstants.primary,
-            actions: [
-              IconButton(
-                icon: Icon(
-                  Icons.home,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                },
-              ),
-            ],
-            title: Text('Upcoming Auctions (Sale)',
-                style: TextStyle(color: Colors.white,fontSize: 18))),
+            title: Text('Upcoming Auctions (Sale)', style: TextStyle(color: Colors.white,fontSize: 18))),
         body: Center(
             child: jsonResult == null
                 ? SpinKitFadingCircle(
@@ -80,216 +68,222 @@ class _UpcomingState extends State<Upcoming> {
     if(jsonResult!.isEmpty) {
       AapoortiUtilities.showInSnackBar(context, "No Upcoming Tender");
     } else {
-      return ListView.separated(
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              child: Card(
-                elevation: 4,
-                color: Colors.white,
-                surfaceTintColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  side: BorderSide(width: 1, color: Colors.grey[300]!),
-                ),
-                child: Column(children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 6)),
-                  Row(
+      return ListView.builder(
+        itemCount: jsonResult!.length,
+        itemBuilder: (context, index) {
+          final item = jsonResult![index];
+          return Card(
+            margin: const EdgeInsets.only(bottom: 16),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
+                    children: [
                       Row(
-                        children: <Widget>[
-                          Padding(padding: EdgeInsets.only(top: 8)),
-                          Padding(padding: EdgeInsets.only(left: 8)),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            (index + 1).toString() + ". ",
+                            '${index+1}.',
                             style: TextStyle(
-                                color: Colors.indigo,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(jsonResult![index]['DEPOT_NAME'] != null ? jsonResult![index]['DEPOT_NAME'] : "", style: Theme.of(context).textTheme.bodyMedium
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.receipt_outlined,
+                                      size: 16,
+                                      color: Colors.grey[600],
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Catalogue No : ',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey[700],
+                                        letterSpacing: 0.2,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        jsonResult![index]['CATALOG_NO'] != null ? jsonResult![index]['CATALOG_NO'] : "",
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey[700],
+                                          letterSpacing: 0.2,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(left: 4),
+                          //   child: Container(
+                          //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          //     decoration: BoxDecoration(
+                          //       color: Colors.green[50],
+                          //       borderRadius: BorderRadius.circular(12),
+                          //       border: Border.all(color: Colors.green[200]!),
+                          //     ),
+                          //     child: Row(
+                          //       mainAxisSize: MainAxisSize.min,
+                          //       children: [
+                          //         Container(
+                          //           width: 6,
+                          //           height: 6,
+                          //           decoration: BoxDecoration(
+                          //             color: Colors.green[600],
+                          //             shape: BoxShape.circle,
+                          //           ),
+                          //         ),
+                          //         const SizedBox(width: 4),
+                          //         Text(
+                          //           'LIVE',
+                          //           style: TextStyle(
+                          //             color: Colors.green[700],
+                          //             fontSize: 11,
+                          //             fontWeight: FontWeight.w600,
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
-                      Expanded(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(children: <Widget>[
-                                Expanded(
-                                    child: Text(
-                                  jsonResult![index]['DEPOT_NAME'] != null
-                                      ? jsonResult![index]['DEPOT_NAME']
-                                      : "",
-                                  style: TextStyle(
-                                      color: Colors.indigo,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ))
-                              ]),
-                              Padding(padding: EdgeInsets.only(top: 5.0)),
-                              Row(children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    "Catalogue No",
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        child: Divider(height: 1),
+                      ),
+                      // Time information - centered in the card
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Start time with label
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Start',
                                     style: TextStyle(
-                                        color: Colors.indigo, fontSize: 16),
+                                      fontSize: 9,
+                                      color: Colors.green[700],
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                  flex: 4,
-                                ),
-                                Expanded(
-                                  // height: 30,
-                                  //padding: EdgeInsets.only(top: 10,right: 9),
-
-                                  child: Text(
-                                    jsonResult![index]['CATALOG_NO'] != null
-                                        ? jsonResult![index]['CATALOG_NO']
-                                        : "",
+                                  Text(
+                                    jsonResult![index]['AUCTION_START_DATETIME'] != null ? jsonResult![index]['AUCTION_START_DATETIME'] : "",
                                     style: TextStyle(
-                                        color: Colors.black, fontSize: 16),
-                                  ),
-                                  flex: 6,
-                                )
-                              ]),
-                              Row(children: <Widget>[
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      'Auction Start',
-                                      style: TextStyle(
-                                          color: Colors.indigo, fontSize: 16),
+                                      fontSize: 12,
+                                      color: Colors.green[700],
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                  ),
-                                  flex: 4,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.only(top: 10),
-                                    height: 30,
-                                    child: Text(
-                                      jsonResult![index]['AUCTION_START_DATETIME'] != null ? jsonResult![index]['AUCTION_START_DATETIME'] : "",
-                                      style: TextStyle(
-                                          color: Colors.green, fontSize: 16),
-                                    ),
-                                  ),
-                                  flex: 6,
-                                ),
-                              ]),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        'Auction End',
-                                        style: TextStyle(
-                                            color: Colors.indigo, fontSize: 16),
-                                      ),
-                                    ),
-                                    flex: 4,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.only(top: 10),
-                                      height: 30,
-                                      child: Text(
-                                        (jsonResult![index]
-                                                    ['AUCTION_END_DATETIME'] !=
-                                                null
-                                            ? jsonResult![index]
-                                                ['AUCTION_END_DATETIME']
-                                            : ""),
-                                        style: TextStyle(
-                                            color: Colors.red, fontSize: 16),
-                                      ),
-                                    ),
-                                    flex: 6,
                                   ),
                                 ],
                               ),
-                              Padding(padding: EdgeInsets.only(bottom: 8)),
-                            ]),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Container(
+                                  height: 20,
+                                  width: 1,
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                              // End time with label
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'End',
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      color: Colors.red[700],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text((jsonResult![index]['AUCTION_END_DATETIME'] != null ? jsonResult![index]['AUCTION_END_DATETIME'] : ""),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.red[700],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ]),
-              ),
-              onTap: () {
-                if (jsonResult![index]['CORRI_DETAILS'] != 'NA') {
-                  showDialog(
-                      context: context,
-                      builder: (_) =>
-                          Material(
-                              type: MaterialType.transparency,
-                              child: Center(
-                                  child: Container(
-                                      margin: EdgeInsets.only(
-                                          top: 200,
-                                          bottom: 200,
-                                          left: 30,
-                                          right: 30),
-                                      padding: EdgeInsets.only(
-                                          top: 30,
-                                          bottom: 0,
-                                          left: 30,
-                                          right: 30),
-                                      color: Colors.white,
-                                      // Aligns the container to center
-                                      child: Column(children: <Widget>[
-                                        Container(
-                                          padding: EdgeInsets.only(bottom: 5),
-                                          child: Text(
-                                            'List of Categories',
-                                            style: TextStyle(
-                                              color: Colors.indigo,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.left,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            padding: EdgeInsets.only(bottom: 0),
-                                            child: Overlay(
-                                              context,
-                                              jsonResult![index]['DESCRIPTION']
-                                                  .toString(),
-                                              jsonResult![index]['CATALOG_ID']
-                                                  .toString(),
-                                            ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Text('CLICK ON ANY CATEGORY',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.indigo)),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: GestureDetector(
-                                              onTap: () {
-                                                Navigator.of(context,
-                                                        rootNavigator: true)
-                                                    .pop('dialog');
-                                              },
-                                              child: Image(
-                                                image: AssetImage(
-                                                    'assets/close_overlay.png'),
-                                                color: Colors.black,
-                                                height: 50,
-                                              )),
-                                        )
-                                      ])))));
-                }
-              },
-            );
-          },
-          separatorBuilder: (context, index) {
-            return Container(height: 10);
-          },
-          itemCount: jsonResult != null ? jsonResult!.length : 0);
+                ),
+                // Categories section with horizontal scrolling and lighter blue background
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlue[800]!.withOpacity(0.08),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, bottom: 8),
+                        child: Text(
+                          'Categories',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 38,
+                        child: Overlay(
+                          context,
+                          jsonResult![index]['DESCRIPTION'].toString(),
+                          jsonResult![index]['CATALOG_ID'].toString(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
     }
     return Container();
   }
@@ -297,43 +291,40 @@ class _UpcomingState extends State<Upcoming> {
   Widget Overlay(BuildContext context, String description, String catid) {
     var UpcomingArray = description.split('#');
     var upcomingcatid = catid;
-    return ListView.separated(
+    return ListView.builder(
         itemCount: description.isNotEmpty || description.length>0 ? UpcomingArray.length : 0,
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         itemBuilder: (context, index) {
-          return Container(
-              padding: EdgeInsets.all(0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                      child: GestureDetector(
-                          onTap: () {
-                            var route = MaterialPageRoute(
-                              builder: (BuildContext context) => upcoming2(
-                                  value1: Userup(
-                                upid: upcomingcatid,
-                                category: UpcomingArray[index],
-                              )),
-                            );
-                            Navigator.of(context).push(route);
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                UpcomingArray[index].toString(),
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 17),
-                              ),
-                            ],
-                          ))),
-                ],
-              ));
-        },
-        separatorBuilder: (context, index) {
-          return Divider(
-            color: Colors.grey,
-            height: 25,
+          return InkWell(
+            onTap: (){
+              var route = MaterialPageRoute(
+                builder: (BuildContext context) => upcoming2(value1: Userup(upid: upcomingcatid, category: UpcomingArray[index])),
+              );
+              Navigator.of(context).push(route);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                margin: const EdgeInsets.only(bottom: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.lightBlue[800]!.withOpacity(0.2)),
+                ),
+                child: Center(
+                  child: Text(
+                    UpcomingArray[index].toString(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           );
         });
   }

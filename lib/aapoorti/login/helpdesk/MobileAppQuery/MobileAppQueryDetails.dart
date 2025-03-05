@@ -131,7 +131,7 @@ class _MobileAppQueryDetailsState extends State<MobileAppQueryDetails> {
     String inputParam2 = AapoortiUtilities.user!.MAP_ID;
 
     jsonResult = await AapoortiUtilities.fetchPostPostLogin(
-        'Log/GetAllQuery', 'GetAllQuery', inputParam1, inputParam2);
+        'Log/GetAllQuery', 'GetAllQuery', inputParam1, inputParam2, context);
     print(jsonResult!.length);
     print(jsonResult.toString());
     if (jsonResult!.length == 0) {
@@ -168,7 +168,7 @@ class _MobileAppQueryDetailsState extends State<MobileAppQueryDetails> {
     String inputParam2 =
         AapoortiUtilities.user!.MAP_ID + "," + qid! + "," + "spam" + "," + "S";
     jsonResult2 = await AapoortiUtilities.fetchPostPostLogin(
-        'Login/SubmitQueryReply', 'SubmitQueryReply', inputParam1, inputParam2);
+        'Login/SubmitQueryReply', 'SubmitQueryReply', inputParam1, inputParam2, context);
     print("jsonResult2------");
     print(jsonResult2);
     //showDialogBox(context);
@@ -194,7 +194,7 @@ class _MobileAppQueryDetailsState extends State<MobileAppQueryDetails> {
     //if the whole layout is present means can reply more
     String reply2 = AddReply_val;
     jsonResult3 = await AapoortiUtilities.fetchPostPostLogin(
-        'Login/SubmitQueryReply', 'SubmitQueryReply', inputParam1, inputParam2);
+        'Login/SubmitQueryReply', 'SubmitQueryReply', inputParam1, inputParam2, context);
     print(jsonResult3!.length);
     print(jsonResult3.toString());
     if (jsonResult == null) {

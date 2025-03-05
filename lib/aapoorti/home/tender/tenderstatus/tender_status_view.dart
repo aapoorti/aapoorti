@@ -1,9 +1,11 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 
 List<dynamic>? jsonResult;
 
@@ -31,7 +33,7 @@ class StatusState extends State<Status> {
     debugPrint("====" + date);
     tendno = content;
     this.railid = railid;
-    if (date == "-1") {
+    if(date == "-1") {
       date1 = "-1";
       u = 'https://ireps.gov.in/Aapoorti/ServiceCallTender/TenderSearch?param=${this.date1},${this.tendno},${this.railid}';
     } else {
@@ -61,11 +63,19 @@ class StatusState extends State<Status> {
     debugPrint("URL==>" + v);
     final response = await http.post(Uri.parse(v));
     jsonResult = json.decode(response.body);
-    debugPrint(jsonResult.toString());
+    debugPrint("response ${jsonResult}");
+    if(jsonResult!.length >= 1){
+      debugPrint(jsonResult.toString());
+      setState(() {
+        data = jsonResult!;
+      });
+    }
+    else{
+      setState(() {
+        data = [];
+      });
+    }
 
-    setState(() {
-      data = jsonResult!;
-    });
   }
 
   @override
@@ -83,7 +93,6 @@ class StatusState extends State<Status> {
             children: <Widget>[
               Text('Tender Status Search',
                   style: TextStyle(color: Colors.white)),
-              // Padding(padding: EdgeInsets.only(left: 40)),
               IconButton(
                 alignment: Alignment.centerRight,
                 icon: Icon(Icons.home, color: Colors.white),
@@ -96,8 +105,22 @@ class StatusState extends State<Status> {
           ),
         ),
         backgroundColor: Colors.cyan.shade50,
-        body: Container(
-            child: jsonResult == null ? SpinKitFadingCircle(color: Colors.cyan, size: 130.0) : _myListView(context), color: Colors.cyan[50]),
+        body: Container(child: jsonResult == null ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 130.0) : jsonResult!.isEmpty ? Center(child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Lottie.asset('assets/json/no_data.json', height: 120, width: 120),
+            AnimatedTextKit(
+                isRepeatingAnimation: false,
+                animatedTexts: [
+                  TyperAnimatedText("Data not found",
+                      speed: Duration(milliseconds: 150),
+                      textStyle:
+                      TextStyle(fontWeight: FontWeight.bold)),
+                ]
+            )
+          ],
+        )) : _myListView(context), color: Colors.cyan[50]),
       ),
     );
   }
@@ -105,10 +128,7 @@ class StatusState extends State<Status> {
   Widget _myListView(BuildContext context) {
     //Dismiss spinner
     SpinKitWave(color: Colors.red, type: SpinKitWaveType.end);
-
-    return jsonResult!.isEmpty ? Container(
-            height: 40.0,
-            width: 500,
+    return jsonResult!.isEmpty ? Container(height: 40.0, width: 500,
             child: Card(
               margin: EdgeInsets.only(top: 20.0, left: 15, right: 15),
               child: Text(
@@ -191,7 +211,6 @@ class StatusState extends State<Status> {
                                               fontSize: 15,
                                               fontWeight: FontWeight.w600),
                                         ),
-                                        //),
                                         Padding(
                                             padding: EdgeInsets.only(
                                                 left: MediaQuery.of(context)
@@ -258,7 +277,6 @@ class StatusState extends State<Status> {
                                                                 color: Color(
                                                                     0xAB000000),
 
-                                                                // Aligns the container to center
                                                                 child: Column(
                                                                     children: <
                                                                         Widget>[

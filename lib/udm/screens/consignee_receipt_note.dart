@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,7 @@ class ConsigneeReceiptNote extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Consignee Receipt Note'),
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
       ),
       body: FutureBuilder(
         future: getApiData('TransactionsConsignmentReceipt', transCode),

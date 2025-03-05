@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/localization/languageHelper.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/screens/UdmChangePin.dart';
@@ -57,10 +58,10 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(iconList[index], height: 25, width: 25, color: isActive ? Colors.red.shade300 : Colors.black),
+              Image.asset(iconList[index], height: 25, width: 25, color: isActive ? AapoortiConstants.primary : Colors.black),
               SizedBox(height: 5),
               Text((textList[index]).split('\n')[isEnglish ? 1 : 0],
-                style: TextStyle(color: isActive ? Colors.red.shade300 : Colors.black),
+                style: TextStyle(color: isActive ? AapoortiConstants.primary : Colors.black),
               )
             ],
           );

@@ -449,7 +449,7 @@ class Edocs  extends StatelessWidget{
            else if(label == 'System\nSettings'){
              var fileUrl="https://ireps.gov.in/ireps/upload/resources/SystemSettings.pdf";
              var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
-             AapoortiUtilities.pdfDialog(context,fileUrl,fileName);
+             AapoortiUtilities.pdfDialog(context,fileUrl,fileName.split("/").last);
            }
            else if(label == 'Goods &\nServices'){
              Navigator.pushNamed(context, "/edocs_GandS");

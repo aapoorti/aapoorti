@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/aapoorti/common/NoConnection.dart';
 
@@ -9,26 +10,26 @@ class ImplinkScreen extends StatefulWidget {
 
 class _ImplinkScreenState extends State<ImplinkScreen> with SingleTickerProviderStateMixin{
 
-  late AnimationController _controller;
-  late Animation<double> _animation;
+  //late AnimationController _controller;
+  //late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 1),
-    );
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
-    _controller.forward();
+    // _controller = AnimationController(
+    //   vsync: this,
+    //   duration: Duration(seconds: 1),
+    // );
+    // _animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Curves.easeInOut,
+    // ));
+    // _controller.forward();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    //_controller.dispose();
     super.dispose();
   }
 
@@ -40,7 +41,7 @@ class _ImplinkScreenState extends State<ImplinkScreen> with SingleTickerProvider
         children: [
           Container(
             height: 50,
-            color: Colors.cyan[700],
+            color: Colors.lightBlue[700]!,
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: Text(
@@ -48,23 +49,35 @@ class _ImplinkScreenState extends State<ImplinkScreen> with SingleTickerProvider
               style: TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w400, fontFamily: 'Roboto'),
             ),
           ),
-          Expanded(
-            child: FadeTransition(
-              opacity: _animation,
-              child: ListView(
-                padding: EdgeInsets.all(20.0),
-                children: [
-                  _buildAnimatedTile(Icons.description, 'E-Documents'),
-                  SizedBox(height: 18),
-                  _buildAnimatedTile(Icons.block, 'Banned Firms'),
-                  SizedBox(height: 18),
-                  _buildAnimatedTile(Icons.storage, 'AAC'),
-                  SizedBox(height: 18),
-                  _buildAnimatedTile(Icons.check_box, 'Approved Vendors'),
-                ],
-              ),
-            ),
-          ),
+          Expanded(child: ListView(
+            padding: EdgeInsets.all(20.0),
+            children: [
+              _buildAnimatedTile(Icons.description, 'E-Documents'),
+              SizedBox(height: 18),
+              _buildAnimatedTile(Icons.block, 'Banned Firms'),
+              SizedBox(height: 18),
+              _buildAnimatedTile(Icons.storage, 'AAC'),
+              SizedBox(height: 18),
+              _buildAnimatedTile(Icons.check_box, 'Approved Vendors'),
+            ],
+          ))
+          // Expanded(
+          //   child: FadeTransition(
+          //     opacity: _animation,
+          //     child: ListView(
+          //       padding: EdgeInsets.all(20.0),
+          //       children: [
+          //         _buildAnimatedTile(Icons.description, 'E-Documents'),
+          //         SizedBox(height: 18),
+          //         _buildAnimatedTile(Icons.block, 'Banned Firms'),
+          //         SizedBox(height: 18),
+          //         _buildAnimatedTile(Icons.storage, 'AAC'),
+          //         SizedBox(height: 18),
+          //         _buildAnimatedTile(Icons.check_box, 'Approved Vendors'),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -105,11 +118,7 @@ class _ImplinkScreenState extends State<ImplinkScreen> with SingleTickerProvider
   }
 
   Widget _buildAnimatedTile(IconData icon, String label) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(-200 + (_animation.value * 200), 0),
+    return Container(
           child: InkWell(
             onTap: () async{
               if(label == "E-Documents"){
@@ -155,7 +164,7 @@ class _ImplinkScreenState extends State<ImplinkScreen> with SingleTickerProvider
                   Icon(
                     icon,
                     size: 40,
-                    color: Colors.teal,
+                    color: Colors.lightBlue[700]!,
                   ),
                   SizedBox(width: 16),
                   Text(
@@ -170,8 +179,6 @@ class _ImplinkScreenState extends State<ImplinkScreen> with SingleTickerProvider
             ),
           ),
         );
-      },
-    );
   }
 }
 

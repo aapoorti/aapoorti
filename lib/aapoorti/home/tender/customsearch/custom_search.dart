@@ -20,7 +20,6 @@ class CustomSearchState extends State<CustomSearch> {
   TextEditingController searchcriteriaController = TextEditingController();
   ProgressDialog? pr;
 
-
   int countersc = 1;
   String counterwk = "PT";
   int counter = 1;
@@ -39,40 +38,36 @@ class CustomSearchState extends State<CustomSearch> {
   String? unitName, unitCode = "-1";
   String? workArea = "PT";
 
-
   navigate() async {
-    debugPrint(closingDate.difference(uploadingDate).inDays.toString() + "no of difference in date1");
-    debugPrint("Closing date $closingDate");
-    debugPrint("Uploading date $uploadingDate");
-    try{
-        if(closingDate.difference(uploadingDate).inDays > 30){
-          AapoortiUtilities.showInSnackBar(context, "Select Tender Date Criteria Maximum difference 30 days");
-        }
-        else{
-          debugPrint(zoneCode);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Custom_search_view(
-                    workarea: counterwk,
-                    SearchForstring: searchcriteriaController.text.trim(),
-                    RailZoneIn: '${zoneCode!.split(";").first.trim()}',
-                    Dt1In: DateFormat('dd/MMM/yyyy').format(uploadingDate).toString(),
-                    Dt2In: DateFormat('dd/MMM/yyyy').format(closingDate).toString(),
-                    searchOption: countersc.toString(),
-                    OrgCode: orgCode.toString(),
-                    ClDate: counter.toString(),
-                    dept: deptCode.toString(),
-                    unit: unitCode.toString()),
-              ));
-        }
-
+    try {
+      if (closingDate.difference(uploadingDate).inDays > 30) {
+        AapoortiUtilities.showInSnackBar(
+            context, "Select Tender Date Criteria Maximum difference 30 days");
+      } else {
+        debugPrint(zoneCode);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Custom_search_view(
+                  workarea: counterwk,
+                  SearchForstring: searchcriteriaController.text.trim(),
+                  RailZoneIn: '${zoneCode!.split(";").first.trim()}',
+                  Dt1In: DateFormat('dd/MMM/yyyy')
+                      .format(uploadingDate)
+                      .toString(),
+                  Dt2In:
+                      DateFormat('dd/MMM/yyyy').format(closingDate).toString(),
+                  searchOption: countersc.toString(),
+                  OrgCode: orgCode.toString(),
+                  ClDate: counter.toString(),
+                  dept: deptCode.toString(),
+                  unit: unitCode.toString()),
+            ));
+      }
     } catch (ex) {
       debugPrint('SharedProfile ' + ex.toString());
-
     }
   }
-
 
   void dispose() {
     searchcriteriaController.dispose();
@@ -80,7 +75,8 @@ class CustomSearchState extends State<CustomSearch> {
   }
 
   _progressShow() {
-    pr = ProgressDialog(context, type: ProgressDialogType.normal, isDismissible: true, showLogs: true);
+    pr = ProgressDialog(context,
+        type: ProgressDialogType.normal, isDismissible: true, showLogs: true);
     pr!.show();
   }
 
@@ -231,93 +227,84 @@ class CustomSearchState extends State<CustomSearch> {
   Future<void> fetchOrganisation() async {
     //debugPrint("Parameter $demandType~$fromDate~$toDate~$deptCode~$statusCode~$demandnum~05~98");
     _progressShow();
-    fetchToken(context);
-    try{
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final url =
+          Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
       final headers = {
         'accept': '*/*',
         'Content-Type': 'application/json',
         'Authorization': '${prefs.getString('token')}',
       };
-      final body = json.encode({
-        "input_type" : "ORGANIZATION",
-        "input": "",
-        "key_ver" : "V1"
-      });
+      final body = json
+          .encode({"input_type": "ORGANIZATION", "input": "", "key_ver": "V1"});
       final response = await http.post(url, headers: headers, body: body);
       debugPrint("response organisation ${json.decode(response.body)}");
-      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)['status'] == 'Success') {
         dataRly.clear();
         var listdata = json.decode(response.body);
-        if(listdata['status'] == 'Success') {
+        if (listdata['status'] == 'Success') {
           var listJson = listdata['data'];
-          if(listJson != null) {
+          if (listJson != null) {
             setState(() {
               dataRly = listJson;
             });
-          }
-          else{
+          } else {
             setState(() {
               dataRly = [];
             });
           }
         }
         _progressHide();
-      }
-      else{
+      } else {
         dataRly.clear();
         //IRUDMConstants().showSnack('Data not found.', context);
         _progressHide();
       }
-    }
-    on Exception{
+    } on Exception {
       _progressHide();
     }
   }
 
-  Future<void> fetchZone(String orgCode) async{
+  Future<void> fetchZone(String orgCode) async {
     _progressShow();
-    try{
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final url =
+          Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
       final headers = {
         'accept': '*/*',
         'Content-Type': 'application/json',
         'Authorization': '${prefs.getString('token')}',
       };
-      final body = json.encode({
-        "input_type" : "ZONE",
-        "input": orgCode,
-        "key_ver" : "V1"
-      });
+      final body = json
+          .encode({"input_type": "ZONE", "input": orgCode, "key_ver": "V1"});
       final response = await http.post(url, headers: headers, body: body);
       debugPrint("response zone ${json.decode(response.body)}");
-      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)['status'] == 'Success') {
         dataZone.clear();
         var listdata = json.decode(response.body);
-        if(listdata['status'] == 'Success') {
+        if (listdata['status'] == 'Success') {
           var listJson = listdata['data'];
-          if(listJson != null) {
+          if (listJson != null) {
             setState(() {
               dataZone = listJson;
             });
-          }
-          else{
+          } else {
             setState(() {
               dataZone = [];
             });
           }
         }
         _progressHide();
-      }
-      else{
+      } else {
         dataZone.clear();
         //IRUDMConstants().showSnack('Data not found.', context);
         _progressHide();
       }
-    }
-    on Exception{
+    } on Exception {
       _progressHide();
     }
   }
@@ -325,55 +312,53 @@ class CustomSearchState extends State<CustomSearch> {
   Future<void> fetchDepartment(String orgCode, String zoneCode) async {
     debugPrint("fetch Dept $orgCode ${zoneCode.split(";").first}");
     _progressShow();
-    try{
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final url =
+          Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
       final headers = {
         'accept': '*/*',
         'Content-Type': 'application/json',
         'Authorization': '${prefs.getString('token')}',
       };
-      final body = json.encode({
-        "input_type" : "DEPARTMENT",
-        "input": "$orgCode",
-        "key_ver" : "V1"
-      });
+      final body = json.encode(
+          {"input_type": "DEPARTMENT", "input": "$orgCode", "key_ver": "V1"});
       final response = await http.post(url, headers: headers, body: body);
       debugPrint("response Department ${json.decode(response.body)}");
-      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)['status'] == 'Success') {
         dataDept.clear();
         var listdata = json.decode(response.body);
-        if(listdata['status'] == 'Success') {
+        if (listdata['status'] == 'Success') {
           var listJson = listdata['data'];
-          if(listJson != null) {
+          if (listJson != null) {
             setState(() {
               dataDept = listJson;
             });
-          }
-          else{
+          } else {
             setState(() {
               dataDept = [];
             });
           }
         }
         _progressHide();
-      }
-      else{
+      } else {
         dataDept.clear();
         //IRUDMConstants().showSnack('Data not found.', context);
         _progressHide();
       }
-    }
-    on Exception{
+    } on Exception {
       _progressHide();
     }
   }
 
-  Future<void> fetchUnit(String orgCode, String orgZone, String orgDept, String unittypeid) async{
+  Future<void> fetchUnit(
+      String orgCode, String orgZone, String orgDept, String unittypeid) async {
     _progressShow();
-    try{
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
+      final url =
+          Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
       debugPrint("$orgCode~$orgZone~$orgDept~$unittypeid");
       final headers = {
         'accept': '*/*',
@@ -381,37 +366,37 @@ class CustomSearchState extends State<CustomSearch> {
         'Authorization': '${prefs.getString('token')}',
       };
       final body = json.encode({
-        "input_type" : "UNIT",
+        "input_type": "UNIT",
         "input": "$orgCode~${zoneCode!.split(";").last}~$orgDept~$unittypeid",
-        "key_ver" : "V1"
+        "key_ver": "V1"
       });
       final response = await http.post(url, headers: headers, body: body);
       debugPrint("response Unit ${json.decode(response.body)}");
-      if(response.statusCode == 200 && json.decode(response.body)['status'] == 'Success') {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)['status'] == 'Success') {
         dataUnit.clear();
         var listdata = json.decode(response.body);
-        if(listdata['status'] == 'Success') {
+        if (listdata['status'] == 'Success') {
           var listJson = listdata['data'];
-          if(listJson != null) {
+          if (listJson != null) {
             setState(() {
+              unitName = null;
               dataUnit = listJson;
             });
-          }
-          else{
+          } else {
             setState(() {
+              unitName = null;
               dataUnit = [];
             });
           }
         }
         _progressHide();
-      }
-      else{
+      } else {
         dataUnit.clear();
         //IRUDMConstants().showSnack('Data not found.', context);
         _progressHide();
       }
-    }
-    on Exception{
+    } on Exception {
       _progressHide();
     }
   }
@@ -419,27 +404,26 @@ class CustomSearchState extends State<CustomSearch> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async{
-      //fetchPost();
+    Future.delayed(Duration.zero, () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
-      if(providedTime.isBefore(DateTime.now())){
+      if (providedTime.isBefore(DateTime.now())) {
         await fetchToken(context);
         fetchOrganisation();
-      }
-      else{
+      } else {
         fetchOrganisation();
       }
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Custom Search",style: TextStyle(color: Colors.white, fontSize: 18)),
+        title: Text("Custom Search",
+            style: TextStyle(color: Colors.white, fontSize: 18)),
         backgroundColor: AapoortiConstants.primary,
         elevation: 0,
         leading: IconButton(
@@ -448,14 +432,14 @@ class CustomSearchState extends State<CustomSearch> {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.home, color: Colors.white, size: 22),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.home, color: Colors.white, size: 22),
+        //     onPressed: () {
+        //       Navigator.of(context, rootNavigator: true).pop();
+        //     },
+        //   ),
+        // ],
       ),
       body: RefreshIndicator(
         onRefresh: fetchOrganisation,
@@ -464,11 +448,12 @@ class CustomSearchState extends State<CustomSearch> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Select Search Criteria", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+              Text("Select Search Criteria",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
               SizedBox(height: 12),
               Row(
                 children: [
-                  if(!showTenderNo)
+                  if (!showTenderNo)
                     Expanded(
                       child: _buildExpandableButton(
                         title: "Tender No",
@@ -481,8 +466,7 @@ class CustomSearchState extends State<CustomSearch> {
                         },
                       ),
                     ),
-                  if(!showTenderNo && !showItemDesc)
-                    SizedBox(width: 8),
+                  if (!showTenderNo && !showItemDesc) SizedBox(width: 8),
                   if (!showItemDesc)
                     Expanded(
                       child: _buildExpandableButton(
@@ -498,13 +482,15 @@ class CustomSearchState extends State<CustomSearch> {
                     ),
                 ],
               ),
-              if(showTenderNo || showItemDesc) Column(crossAxisAlignment: CrossAxisAlignment.start,
+              if (showTenderNo || showItemDesc)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if(showTenderNo) ...[
+                    if (showTenderNo) ...[
                       SizedBox(height: 8),
                       _buildTextField("Enter Tender No"),
                     ],
-                    if(showItemDesc) ...[
+                    if (showItemDesc) ...[
                       SizedBox(height: 8),
                       _buildTextField("Enter Item Description"),
                     ],
@@ -518,27 +504,31 @@ class CustomSearchState extends State<CustomSearch> {
               ),
               SizedBox(height: 8),
               _buildWorkAreaSelection(),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5.0)),
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5.0)),
               Container(
-                margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10.0),
+                margin: EdgeInsets.only(
+                    top: 10.0, left: 10, right: 10, bottom: 10.0),
                 child: DropdownSearch<String>(
-                  selectedItem: orgName ?? "Select Organization",
-                  // items: (filter, loadProps) => dataRly.map((e) {
-                  //     return e['NAME'].toString().trim();
-                  //   }).toList(),
-                  items: (filter, loadProps) => dataRly.map((e) {
-                    return e['key1'].toString().trim();
-                  }).toList(),
-                  decoratorProps: DropDownDecoratorProps(
-                    decoration: InputDecoration(
-                      //labelText: "Organization",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0)
+                    selectedItem: orgName ?? "Select Organization",
+                    // items: (filter, loadProps) => dataRly.map((e) {
+                    //     return e['NAME'].toString().trim();
+                    //   }).toList(),
+                    items: (filter, loadProps) => dataRly.map((e) {
+                          return e['key1'].toString().trim();
+                        }).toList(),
+                    decoratorProps: DropDownDecoratorProps(
+                      decoration: InputDecoration(
+                        //labelText: "Organization",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0)),
+                        prefixIcon: Icon(Icons.list, color: Colors.blue[800]),
                       ),
-                      prefixIcon: Icon(Icons.list, color: Colors.blue[800]),
                     ),
-                  ),
-                  popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
+                    popupProps: PopupProps.menu(
+                        fit: FlexFit.loose,
+                        showSearchBox: true,
+                        constraints: BoxConstraints(maxHeight: 400)),
                     onChanged: (String? newValue) {
                       debugPrint("Select Organization test $newValue");
                       try {
@@ -550,7 +540,8 @@ class CustomSearchState extends State<CustomSearch> {
                           dataDept.clear();
                           dataUnit.clear();
                           dataRly.forEach((element) {
-                            if(newValue.toString() == element['key1'].toString()) {
+                            if (newValue.toString() ==
+                                element['key1'].toString()) {
                               orgName = newValue.toString();
                               orgCode = element['key2'].toString();
                             }
@@ -568,151 +559,215 @@ class CustomSearchState extends State<CustomSearch> {
                       }
                       //getZone();
                       fetchZone(orgCode!);
-                    }
-                ),
+                    }),
               ),
               //_buildOrganisationDropdown(),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0)),
+              Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0)),
               //_buildRlyDropdown(),
-              Container(
-                margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10),
-                child: DropdownSearch<String>(
-                  selectedItem: zoneName ?? "Select Zone",
-                  // items: (filter, loadProps) => dataZone.map((e) {
-                  //   return e['NAME'].toString().trim();
-                  // }).toList(),
-                  items: (filter, loadProps) => dataZone.map((e) {
-                    return e['key1'].toString().trim();
-                  }).toList(),
-                  decoratorProps: DropDownDecoratorProps(
-                    decoration: InputDecoration(
-                      //labelText: "Zone",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0)
+              orgCode == null || orgCode == "-1"
+                  ? InkWell(
+                      onTap: () {
+                        AapoortiUtilities.showInSnackBar(
+                            context, "Please select organization");
+                      },
+                      child: Container(
+                        width: size.width,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            border: Border.all(color: Colors.grey[800]!)),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        margin: EdgeInsets.only(
+                            top: 10.0, left: 10, right: 10, bottom: 10),
+                        child: Row(
+                          children: [
+                            Icon(Icons.train, color: Colors.blue[800]),
+                            SizedBox(width: 10),
+                            Text(zoneName ?? "Select Zone",
+                                style: TextStyle(color: Colors.black)),
+                            SizedBox(width: 10),
+                            Spacer(),
+                            Icon(Icons.arrow_drop_down,
+                                size: 24, color: Colors.grey[800]),
+                          ],
+                        ),
                       ),
-                      prefixIcon: Icon(Icons.train, color: Colors.blue[800]),
-                    ),
-                  ),
-                  popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
-                  onChanged: (newVal) {
-                    setState(() {
-                      deptCode = "-1";
-                      unitCode = "-1";
-                      deptName = null;
-                      unitName = null;
-                      dataDept.clear();
-                      dataUnit.clear();
-                      // dataZone.forEach((element) {
-                      //   if(newVal.toString() == element['NAME'].toString()) {
-                      //     zoneCode = element['ACCID'].toString() + ";" + element['ID'].toString();
-                      //     zoneName = newVal.toString();
-                      //   }
-                      // });
-                      dataZone.forEach((element) {
-                        if(newVal.toString() == element['key1'].toString()) {
-                          zoneCode = element['key3'].toString() + ";" + element['key2'].toString();
-                          zoneName = newVal.toString();
-                        }
-                      });
-                    });
-                    //getDept();
-                    fetchDepartment(orgCode!, zoneCode!);
-                  },
-                ),
-              ),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0)),
-              //_buildDepDropdown(),
-              Container(
-                margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10),
-                child: DropdownSearch<String>(
-                  selectedItem: deptName ?? "Select Department",
-                  items: (filter, loadProps) => dataDept.map((e) {
-                      return e['key1'].toString().trim();
-                    }).toList(),
-                  // items: (filter, loadProps) => dataDept.map((e) {
-                  //   return e['NAME'].toString().trim();
-                  // }).toList(),
-                  decoratorProps: DropDownDecoratorProps(
-                    decoration: InputDecoration(
-                      //labelText: "Department",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0)
-                      ),
-                      prefixIcon: Icon(Icons.account_balance, color: Colors.blue[800]),
-                    ),
-                  ),
-                  popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        unitCode = "-1";
-                        dataUnit.clear();
-                        dataDept.forEach((element){
-                          if(newValue.toString() == element['key1'].toString()) {
-                            deptCode = element['key2'].toString();
-                            deptName = newValue.toString();
+                    )
+                  : Container(
+                      margin: EdgeInsets.only(
+                          top: 10.0, left: 10, right: 10, bottom: 10),
+                      child: DropdownSearch<String>(
+                        selectedItem: zoneName ?? "Select Zone",
+                        // items: (filter, loadProps) => dataZone.map((e) {
+                        //   return e['NAME'].toString().trim();
+                        // }).toList(),
+                        items: (filter, loadProps) => dataZone.map((e) {
+                          return e['key1'].toString().trim();
+                        }).toList(),
+                        decoratorProps: DropDownDecoratorProps(
+                          decoration: InputDecoration(
+                            //labelText: "Zone",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                            prefixIcon:
+                                Icon(Icons.train, color: Colors.blue[800]),
+                          ),
+                        ),
+                        popupProps: PopupProps.menu(
+                            fit: FlexFit.loose,
+                            showSearchBox: true,
+                            constraints: BoxConstraints(maxHeight: 400)),
+                        onChanged: (newVal) async{
+                          setState(() {
+                            deptCode = "-1";
+                            unitCode = "-1";
+                            deptName = null;
+                            unitName = null;
+                            dataDept.clear();
+                            dataUnit.clear();
+                            dataZone.forEach((element) {
+                              if(newVal.toString() == element['key1'].toString()) {
+                                zoneCode = element['key3'].toString() + ";" + element['key2'].toString();
+                                zoneName = newVal.toString();
+
+                                debugPrint("zone code nsnns $zoneCode");
+                              }
+                              debugPrint("zone code nanna $zoneCode");
+                            });
+                          });
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+                          if(providedTime.isBefore(DateTime.now())){
+                            await fetchToken(context);
+                            fetchDepartment(orgCode!, zoneCode!);
                           }
-                        });
-                        // dataDept.forEach((element){
-                        //   if(newValue.toString() == element['NAME'].toString()) {
-                        //     deptCode = element['ID'].toString();
-                        //     deptName = newValue.toString();
-                        //   }
-                        // });
-                      });
-                      //getUnit();
+                          else{
+                            fetchDepartment(orgCode!, zoneCode!);
+                          }
+                        },
+                      ),
+                    ),
+              Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0)),
+              //_buildDepDropdown(),
+              Container(margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10), child: DropdownSearch<String>(
+                selectedItem: deptName ?? "Select Department",
+                items: (filter, loadProps) => dataDept.map((e) {
+                  return e['key1'].toString().trim();
+                }).toList(),
+                decoratorProps: DropDownDecoratorProps(
+                  decoration: InputDecoration(
+                    //labelText: "Department",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0)
+                    ),
+                    prefixIcon: Icon(Icons.account_balance, color: Colors.blue[800]),
+                  ),
+                ),
+                popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
+                onChanged: (newVal) async{
+                  setState(() {
+                    dataUnit.clear();
+                    dataDept.forEach((element){
+                      if(newVal.toString() == element['key1'].toString()) {
+                        deptCode = element['key2'].toString();
+                        deptName = newVal.toString();
+                      }
+                    });
+                  });
+                  if(deptCode == "-1"){
+                    setState(() {
+                      unitCode = "-1";
+                      unitName = "All";
+                    });
+                  }
+                  else{
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+                    if(providedTime.isBefore(DateTime.now())){
+                      await fetchToken(context);
                       fetchUnit(orgCode!, zoneCode!, deptCode!, "-1");
                     }
-                ),
-              ),
+                    else{
+                      fetchUnit(orgCode!, zoneCode!, deptCode!, "-1");
+                    }
+                  }
+                },
+              )),
               Padding(padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0)),
               //_buildUnitDropdown(),
-              Container(
-                margin: EdgeInsets.only(top: 10.0, left: 10, right: 10),
-                child: DropdownSearch<String>(
-                  selectedItem: unitName ?? "Select Unit",
-                  // items: (filter, loadProps) => dataUnit.map((e) {
-                  //   return e['NAME'].toString().trim();
-                  // }).toList(),
-                  items: (filter, loadProps) => dataUnit.map((e) {
-                    return e['key1'].toString().trim();
-                  }).toList(),
-                  decoratorProps: DropDownDecoratorProps(
-                    decoration: InputDecoration(
-                      //labelText: "Unit",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0)
+              deptCode == null || deptCode == "-1"
+                  ? Container(
+                      width: size.width,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(color: Colors.grey[800]!)),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      margin: EdgeInsets.only(top: 10.0, left: 10, right: 10),
+                      child: Row(
+                        children: [
+                          Icon(Icons.location_city, color: Colors.blue[800]),
+                          SizedBox(width: 10),
+                          Text(unitName ?? "Select Unit",
+                              style: TextStyle(color: Colors.black)),
+                          SizedBox(width: 10),
+                          Spacer(),
+                          Icon(Icons.arrow_drop_down,
+                              size: 24, color: Colors.grey[800]),
+                        ],
                       ),
-                      prefixIcon: Icon(Icons.location_city, color: Colors.blue[800]),
+                    )
+                  : Container(
+                      margin: EdgeInsets.only(top: 10.0, left: 10, right: 10),
+                      child: DropdownSearch<String>(
+                        selectedItem: unitName ?? "Select Unit",
+                        // items: (filter, loadProps) => dataUnit.map((e) {
+                        //   return e['NAME'].toString().trim();
+                        // }).toList(),
+                        items: (filter, loadProps) => dataUnit.map((e) {
+                          return e['key1'].toString().trim();
+                        }).toList(),
+                        decoratorProps: DropDownDecoratorProps(
+                          decoration: InputDecoration(
+                            //labelText: "Unit",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                            prefixIcon: Icon(Icons.location_city,
+                                color: Colors.blue[800]),
+                          ),
+                        ),
+                        popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
+                        onChanged: (newVal) {
+                          setState(() {
+                            dataUnit.forEach((element) {
+                              if (newVal.toString() == element['key1'].toString()) {
+                                unitCode = element['key2'].toString();
+                                unitName = newVal.toString();
+                              }
+                            });
+                          });
+                        },
+                      ),
                     ),
-                  ),
-                  popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
-                  onChanged: (newVal) {
-                    setState(() {
-                      // dataUnit.forEach((element){
-                      //   if(newVal.toString() == element['NAME'].toString()) {
-                      //     unitCode = element['ID'].toString();
-                      //     unitName = newVal.toString();
-                      //   }
-                      // });
-                      dataUnit.forEach((element){
-                        if(newVal.toString() == element['key1'].toString()) {
-                          unitCode = element['key2'].toString();
-                          unitName = newVal.toString();
-                        }
-                      });
-                    });
-                  },
-                ),
-              ),
               SizedBox(height: 16),
               RichText(
                 text: TextSpan(
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black),
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black),
                   children: [
-                    TextSpan(text: "Select Tender Date Criteria", style: TextStyle(fontSize: 15)),
+                    TextSpan(
+                        text: "Select Tender Date Criteria",
+                        style: TextStyle(fontSize: 15)),
                     TextSpan(
                       text: " (Maximum difference 30 days)",
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                      style:
+                          TextStyle(fontSize: 12, color: Colors.grey.shade600),
                     ),
                   ],
                 ),
@@ -724,13 +779,18 @@ class CustomSearchState extends State<CustomSearch> {
               SizedBox(height: 24),
               _buildActionButton("Show Results", Colors.blue.shade800),
               SizedBox(height: 8),
-              _buildActionButton("Reset", Colors.blue.shade400),
+              _buildResetButton(
+                "Reset",
+                Colors.blue.shade400,
+                onPressed: resetForm,
+                isOutlined: true,
+              ),
+              //_buildActionButton("Reset", Colors.blue.shade400),
             ],
           ),
         ),
       ),
     );
-
   }
 
   Widget _buildDateTypeSelection() {
@@ -762,10 +822,9 @@ class CustomSearchState extends State<CustomSearch> {
       onTap: () {
         setState(() {
           selectedDateType = value;
-          if(title == "Uploading Date"){
+          if (title == "Uploading Date") {
             counter = 1;
-          }
-          else{
+          } else {
             counter = 0;
           }
         });
@@ -783,7 +842,7 @@ class CustomSearchState extends State<CustomSearch> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if(isSelected)
+            if (isSelected)
               Icon(
                 Icons.check_circle,
                 color: Colors.blue.shade400,
@@ -879,13 +938,11 @@ class CustomSearchState extends State<CustomSearch> {
       onSelected: (selected) {
         setState(() {
           selectedWorkArea = title;
-          if(title == "Goods & Services"){
+          if (title == "Goods & Services") {
             counterwk = "PT";
-          }
-          else if(title == "Works"){
+          } else if (title == "Works") {
             counterwk = "WT";
-          }
-          else if(title == "Earning/Leasing"){
+          } else if (title == "Earning/Leasing") {
             counterwk = "LT";
           }
         });
@@ -938,7 +995,7 @@ class CustomSearchState extends State<CustomSearch> {
         );
         if (pickedDate != null) {
           setState(() {
-            if(label == "From  ") {
+            if (label == "From  ") {
               uploadingDate = pickedDate;
             } else {
               closingDate = pickedDate;
@@ -983,7 +1040,7 @@ class CustomSearchState extends State<CustomSearch> {
     );
   }
 
-  Widget _buildActionButton(String text, Color color){
+  Widget _buildActionButton(String text, Color color) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -992,26 +1049,68 @@ class CustomSearchState extends State<CustomSearch> {
           padding: EdgeInsets.symmetric(vertical: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        onPressed: (){
-          if(text == "Show Results"){
+        onPressed: () {
+          if (text == "Show Results") {
             //_validateInputs();
-            navigate();
-            //debugPrint("counterwk $counterwk countrersc $countersc closingd ${DateFormat('dd-MM-yyyy').format(closingDate)}  ""uploadingd ${DateFormat('dd-MM-yyyy').format(uploadingDate)} content ${searchcriteriaController.text.toString()} orgcode $orgCode orgname $orgName zonecode $zoneCode zonename $zoneName deptcode $deptCode $deptName unitcode $unitCode $unitName");
-          }
-          else{
-             resetForm();
+            //debugPrint("zone code ${zoneCode}");
+            //debugPrint("counterwk $counterwk countrersc $countersc closingd ${DateFormat('dd-MM-yyyy').format(closingDate)}  ""uploadingd ${DateFormat('dd-MM-yyyy').format(uploadingDate)} content ${searchcriteriaController.text.toString()} orgcode $orgCode orgname $orgName zonecode ${zoneCode!.trim().split(";").first.trim()} zonename $zoneName deptcode $deptCode $deptName unitcode $unitCode $unitName");
+            if (orgName == null &&
+                zoneName == null &&
+                deptName == null &&
+                unitName == null) {
+              AapoortiUtilities.showInSnackBar(context,
+                  "All selection fields are required, please select require fields");
+            } else {
+              navigate();
+            }
+          } else {
+            resetForm();
           }
         },
         child: Text(
           text,
           style: TextStyle(
-              color: Colors.white,
+              color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResetButton(
+    String text,
+    Color color, {
+    VoidCallback? onPressed,
+    bool isOutlined = false,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isOutlined ? Colors.white : color,
+            foregroundColor: isOutlined ? color : Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: isOutlined
+                  ? BorderSide(color: color, width: 1.5)
+                  : BorderSide.none,
+            ),
+            elevation: isOutlined ? 0 : 2,
+          ),
+          onPressed: onPressed,
+          child: Text(
+            text,
+            style: TextStyle(
               fontSize: 15,
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold,
+              color: isOutlined ? color : Colors.white,
+            ),
           ),
         ),
       ),
     );
   }
 }
-

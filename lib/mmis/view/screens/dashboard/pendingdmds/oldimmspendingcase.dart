@@ -1,10 +1,14 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/mmis/controllers/oldimms_controller.dart';
+import 'package:flutter_app/mmis/models/oldimmsData.dart';
 import 'package:flutter_app/mmis/utils/my_color.dart';
+import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:marquee/marquee.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class Oldimmspendingcase extends StatefulWidget {
@@ -27,10 +31,18 @@ class _OldimmspendingcaseState extends State<Oldimmspendingcase> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async{
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    oldimmscontroller.fetchOldimmsData(context);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+    if(providedTime.isBefore(DateTime.now())){
+      await fetchToken(context);
+      oldimmscontroller.fetchOldimmsData(context);
+    }
+    else{
+      oldimmscontroller.fetchOldimmsData(context);
+    }
   }
 
   @override
@@ -116,7 +128,7 @@ class _OldimmspendingcaseState extends State<Oldimmspendingcase> {
             ],
           );
         }),
-        backgroundColor: MyColor.primaryColor,
+        backgroundColor: AapoortiConstants.primary,
         iconTheme: IconThemeData(color: Colors.white),
         automaticallyImplyLeading: false,
         actions: [
@@ -158,203 +170,27 @@ class _OldimmspendingcaseState extends State<Oldimmspendingcase> {
                );
              }
              else if(oldimmscontroller.oldimmsState == OldimmsState.Finished){
-               return ListView.builder(
-                   itemCount: oldimmscontroller.oldimmsData.length,
-                   shrinkWrap: true,
-                   //controller: listScrollController,
-                   padding: EdgeInsets.zero,
-                   itemBuilder: (BuildContext context, int index) {
-                     return Card(
-                       elevation: 8.0,
-                       shape: RoundedRectangleBorder(
-                           borderRadius: BorderRadius.circular(4.0),
-                           side: BorderSide(
-                             color: Colors.indigo.shade500,
-                             width: 1.0,
-                           )),
-                       child: Container(
-                         decoration: BoxDecoration(
-                             borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                             color: Colors.white
-                         ),
-                         child: Column(
-                           mainAxisAlignment: MainAxisAlignment.start,
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                           children: [
-                             Align(
-                               alignment: Alignment.topLeft,
-                               child: Container(
-                                   height: 30,
-                                   width: 35,
-                                   alignment: Alignment.center,
-                                   child: Text('${index + 1}',
-                                       textAlign: TextAlign.center,
-                                       style: TextStyle(
-                                           fontSize: 14,
-                                           color: Colors.white)),
-                                   decoration: BoxDecoration(
-                                       color: Colors.indigo,
-                                       borderRadius: BorderRadius.only(
-                                           bottomRight: Radius.circular(10),
-                                           topLeft: Radius.circular(5)))),
-                             ),
-                             Padding(
-                                 padding: EdgeInsets.symmetric(horizontal: 8),
-                                 child: Column(children: <Widget>[
-                                   Container(
-                                     child: Column(
-                                       mainAxisAlignment:
-                                       MainAxisAlignment.start,
-                                       crossAxisAlignment:
-                                       CrossAxisAlignment.start,
-                                       children: [
-                                         Column(
-                                           mainAxisAlignment:
-                                           MainAxisAlignment.start,
-                                           crossAxisAlignment:
-                                           CrossAxisAlignment.start,
-                                           children: [
-                                             Text('Demand No.', style: TextStyle(color: Colors.indigo, fontSize: 16, fontWeight: FontWeight.w500)),
-                                             SizedBox(height: 4.0),
-                                             Text(oldimmscontroller.oldimmsData[index].key7!, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 16))
-                                           ],
-                                         ),
-                                         SizedBox(height: 10),
-                                         Column(
-                                           mainAxisAlignment:
-                                           MainAxisAlignment.start,
-                                           crossAxisAlignment:
-                                           CrossAxisAlignment.start,
-                                           children: [
-                                             Text("Date/Time", style: TextStyle(color: Colors.indigo, fontSize: 16, fontWeight: FontWeight.w500)),
-                                             SizedBox(height: 4.0),
-                                             Text(
-                                                 oldimmscontroller.oldimmsData[index].key2!,
-                                                 style: TextStyle(
-                                                     color: Colors.black,
-                                                     fontWeight:
-                                                     FontWeight.w400,
-                                                     fontSize: 16))
-                                             //Text("P.O.No. ${value.coveredDueData[index].poNo.toString()} dt. ${value.coveredDueData[index].podt.toString()} on M/s. ${value.coveredDueData[index].firm.toString()} PO-CAT:[ XX ]", style: TextStyle(color: Colors.black, fontSize: 16))
-                                           ],
-                                         ),
-                                         SizedBox(height: 10),
-                                         Column(
-                                           mainAxisAlignment:
-                                           MainAxisAlignment.start,
-                                           crossAxisAlignment:
-                                           CrossAxisAlignment.start,
-                                           children: [
-                                             Text(
-                                                 'Status',
-                                                 style: TextStyle(
-                                                     color: Colors.indigo,
-                                                     fontSize: 16,
-                                                     fontWeight:
-                                                     FontWeight.w500)),
-                                             SizedBox(height: 4.0),
-                                             InkWell(
-                                               onTap: (){
-
-                                               },
-                                               child: Text(
-                                                   oldimmscontroller.oldimmsData[index].key4!,
-                                                   style: TextStyle(
-                                                       color: Colors.black,
-                                                       fontWeight:
-                                                       FontWeight.w400,
-                                                       fontSize: 16)),
-                                             )
-                                             //Text("P.O.No. ${value.coveredDueData[index].poNo.toString()} dt. ${value.coveredDueData[index].podt.toString()} on M/s. ${value.coveredDueData[index].firm.toString()} PO-CAT:[ XX ]", style: TextStyle(color: Colors.black, fontSize: 16))
-                                           ],
-                                         ),
-                                         SizedBox(height: 10),
-                                         Column(
-                                           mainAxisAlignment:
-                                           MainAxisAlignment.start,
-                                           crossAxisAlignment:
-                                           CrossAxisAlignment.start,
-                                           children: [
-                                             Text(
-                                                 'Received From',
-                                                 style: TextStyle(
-                                                     color: Colors.indigo,
-                                                     fontSize: 16,
-                                                     fontWeight: FontWeight.w500)),
-                                             SizedBox(height: 4.0),
-                                             Text(oldimmscontroller.oldimmsData[index].key6!, style: TextStyle(color: Colors.black, fontSize: 16))
-                                             //Text("P.O.No. ${value.coveredDueData[index].poNo.toString()} dt. ${value.coveredDueData[index].podt.toString()} on M/s. ${value.coveredDueData[index].firm.toString()} PO-CAT:[ XX ]", style: TextStyle(color: Colors.black, fontSize: 16))
-                                           ],
-                                         ),
-                                         SizedBox(height: 10),
-                                         Column(
-                                           mainAxisAlignment:
-                                           MainAxisAlignment.start,
-                                           crossAxisAlignment:
-                                           CrossAxisAlignment.start,
-                                           children: [
-                                             Text("Consignee", style: TextStyle(color: Colors.indigo, fontSize: 16, fontWeight: FontWeight.w500)),
-                                             SizedBox(height: 4.0),
-                                             Text(oldimmscontroller.oldimmsData[index].key9!, style: TextStyle(color: Colors.black, fontSize: 16)),
-                                           ],
-                                         ),
-                                         SizedBox(height: 10),
-                                         Column(
-                                           mainAxisAlignment:
-                                           MainAxisAlignment.start,
-                                           crossAxisAlignment:
-                                           CrossAxisAlignment.start,
-                                           children: [
-                                             Text(
-                                                 'Demand Value',
-                                                 style: TextStyle(
-                                                     color: Colors.indigo,
-                                                     fontSize: 16,
-                                                     fontWeight:
-                                                     FontWeight.w500)),
-                                             SizedBox(height: 4.0),
-                                             Text(oldimmscontroller.oldimmsData[index].key10!, style: TextStyle(color: Colors.black, fontSize: 16)),
-                                             //Text("P.O.No. ${value.coveredDueData[index].poNo.toString()} dt. ${value.coveredDueData[index].podt.toString()} on M/s. ${value.coveredDueData[index].firm.toString()} PO-CAT:[ XX ]", style: TextStyle(color: Colors.black, fontSize: 16))
-                                           ],
-                                         ),
-                                         SizedBox(height: 10),
-                                         // Row(
-                                         //   mainAxisAlignment: MainAxisAlignment.end,
-                                         //   children: [
-                                         //     Text(language.text('viemdmd'), style: TextStyle(color: Colors.blue, fontSize: 16)),
-                                         //     ElevatedButton(
-                                         //         style: ElevatedButton.styleFrom(shape: CircleBorder()),
-                                         //         onPressed: () async {
-                                         //           bool check = await UdmUtilities.checkconnection();
-                                         //           // if(check == true) {
-                                         //           //   //fileUrl = "https://www.trial.ireps.gov.in/ireps/etender/pdfdocs/MMIS/RN/DMD/2022/03/NR-33364-22-00121.pdf";
-                                         //           //   var fileUrl = "https://${value.nstotallinklistData[index].pdf_path}";
-                                         //           //   //var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
-                                         //           //   if(fileUrl.toString().trim() == "https://www.ireps.gov.in") {
-                                         //           //     UdmUtilities.showWarningFlushBar(context, language.text('sdnf'));
-                                         //           //   } else {
-                                         //           //     var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
-                                         //           //     UdmUtilities.openPdfBottomSheet(context, fileUrl, fileName, language.text('nsdemandtitle'));
-                                         //           //   }
-                                         //           // } else{
-                                         //           //   Navigator.push(context, MaterialPageRoute(builder: (context) => NoConnection()));
-                                         //           // }
-                                         //         },
-                                         //         child: Icon(
-                                         //           Icons.feedback_outlined,
-                                         //           color: Colors.white,
-                                         //         )),
-                                         //   ],
-                                         // )
-                                       ],
-                                     ),
-                                   ),
-                                 ]))
-                           ],
-                         ),
-                       ),
-                     );
-                   }
+               return Container(
+                   height: Get.height,
+                   width: Get.width,
+                   child: Padding(
+                     padding: EdgeInsets.only(bottom: 0.0, left: 2.0, right: 2.0),
+                     child: ListView.builder(
+                       itemCount: oldimmscontroller.oldimmsData.length,
+                       shrinkWrap: true,
+                       //controller: listScrollController,
+                       padding: EdgeInsets.zero,
+                       itemBuilder: (context, index) {
+                         return Padding(
+                           padding: const EdgeInsets.only(bottom: 5),
+                           child: DemandCard(
+                             demandDetails: oldimmscontroller.oldimmsData[index],
+                             demandNumber: index + 1,
+                           ),
+                         );
+                       },
+                     ),
+                   )
                );
              }
              else if(oldimmscontroller.oldimmsState == OldimmsState.Error){
@@ -430,5 +266,176 @@ class _OldimmspendingcaseState extends State<Oldimmspendingcase> {
            })
        ),
     );
+  }
+
+}
+
+
+
+class DemandCard extends StatelessWidget {
+  final OldImmsData demandDetails;
+  final int demandNumber;
+
+  const DemandCard({
+    Key? key,
+    required this.demandDetails,
+    required this.demandNumber
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('Demand No. & Date', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                SizedBox(height: 4.0),
+                RichText(
+                  text: TextSpan(
+                    text: '${demandDetails.key7}\n',
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: 'Dt.${demandDetails.key2}',
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      ),
+                      // TextSpan(
+                      //   text: 'testing',
+                      //   style: TextStyle(color: Colors.blue, fontSize: 16),
+                      // ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            _buildDetailItem(
+              Icons.info,
+              'Status',
+              '${demandDetails.key4!}',
+              subtitle: '',
+              isBold: true,
+              isBlueText: true,
+            ),
+            _buildDetailItem(
+              Icons.person,
+              'Received From',
+              '${demandDetails.key6!}',
+              subtitle: '',
+              isBold: true,
+              isBlueText: true,
+            ),
+            _buildDetailItem(
+              Icons.description,
+              'Consignee',
+              "${demandDetails.key9!}",
+            ),
+            _buildDetailItem(
+              Icons.currency_rupee,
+              'Demand Value',
+              'Rs.${demandDetails.key10!}/-',
+              subtitle: '',
+              isLast: true,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailItem(
+      IconData icon,
+      String label,
+      String value, {
+        String? subtitle,
+        bool isBold = false,
+        bool isBlueText = false,
+        bool isLast = false,
+        VoidCallback? onStatusCodeTap,
+      }) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: isLast ? 0 : 20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0073CF).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Icon(icon, size: 16, color: const Color(0xFF0073CF)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 15,
+                    fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+                if(subtitle != null) ...[
+                  const SizedBox(height: 2),
+                  InkWell(
+                    onTap: label == 'Status' ? onStatusCodeTap : null,
+                    child: Row(
+                      children: [
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            color: isBlueText ? const Color(0xFF0073CF) : Colors.grey[600],
+                            fontSize: 14,
+                            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                        // if(label == 'Status') ...[
+                        //   const SizedBox(width: 4),
+                        //   Icon(
+                        //     Icons.info_outline,
+                        //     size: 14,
+                        //     color: const Color(0xFF0073CF),
+                        //   ),
+                        // ],
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String removeLeadingDashes(String value) {
+    if(value.startsWith('---')) {
+      return value.replaceFirst('---', '');
+    }
+    return value;
   }
 }

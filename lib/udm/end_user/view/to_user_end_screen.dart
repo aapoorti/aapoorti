@@ -1,6 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/end_user/view/end_user_list_screen.dart';
 import 'package:flutter_app/udm/end_user/view_models/to_end_user_view_model.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
@@ -54,7 +55,7 @@ class _ToEndUserScreenState extends State<ToEndUserScreen> {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return WillPopScope(child: Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           title: Text(language.text('endusertitle'), style: TextStyle(color: Colors.white)),
           iconTheme: IconThemeData(color: Colors.white)
       ),
@@ -380,7 +381,7 @@ class _ToEndUserScreenState extends State<ToEndUserScreen> {
                     borderSide: const BorderSide(color: Colors.grey, width: 1.0),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  focusColor: Colors.red[300],
+                  focusColor: AapoortiConstants.primary,
                   focusedErrorBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Colors.red, width: 1.0),
                     borderRadius: BorderRadius.circular(10.0),

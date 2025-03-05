@@ -81,7 +81,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.cyan),
+            border: Border.all(color: AapoortiConstants.primary),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -93,12 +93,12 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 'Generate OTP for IREPS Desktop Web Application',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.cyan,
+                  color: AapoortiConstants.primary,
                 ),
               ),
               const SizedBox(height: 20),
@@ -114,7 +114,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.cyan, // Cyan button
+                  backgroundColor: AapoortiConstants.primary, // Cyan button
                   padding:
                   const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                   shape: RoundedRectangleBorder(
@@ -749,7 +749,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
             },
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.cyan[400],
+                  color: AapoortiConstants.primary,
                   borderRadius: BorderRadius.circular(8.0)
               ),
               padding: const EdgeInsets.all(14),
@@ -823,7 +823,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'This link will work only outside India',
+                  'This link is accessible only from outside India',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -833,7 +833,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.cyan,
+                    backgroundColor: AapoortiConstants.primary,
                     padding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 32),
                     shape: RoundedRectangleBorder(

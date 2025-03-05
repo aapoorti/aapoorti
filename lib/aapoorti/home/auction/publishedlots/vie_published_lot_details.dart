@@ -58,7 +58,7 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
+            backgroundColor: AapoortiConstants.primary,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -98,23 +98,12 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
         itemCount: jsonResult != null ? jsonResult!.length : 0,
         itemBuilder: (context, index) {
           return Container(
-            //padding: EdgeInsets.all(10),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: <
                 Widget>[
-              /* Text(
-                    (index + 1).toString() + ". ",
-
-                    style: TextStyle(
-                        color: Colors.indigo,
-                        fontSize: 16
-                    ),
-                  ),*/
-
               Expanded(
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                    //  new Divider(color: Colors.blueAccent,height: 3,),
                     Row(children: <Widget>[
                       Container(
                         width: MediaQuery.of(context).size.width,
@@ -129,11 +118,10 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                         ),
                       ),
                     ]),
-                    new Padding(padding: new EdgeInsets.all(5.0)),
-                    // new Divider(color: Colors.blueAccent,height: 3,),
+                    Padding(padding: EdgeInsets.all(5.0)),
 
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Container(
                         width: 125,
                         child: Text(
@@ -261,14 +249,14 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                         ),
                       ),
                     ]),
-                    new Padding(padding: new EdgeInsets.all(5.0)),
-                    new Divider(
+                    Padding(padding: EdgeInsets.all(5.0)),
+                    Divider(
                       color: Colors.grey[800],
                       height: 6,
                     ),
 
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Container(
                         height: 30,
                         width: 125,
@@ -454,7 +442,7 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                       height: 6,
                     ),
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Container(
                         height: 40,
                         width: 125,
@@ -500,13 +488,13 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                         ),
                       )
                     ]),
-                    new Padding(padding: new EdgeInsets.all(5.0)),
-                    new Divider(
+                    Padding(padding: EdgeInsets.all(5.0)),
+                    Divider(
                       color: Colors.grey[800],
                       height: 6,
                     ),
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Container(
                         height: 40,
                         width: 125,
@@ -550,13 +538,13 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                         ),
                       )
                     ]),
-                    new Padding(padding: new EdgeInsets.all(5.0)),
-                    new Divider(
+                    Padding(padding:EdgeInsets.all(5.0)),
+                    Divider(
                       color: Colors.grey[800],
                       height: 6,
                     ),
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Container(
                         height: 30,
                         child: Text(
@@ -625,13 +613,13 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                         ),
                       )
                     ]),
-                    new Padding(padding: new EdgeInsets.all(5.0)),
-                    new Divider(
+                    Padding(padding: EdgeInsets.all(5.0)),
+                    Divider(
                       color: Colors.grey[800],
                       height: 6,
                     ),
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Container(
                         height: 30,
                         width: 125,
@@ -656,7 +644,7 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                       height: 6,
                     ),
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Container(
                         height: 40,
                         width: 125,
@@ -671,7 +659,7 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                     ]),
 
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Expanded(
                           child: Container(
                         height: 40,
@@ -683,13 +671,13 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                         ),
                       ))
                     ]),
-                    new Padding(padding: new EdgeInsets.all(5.0)),
-                    new Divider(
+                    Padding(padding: EdgeInsets.all(5.0)),
+                    Divider(
                       color: Colors.grey[800],
                       height: 6,
                     ),
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Container(
                         height: 40,
                         width: 125,
@@ -704,7 +692,7 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                     ]),
 
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Expanded(
                           child: Container(
                         height: 40,
@@ -716,14 +704,14 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                         ),
                       ))
                     ]),
-                    new Padding(padding: new EdgeInsets.all(5.0)),
-                    new Divider(
+                    Padding(padding: EdgeInsets.all(5.0)),
+                    Divider(
                       color: Colors.grey[800],
                       height: 6,
                     ),
 
                     Row(children: <Widget>[
-                      new Padding(padding: new EdgeInsets.only(left: 8.0)),
+                      Padding(padding: EdgeInsets.only(left: 8.0)),
                       Container(
                         // height: 30,
                         width: 125,
@@ -774,13 +762,6 @@ class PublishedLotDetailsState extends State<PublishedLotDetails> {
                     ]),
                   ]))
             ]),
-            /*onTap: (){
-
-              lotid=jsonResult[index]['LOT_ID'];
-              print(lotid);
-              Navigator.push(context,MaterialPageRoute(builder: (context) => PublishedLotDetails(id:lotid)));
-
-            },*/
           );
         },
         separatorBuilder: (context, index) {

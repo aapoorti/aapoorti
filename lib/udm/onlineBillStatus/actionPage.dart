@@ -1,6 +1,7 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:flutter_app/udm/onlineBillStatus/actionModel.dart';
@@ -1907,7 +1908,7 @@ class _ProductBoxState extends State<ProductBox>
                                 style: ElevatedButton.styleFrom(
                                   shape: CircleBorder(),
                                   fixedSize: Size(115, 36),
-                                  backgroundColor: Colors.red.shade300
+                                  backgroundColor: AapoortiConstants.primary
                                 ),
                                 onPressed: () {
                                   String pAYINGRLY = widget.item.pAYINGRLY == null ? "NA" : widget.item.pAYINGRLY.toString();

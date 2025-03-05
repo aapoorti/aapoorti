@@ -263,7 +263,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                 Expanded(child: Text('logOut'.tr, style: TextStyle(color: Colors.black, fontSize: 16))),
                                 IconButton(
                                     onPressed: () {
-                                      AapoortiUtilities.alertDialog(context, "MMIS");
+                                      AapoortiUtilities.showAlertDailog(context, "MMIS");
                                       //Get.dialog(LogOutDialog(press: () { }));
                                       //WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
                                     },
@@ -445,7 +445,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 onTap: () {
                   if (_scaffoldKey.currentState!.isDrawerOpen) {
                     _scaffoldKey.currentState!.closeDrawer();
-                    AapoortiUtilities.alertDialog(context, "MMIS");
+                    AapoortiUtilities.showAlertDailog(context, "MMIS");
                     //_showConfirmationDialog(context);
                     //WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
                     //callWebServiceLogout();

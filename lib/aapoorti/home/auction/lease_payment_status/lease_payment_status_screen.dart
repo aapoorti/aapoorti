@@ -14,417 +14,426 @@ import 'package:provider/provider.dart';
 
 import 'CustomRadioController.dart';
 
-class LeasePaymentStatus extends StatefulWidget {
-  static const routeName = "/lease-payment-status";
+// class LeasePaymentStatus extends StatefulWidget {
+//   static const routeName = "/lease-payment-status";
+//
+//   @override
+//   State<LeasePaymentStatus> createState() => _LeasePaymentStatusState();
+// }
+//
+// class _LeasePaymentStatusState extends State<LeasePaymentStatus> with SingleTickerProviderStateMixin{
+//
+//   final _formKey = GlobalKey<FormState>();
+//   String? selectedValue = 'F1';
+//   String _selectedType = 'SLR';
+//   DateTime? _selectedDate;
+//   final TextEditingController _trainController = TextEditingController();
+//   late AnimationController _animationController;
+//   late Animation<double> _fadeAnimation;
 
-  @override
-  State<LeasePaymentStatus> createState() => _LeasePaymentStatusState();
-}
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _animationController = AnimationController(
+//       vsync: this,
+//       duration: Duration(milliseconds: 800),
+//     );
+//     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+//       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+//     );
+//     _animationController.forward();
+//     pr = ProgressDialog(context);
+//    _challanStatusProvider = Provider.of<ChallanStatusProvider>(context, listen: false);
+//    _selectedDate = DateTime.now();
+//   }
+//
+//   @override
+//   void dispose() {
+//     _animationController.dispose();
+//     _trainController.dispose();
+//     super.dispose();
+//   }
+//
+//   String formatDate(DateTime date) {
+//     return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
+//   }
+//
 
-class _LeasePaymentStatusState extends State<LeasePaymentStatus> with SingleTickerProviderStateMixin{
-
-  final _formKey = GlobalKey<FormState>();
-  String? selectedValue = 'F1';
-  String _selectedType = 'SLR';
-  DateTime? _selectedDate;
-  final TextEditingController _trainController = TextEditingController();
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  ProgressDialog? pr;
-  ChallanStatusProvider? _challanStatusProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 800),
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-    _animationController.forward();
-    pr = ProgressDialog(context);
-   _challanStatusProvider = Provider.of<ChallanStatusProvider>(context, listen: false);
-   _selectedDate = DateTime.now();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _trainController.dispose();
-    super.dispose();
-  }
-
-  String formatDate(DateTime date) {
-    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
-  }
-
-  void validateAndSave() async {
-    if(_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      String temp = DateFormat("dd/MM/yyyy").format(_selectedDate!);
-      String input = "${_trainController.text.trim()}~$_selectedType~$selectedValue~$temp";
-      try {
-        await pr!.show();
-        await _challanStatusProvider!.getStatus(input);
-        await pr!.hide();
-        if(ChallanStatusProvider.apiStatus == ApiStatus.finished) {
-          Navigator.of(context).pushNamed(
-            ChallanStatusDetails.routename,
-            arguments: _challanStatusProvider!.challanStatus,
-          );
-        }
-        else if(ChallanStatusProvider.apiStatus == ApiStatus.none) {Navigator.of(context).pushNamed("/nodata");}
-      }
-      on SocketException catch (_) {
-        await pr!.hide();
-        Future.delayed(Duration.zero, () =>  AapoortiUtilities.showInSnackBar(context,"Internet Connectivity issue"));
-      }
-      on TimeoutException catch (_) {
-        await pr!.hide();
-        AapoortiUtilities.showInSnackBar(context,"Internet Connectivity issue");
-      }
-      on FormatException catch (_) {
-        await pr!.hide();
-        AapoortiUtilities.showInSnackBar(context, "Errorneous response");
-      }
-      on AapoortiException catch (_) {
-        await pr!.hide();
-        AapoortiUtilities.showInSnackBar(context, "Service Not Available!");
-      }
-      on Exception catch (_) {
-        await pr!.hide();
-        AapoortiUtilities.showInSnackBar(context, "Unexpected Error!");
-      }
-      catch (error) {
-        await pr!.hide();
-        AapoortiUtilities.showInSnackBar(context, "Unexpected Error!");
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: AapoortiConstants.primary,
-        elevation: 0,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-        title: Text(
-          'Parcel Payment',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.home_rounded, color: Colors.white),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-          ),
-        ],
-      ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: Container(
-          color: Colors.grey[100],
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Colors.white, Colors.blue.shade50],
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            buildAnimatedTextField(
-                              controller: _trainController,
-                              label: 'Train No.',
-                              icon: Icons.train_rounded,
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return 'Please enter train number';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 24),
-                            buildTypeSelection(),
-                            SizedBox(height: 24),
-                            buildDropdown(),
-                            SizedBox(height: 24),
-                            buildDatePicker(),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    buildSubmitButton(),
-                    SizedBox(height: 16),
-                    buildResetButton(),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildAnimatedTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    required String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(
-          color: Colors.blue.shade800,
-          fontWeight: FontWeight.w500,
-        ),
-        prefixIcon: Icon(icon, color: Colors.blue.shade800),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.blue.shade300),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.blue.shade300),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.blue.shade800, width: 2),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-      ),
-      validator: validator,
-    );
-  }
-
-  Widget buildTypeSelection() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.shade300),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: buildTypeButton('SLR'),
-          ),
-          Container(
-            width: 1,
-            height: 48,
-            color: Colors.blue.shade300,
-          ),
-          Expanded(
-            child: buildTypeButton('VP'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildTypeButton(String type) {
-    bool isSelected = _selectedType == type;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedType = type;
-          // Reset selected value when type changes
-          selectedValue = _selectedType == 'SLR' ? 'F1' : '1';
-        });
-      },
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.shade800 : Colors.transparent,
-          borderRadius: BorderRadius.horizontal(
-            left: type == 'SLR' ? Radius.circular(12) : Radius.zero,
-            right: type == 'VP' ? Radius.circular(12) : Radius.zero,
-          ),
-        ),
-        child: Text(
-          type,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.blue.shade800,
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildDropdown() {
-    // Define options based on selected type
-    List<String> options = _selectedType == 'SLR'
-        ? ['F1', 'F2', 'F3']
-        : ['1', '2', '3', '4', '5'];
-
-    return DropdownButtonFormField<String>(
-      value: selectedValue,
-      decoration: InputDecoration(
-        labelText: 'Value',
-        labelStyle: TextStyle(
-          color: Colors.blue.shade800,
-          fontWeight: FontWeight.w500,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      items: options.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: (newValue) {
-        setState(() {
-          selectedValue = newValue;
-        });
-      },
-    );
-  }
-
-  Widget buildDatePicker() {
-    return TextFormField(
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: 'Date',
-        labelStyle: TextStyle(
-          color: Colors.blue.shade800,
-          fontWeight: FontWeight.w500,
-        ),
-        prefixIcon: Icon(Icons.calendar_today_rounded, color: Colors.blue.shade800),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      controller: TextEditingController(
-        text: _selectedDate != null ? formatDate(_selectedDate!) : '',
-      ),
-      onTap: () async {
-        final DateTime? picked = await showDatePicker(
-          context: context,
-          initialDate: _selectedDate ?? DateTime.now(),
-          firstDate: DateTime(2000),
-          lastDate: DateTime(2100),
-          builder: (context, child) {
-            return Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: Colors.blue.shade800,
-                ),
-              ),
-              child: child!,
-            );
-          },
-        );
-        if (picked != null) {
-          setState(() {
-            _selectedDate = picked;
-          });
-        }
-      },
-    );
-  }
-
-  Widget buildSubmitButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue.shade800,
-        padding: EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        elevation: 4,
-      ),
-      onPressed: () {
-        validateAndSave();
-        // if (_formKey.currentState?.validate() ?? false) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(
-        //       content: Text('Processing Payment...'),
-        //       backgroundColor: Colors.blue.shade800,
-        //       behavior: SnackBarBehavior.floating,
-        //       shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.circular(10),
-        //       ),
-        //     ),
-        //   );
-        // }
-      },
-      child: Text(
-        'Submit',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  Widget buildResetButton() {
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        backgroundColor: Colors.grey[300],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      onPressed: () {
-        _trainController.clear();
-        setState(() {
-          _selectedType = 'SLR';
-          selectedValue = 'F1';
-          _selectedDate = null;
-        });
-      },
-      child: Text(
-        'Reset',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.blue.shade800,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
-
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.grey[100],
+//       appBar: AppBar(
+//         backgroundColor: AapoortiConstants.primary,
+//         elevation: 0,
+//         centerTitle: true,
+//         iconTheme: IconThemeData(color: Colors.white),
+//         title: Text(
+//           'Parcel Payment',
+//           style: TextStyle(
+//             color: Colors.white,
+//             fontSize: 16,
+//           ),
+//         ),
+//         // actions: [
+//         //   IconButton(
+//         //     icon: Icon(Icons.home_rounded, color: Colors.white),
+//         //     onPressed: () {
+//         //       Navigator.of(context, rootNavigator: true).pop();
+//         //     },
+//         //   ),
+//         // ],
+//       ),
+//       body: FadeTransition(
+//         opacity: _fadeAnimation,
+//         child: Container(
+//           color: Colors.grey[100],
+//           child: SingleChildScrollView(
+//             physics: BouncingScrollPhysics(),
+//             child: Padding(
+//               padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
+//               child: Form(
+//                 key: _formKey,
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.stretch,
+//                   children: [
+//                     Card(
+//                       elevation: 2,
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(16),
+//                       ),
+//                       child: Container(
+//                         padding: EdgeInsets.all(20),
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(16),
+//                           gradient: LinearGradient(
+//                             begin: Alignment.topLeft,
+//                             end: Alignment.bottomRight,
+//                             colors: [Colors.white, Colors.blue.shade50],
+//                           ),
+//                         ),
+//                         child: Column(
+//                           children: [
+//                             buildAnimatedTextField(
+//                               controller: _trainController,
+//                               label: 'Train No.',
+//                               icon: Icons.train_rounded,
+//                               validator: (value) {
+//                                 if (value?.isEmpty ?? true) {
+//                                   return 'Please enter train number';
+//                                 }
+//                                 return null;
+//                               },
+//                             ),
+//                             SizedBox(height: 24),
+//                             buildTypeSelection(),
+//                             SizedBox(height: 24),
+//                             buildDropdown(),
+//                             SizedBox(height: 24),
+//                             buildDatePicker(),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                     SizedBox(height: 20),
+//                     buildSubmitButton(),
+//                     SizedBox(height: 16),
+//                     _buildResetButton(
+//                       "Reset",
+//                       Colors.blue.shade400,
+//                       onPressed: resetForm,
+//                       isOutlined: true,
+//                     ),
+//                     //buildResetButton(),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   void resetForm() {
+//     _trainController.clear();
+//     setState(() {
+//       _selectedType = 'SLR';
+//       selectedValue = 'F1';
+//       _selectedDate = null;
+//     });
+//   }
+//
+//   Widget buildAnimatedTextField({
+//     required TextEditingController controller,
+//     required String label,
+//     required IconData icon,
+//     required String? Function(String?)? validator,
+//   }) {
+//     return TextFormField(
+//       controller: controller,
+//       decoration: InputDecoration(
+//         labelText: label,
+//         labelStyle: TextStyle(
+//           color: Colors.blue.shade800,
+//           fontWeight: FontWeight.w500,
+//         ),
+//         prefixIcon: Icon(icon, color: Colors.blue.shade800),
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(12),
+//           borderSide: BorderSide(color: Colors.blue.shade300),
+//         ),
+//         enabledBorder: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(12),
+//           borderSide: BorderSide(color: Colors.blue.shade300),
+//         ),
+//         focusedBorder: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(12),
+//           borderSide: BorderSide(color: Colors.blue.shade800, width: 2),
+//         ),
+//         filled: true,
+//         fillColor: Colors.white,
+//       ),
+//       validator: validator,
+//     );
+//   }
+//
+//   Widget buildTypeSelection() {
+//     return Container(
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(color: Colors.blue.shade300),
+//       ),
+//       child: Row(
+//         children: [
+//           Expanded(
+//             child: buildTypeButton('SLR'),
+//           ),
+//           Container(
+//             width: 1,
+//             height: 48,
+//             color: Colors.blue.shade300,
+//           ),
+//           Expanded(
+//             child: buildTypeButton('VP'),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   Widget _buildResetButton(
+//       String text,
+//       Color color, {
+//         VoidCallback? onPressed,
+//         bool isOutlined = false,
+//       }) {
+//     return SizedBox(
+//       width: double.infinity,
+//       child: AnimatedContainer(
+//         duration: const Duration(milliseconds: 300),
+//         curve: Curves.easeInOut,
+//         child: ElevatedButton(
+//           style: ElevatedButton.styleFrom(
+//             backgroundColor: isOutlined ? Colors.white : color,
+//             foregroundColor: isOutlined ? color : Colors.white,
+//             padding: const EdgeInsets.symmetric(vertical: 14),
+//             shape: RoundedRectangleBorder(
+//               borderRadius: BorderRadius.circular(8),
+//               side: isOutlined ? BorderSide(color: color, width: 1.5) : BorderSide.none,
+//             ),
+//             elevation: isOutlined ? 0 : 2,
+//           ),
+//           onPressed: onPressed,
+//           child: Text(
+//             text,
+//             style: TextStyle(
+//               fontSize: 15,
+//               fontWeight: FontWeight.bold,
+//               color: isOutlined ? color : Colors.white,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget buildTypeButton(String type) {
+//     bool isSelected = _selectedType == type;
+//     return GestureDetector(
+//       onTap: () {
+//         setState(() {
+//           _selectedType = type;
+//           // Reset selected value when type changes
+//           selectedValue = _selectedType == 'SLR' ? 'F1' : '1';
+//         });
+//       },
+//       child: AnimatedContainer(
+//         duration: Duration(milliseconds: 200),
+//         padding: EdgeInsets.symmetric(vertical: 12),
+//         decoration: BoxDecoration(
+//           color: isSelected ? Colors.blue.shade800 : Colors.transparent,
+//           borderRadius: BorderRadius.horizontal(
+//             left: type == 'SLR' ? Radius.circular(12) : Radius.zero,
+//             right: type == 'VP' ? Radius.circular(12) : Radius.zero,
+//           ),
+//         ),
+//         child: Text(
+//           type,
+//           textAlign: TextAlign.center,
+//           style: TextStyle(
+//             color: isSelected ? Colors.white : Colors.blue.shade800,
+//             fontWeight: FontWeight.w600,
+//             fontSize: 16,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget buildDropdown() {
+//     // Define options based on selected type
+//     List<String> options = _selectedType == 'SLR'
+//         ? ['F1', 'F2', 'F3']
+//         : ['1', '2', '3', '4', '5'];
+//
+//     return DropdownButtonFormField<String>(
+//       value: selectedValue,
+//       decoration: InputDecoration(
+//         labelText: 'Value',
+//         labelStyle: TextStyle(
+//           color: Colors.blue.shade800,
+//           fontWeight: FontWeight.w500,
+//         ),
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(12),
+//         ),
+//       ),
+//       items: options.map((String value) {
+//         return DropdownMenuItem<String>(
+//           value: value,
+//           child: Text(value),
+//         );
+//       }).toList(),
+//       onChanged: (newValue) {
+//         setState(() {
+//           selectedValue = newValue;
+//         });
+//       },
+//     );
+//   }
+//
+//   Widget buildDatePicker() {
+//     return TextFormField(
+//       readOnly: true,
+//       decoration: InputDecoration(
+//         labelText: 'Date',
+//         labelStyle: TextStyle(
+//           color: Colors.blue.shade800,
+//           fontWeight: FontWeight.w500,
+//         ),
+//         prefixIcon: Icon(Icons.calendar_today_rounded, color: Colors.blue.shade800),
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(12),
+//         ),
+//       ),
+//       controller: TextEditingController(
+//         text: _selectedDate != null ? formatDate(_selectedDate!) : '',
+//       ),
+//       onTap: () async {
+//         final DateTime? picked = await showDatePicker(
+//           context: context,
+//           initialDate: _selectedDate ?? DateTime.now(),
+//           firstDate: DateTime(2000),
+//           lastDate: DateTime(2100),
+//           builder: (context, child) {
+//             return Theme(
+//               data: Theme.of(context).copyWith(
+//                 colorScheme: ColorScheme.light(
+//                   primary: Colors.blue.shade800,
+//                 ),
+//               ),
+//               child: child!,
+//             );
+//           },
+//         );
+//         if (picked != null) {
+//           setState(() {
+//             _selectedDate = picked;
+//           });
+//         }
+//       },
+//     );
+//   }
+//
+//   Widget buildSubmitButton() {
+//     return ElevatedButton(
+//       style: ElevatedButton.styleFrom(
+//         fixedSize: Size(MediaQuery.of(context).size.width, 50),
+//         backgroundColor: Colors.blue.shade800,
+//         padding: EdgeInsets.symmetric(vertical: 16),
+//         shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.circular(12),
+//         ),
+//         elevation: 4,
+//       ),
+//       onPressed: () {
+//         validateAndSave();
+//         // if (_formKey.currentState?.validate() ?? false) {
+//         //   ScaffoldMessenger.of(context).showSnackBar(
+//         //     SnackBar(
+//         //       content: Text('Processing Payment...'),
+//         //       backgroundColor: Colors.blue.shade800,
+//         //       behavior: SnackBarBehavior.floating,
+//         //       shape: RoundedRectangleBorder(
+//         //         borderRadius: BorderRadius.circular(10),
+//         //       ),
+//         //     ),
+//         //   );
+//         // }
+//       },
+//       child: Text(
+//         'Submit',
+//         style: TextStyle(
+//           fontSize: 18,
+//           fontWeight: FontWeight.w600,
+//           color: Colors.white,
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget buildResetButton() {
+//     return TextButton(
+//       style: TextButton.styleFrom(
+//         padding: EdgeInsets.symmetric(vertical: 16),
+//         backgroundColor: Colors.grey[300],
+//         shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.circular(12),
+//         ),
+//       ),
+//       onPressed: () {
+//         _trainController.clear();
+//         setState(() {
+//           _selectedType = 'SLR';
+//           selectedValue = 'F1';
+//           _selectedDate = null;
+//         });
+//       },
+//       child: Text(
+//         'Reset',
+//         style: TextStyle(
+//           fontSize: 16,
+//           color: Colors.blue.shade800,
+//           fontWeight: FontWeight.w500,
+//         ),
+//       ),
+//     );
+//   }
+// }
+//
 // class LeasePaymentStatus extends StatefulWidget {
 //   static const routeName = "/lease-payment-status";
 //   @override
@@ -783,7 +792,7 @@ class _LeasePaymentStatusState extends State<LeasePaymentStatus> with SingleTick
 //     );
 //   }
 // }
-
+//
 // class LeasePaymentStatus extends StatefulWidget {
 //   static const routeName = "/lease-payment-status";
 //   @override
@@ -1593,6 +1602,727 @@ class _LeasePaymentStatusState extends State<LeasePaymentStatus> with SingleTick
 //         ),
 //         onWillPop: _onWillPop);
 //   }
-//
-//
 // }
+//LeasePaymentStatus
+//LeasePaymentStatus
+//  class LeasePaymentStatus extends StatefulWidget {
+//    static const routeName = "/lease-payment-status";
+//
+//    @override
+//    State<LeasePaymentStatus> createState() => _LeasePaymentStatusScreenState();
+//  }
+//
+//  class _LeasePaymentStatusScreenState extends State<LeasePaymentStatus> with SingleTickerProviderStateMixin{
+//
+//    final _formKey = GlobalKey<FormState>();
+//    String? selectedValue = 'F1';
+//    String _selectedType = 'SLR';
+//    DateTime? _selectedDate;
+//    final TextEditingController _trainController = TextEditingController();
+//    late AnimationController _animationController;
+//    late Animation<double> _fadeAnimation;
+//
+//    @override
+//    void initState() {
+//      super.initState();
+//      _animationController = AnimationController(
+//        vsync: this,
+//        duration: Duration(milliseconds: 800),
+//      );
+//      _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+//        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+//      );
+//      _animationController.forward();
+//    }
+//
+//    @override
+//    void dispose() {
+//      _animationController.dispose();
+//      _trainController.dispose();
+//      super.dispose();
+//    }
+//
+//    String formatDate(DateTime date) {
+//      return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
+//    }
+//
+//    @override
+//    Widget build(BuildContext context) {
+//      return Scaffold(
+//        backgroundColor: Colors.grey[100],
+//        appBar: AppBar(
+//          backgroundColor: Colors.blue.shade800,
+//          elevation: 0,
+//          centerTitle: true,
+//          title: Text(
+//            'Parcel Payment',
+//            style: TextStyle(
+//              color: Colors.white,
+//              fontWeight: FontWeight.w600,
+//              fontSize: 22,
+//            ),
+//          ),
+//          leading: IconButton(
+//            icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+//            onPressed: () => Navigator.pop(context),
+//          ),
+//          actions: [
+//            IconButton(
+//              icon: Icon(Icons.home_rounded, color: Colors.white),
+//              onPressed: () {},
+//            ),
+//          ],
+//        ),
+//        body: FadeTransition(
+//          opacity: _fadeAnimation,
+//          child: Container(
+//            color: Colors.grey[100],
+//            child: SingleChildScrollView(
+//              physics: BouncingScrollPhysics(),
+//              child: Padding(
+//                padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
+//                child: Form(
+//                  key: _formKey,
+//                  child: Column(
+//                    crossAxisAlignment: CrossAxisAlignment.stretch,
+//                    children: [
+//                      Card(
+//                        elevation: 8,
+//                        shape: RoundedRectangleBorder(
+//                          borderRadius: BorderRadius.circular(16),
+//                        ),
+//                        child: Container(
+//                          padding: EdgeInsets.all(20),
+//                          decoration: BoxDecoration(
+//                            borderRadius: BorderRadius.circular(16),
+//                            gradient: LinearGradient(
+//                              begin: Alignment.topLeft,
+//                              end: Alignment.bottomRight,
+//                              colors: [Colors.white, Colors.blue.shade50],
+//                            ),
+//                          ),
+//                          child: Column(
+//                            children: [
+//                              buildAnimatedTextField(
+//                                controller: _trainController,
+//                                label: 'Train No.',
+//                                icon: Icons.train_rounded,
+//                                validator: (value) {
+//                                  if (value?.isEmpty ?? true) {
+//                                    return 'Please enter train number';
+//                                  }
+//                                  return null;
+//                                },
+//                              ),
+//                              SizedBox(height: 24),
+//                              buildTypeSelection(),
+//                              SizedBox(height: 24),
+//                              buildDropdown(),
+//                              SizedBox(height: 24),
+//                              buildDatePicker(),
+//                            ],
+//                          ),
+//                        ),
+//                      ),
+//                      SizedBox(height: 32),
+//                      buildSubmitButton(),
+//                      SizedBox(height: 16),
+//                      buildResetButton(),
+//                    ],
+//                  ),
+//                ),
+//              ),
+//            ),
+//          ),
+//        ),
+//      );
+//    }
+//
+//    Widget buildAnimatedTextField({
+//      required TextEditingController controller,
+//      required String label,
+//      required IconData icon,
+//      required String? Function(String?)? validator,
+//    }) {
+//      return TextFormField(
+//        controller: controller,
+//        decoration: InputDecoration(
+//          labelText: label,
+//          labelStyle: TextStyle(
+//            color: Colors.blue.shade800,
+//            fontWeight: FontWeight.w500,
+//          ),
+//          prefixIcon: Icon(icon, color: Colors.blue.shade800),
+//          border: OutlineInputBorder(
+//            borderRadius: BorderRadius.circular(12),
+//            borderSide: BorderSide(color: Colors.blue.shade300),
+//          ),
+//          enabledBorder: OutlineInputBorder(
+//            borderRadius: BorderRadius.circular(12),
+//            borderSide: BorderSide(color: Colors.blue.shade300),
+//          ),
+//          focusedBorder: OutlineInputBorder(
+//            borderRadius: BorderRadius.circular(12),
+//            borderSide: BorderSide(color: Colors.blue.shade800, width: 2),
+//          ),
+//          filled: true,
+//          fillColor: Colors.white,
+//        ),
+//        validator: validator,
+//      );
+//    }
+//
+//    Widget buildTypeSelection() {
+//      return Container(
+//        decoration: BoxDecoration(
+//          borderRadius: BorderRadius.circular(12),
+//          border: Border.all(color: Colors.blue.shade300),
+//        ),
+//        child: Row(
+//          children: [
+//            Expanded(
+//              child: buildTypeButton('SLR'),
+//            ),
+//            Container(
+//              width: 1,
+//              height: 48,
+//              color: Colors.blue.shade300,
+//            ),
+//            Expanded(
+//              child: buildTypeButton('VP'),
+//            ),
+//          ],
+//        ),
+//      );
+//    }
+//
+//    Widget buildTypeButton(String type) {
+//      bool isSelected = _selectedType == type;
+//      return GestureDetector(
+//        onTap: () {
+//          setState(() {
+//            _selectedType = type;
+//            // Reset selected value when type changes
+//            selectedValue = _selectedType == 'SLR' ? 'F1' : '1';
+//          });
+//        },
+//        child: AnimatedContainer(
+//          duration: Duration(milliseconds: 200),
+//          padding: EdgeInsets.symmetric(vertical: 12),
+//          decoration: BoxDecoration(
+//            color: isSelected ? Colors.blue.shade800 : Colors.transparent,
+//            borderRadius: BorderRadius.horizontal(
+//              left: type == 'SLR' ? Radius.circular(12) : Radius.zero,
+//              right: type == 'VP' ? Radius.circular(12) : Radius.zero,
+//            ),
+//          ),
+//          child: Text(
+//            type,
+//            textAlign: TextAlign.center,
+//            style: TextStyle(
+//              color: isSelected ? Colors.white : Colors.blue.shade800,
+//              fontWeight: FontWeight.w600,
+//              fontSize: 16,
+//            ),
+//          ),
+//        ),
+//      );
+//    }
+//
+//    Widget buildDropdown() {
+//      // Define options based on selected type
+//      List<String> options = _selectedType == 'SLR'
+//          ? ['F1', 'F2', 'F3']
+//          : ['1', '2', '3', '4', '5'];
+//
+//      return DropdownButtonFormField<String>(
+//        value: selectedValue,
+//        decoration: InputDecoration(
+//          labelText: 'Value',
+//          labelStyle: TextStyle(
+//            color: Colors.blue.shade800,
+//            fontWeight: FontWeight.w500,
+//          ),
+//          border: OutlineInputBorder(
+//            borderRadius: BorderRadius.circular(12),
+//          ),
+//        ),
+//        items: options.map((String value) {
+//          return DropdownMenuItem<String>(
+//            value: value,
+//            child: Text(value),
+//          );
+//        }).toList(),
+//        onChanged: (newValue) {
+//          setState(() {
+//            selectedValue = newValue;
+//          });
+//        },
+//      );
+//    }
+//
+//    Widget buildDatePicker() {
+//      return TextFormField(
+//        readOnly: true,
+//        decoration: InputDecoration(
+//          labelText: 'Date',
+//          labelStyle: TextStyle(
+//            color: Colors.blue.shade800,
+//            fontWeight: FontWeight.w500,
+//          ),
+//          prefixIcon: Icon(Icons.calendar_today_rounded, color: Colors.blue.shade800),
+//          border: OutlineInputBorder(
+//            borderRadius: BorderRadius.circular(12),
+//          ),
+//        ),
+//        controller: TextEditingController(
+//          text: _selectedDate != null ? formatDate(_selectedDate!) : '',
+//        ),
+//        onTap: () async {
+//          final DateTime? picked = await showDatePicker(
+//            context: context,
+//            initialDate: _selectedDate ?? DateTime.now(),
+//            firstDate: DateTime(2000),
+//            lastDate: DateTime(2100),
+//            builder: (context, child) {
+//              return Theme(
+//                data: Theme.of(context).copyWith(
+//                  colorScheme: ColorScheme.light(
+//                    primary: Colors.blue.shade800,
+//                  ),
+//                ),
+//                child: child!,
+//              );
+//            },
+//          );
+//          if (picked != null) {
+//            setState(() {
+//              _selectedDate = picked;
+//            });
+//          }
+//        },
+//      );
+//    }
+//
+//    Widget buildSubmitButton() {
+//      return ElevatedButton(
+//        style: ElevatedButton.styleFrom(
+//          backgroundColor: Colors.blue.shade800,
+//          padding: EdgeInsets.symmetric(vertical: 16),
+//          shape: RoundedRectangleBorder(
+//            borderRadius: BorderRadius.circular(12),
+//          ),
+//          elevation: 4,
+//        ),
+//        onPressed: () {
+//          if (_formKey.currentState?.validate() ?? false) {
+//            ScaffoldMessenger.of(context).showSnackBar(
+//              SnackBar(
+//                content: Text('Processing Payment...'),
+//                backgroundColor: Colors.blue.shade800,
+//                behavior: SnackBarBehavior.floating,
+//                shape: RoundedRectangleBorder(
+//                  borderRadius: BorderRadius.circular(10),
+//                ),
+//              ),
+//            );
+//          }
+//        },
+//        child: Text(
+//          'Submit',
+//          style: TextStyle(
+//            fontSize: 18,
+//            fontWeight: FontWeight.w600,
+//            color: Colors.white,
+//          ),
+//        ),
+//      );
+//    }
+//
+//    Widget buildResetButton() {
+//      return TextButton(
+//        style: TextButton.styleFrom(
+//          padding: EdgeInsets.symmetric(vertical: 16),
+//          backgroundColor: Colors.grey[300],
+//          shape: RoundedRectangleBorder(
+//            borderRadius: BorderRadius.circular(12),
+//          ),
+//        ),
+//        onPressed: () {
+//          _trainController.clear();
+//          setState(() {
+//            _selectedType = 'SLR';
+//            selectedValue = 'F1';
+//            _selectedDate = null;
+//          });
+//        },
+//        child: Text(
+//          'Reset',
+//          style: TextStyle(
+//            fontSize: 16,
+//            color: Colors.blue.shade800,
+//            fontWeight: FontWeight.w500,
+//          ),
+//        ),
+//      );
+//    }
+//  }
+
+class LeasePaymentStatus extends StatefulWidget {
+  static const routeName = "/lease-payment-status";
+
+  @override
+  State<LeasePaymentStatus> createState() => _LeasePaymentStatusState();
+}
+
+class _LeasePaymentStatusState extends State<LeasePaymentStatus> {
+  final TextEditingController _trainController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  String? _selectedValue = 'F1';
+  String _selectedType = 'SLR';
+  bool _isSLRSelected = true;
+  ProgressDialog? pr;
+  ChallanStatusProvider? _challanStatusProvider;
+
+  List<String> options = [];
+
+  List<String> slroptions = ['F1', 'F2', 'F3'];
+  List<String> vpoptions = ['1', '2', '3', '4', '5'];
+
+  @override
+  void initState() {
+    super.initState();
+    _dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    options.addAll(slroptions);
+    pr = ProgressDialog(context);
+    _challanStatusProvider = Provider.of<ChallanStatusProvider>(context, listen: false);
+  }
+
+  @override
+  void dispose() {
+    _trainController.dispose();
+    _dateController.dispose();
+    super.dispose();
+  }
+
+  void _resetForm() {
+    setState(() {
+      _trainController.clear();
+      _dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+      _selectedValue = 'F1';
+      _selectedType = 'SLR';
+      _isSLRSelected = true;
+      options.clear();
+      options.addAll(slroptions);
+    });
+  }
+
+  void validateAndSave(BuildContext context) async {
+    String temp = _dateController.text;
+    String input = "${_trainController.text.trim()}~$_selectedType~$_selectedValue~$temp";
+    try {
+      await pr!.show();
+      await _challanStatusProvider!.getStatus(input);
+      await pr!.hide();
+      if(ChallanStatusProvider.apiStatus == ApiStatus.finished) {
+        Navigator.of(context).pushNamed(
+          ChallanStatusDetails.routename,
+          arguments: _challanStatusProvider!.challanStatus,
+        );
+      }
+      else if(ChallanStatusProvider.apiStatus == ApiStatus.none) {Navigator.of(context).pushNamed("/nodata");}
+    }
+    on SocketException catch (_) {
+      await pr!.hide();
+      Future.delayed(Duration.zero, () =>  AapoortiUtilities.showInSnackBar(context,"Internet Connectivity issue"));
+    }
+    on TimeoutException catch (_) {
+      await pr!.hide();
+      AapoortiUtilities.showInSnackBar(context,"Internet Connectivity issue");
+    }
+    on FormatException catch (_) {
+      await pr!.hide();
+      AapoortiUtilities.showInSnackBar(context, "Errorneous response");
+    }
+    on AapoortiException catch (_) {
+      await pr!.hide();
+      AapoortiUtilities.showInSnackBar(context, "Service Not Available!");
+    }
+    on Exception catch (_) {
+      await pr!.hide();
+      AapoortiUtilities.showInSnackBar(context, "Unexpected Error!");
+    }
+    catch (error) {
+      await pr!.hide();
+      AapoortiUtilities.showInSnackBar(context, "Unexpected Error!");
+    }
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1976D2),
+        title: const Text(
+          'Parcel Payments',
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Train Number Field
+              Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue.shade100),
+                ),
+                child: TextField(
+                  controller: _trainController,
+                  decoration: const InputDecoration(
+                    prefixIcon:
+                        Icon(Icons.train, color: Color(0xFF1976D2), size: 20),
+                    hintText: 'Train No.',
+                    hintStyle: TextStyle(fontSize: 14),
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // SLR/VP Toggle
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isSLRSelected = true;
+                            _selectedType = 'SLR';
+                            // Reset selected value when type changes
+                           _selectedValue = 'F1' ;
+                           options.clear();
+                           options.addAll(slroptions);
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: _isSLRSelected
+                                ? const Color(0xFF1976D2)
+                                : Colors.transparent,
+                            borderRadius: const BorderRadius.horizontal(
+                              left: Radius.circular(7),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'SLR',
+                              style: TextStyle(
+                                color: _isSLRSelected
+                                    ? Colors.white
+                                    : Colors.black54,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            _isSLRSelected = false;
+                            _selectedType = 'VP';
+                            _selectedValue = '1';
+                            options.clear();
+                            options.addAll(vpoptions);
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: !_isSLRSelected ? const Color(0xFF1976D2) : Colors.transparent,
+                            borderRadius: const BorderRadius.horizontal(
+                              right: Radius.circular(7),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'VP',
+                              style: TextStyle(
+                                color: !_isSLRSelected
+                                    ? Colors.white
+                                    : Colors.black54,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Value Dropdown
+              buildDropdown(),
+              const SizedBox(height: 12),
+
+              // Date Field
+              Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: TextField(
+                  controller: _dateController,
+                  readOnly: true,
+                  style: TextStyle(
+                    color: Colors.blue.shade800,
+                    fontSize: 14,
+                  ),
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.calendar_today,
+                        color: Color(0xFF1976D2), size: 20),
+                    hintText: 'Date',
+                    hintStyle: TextStyle(fontSize: 14),
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                  onTap: () async {
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2024),
+                      lastDate: DateTime(2026),
+                    );
+                    if (picked != null) {
+                      setState(() {
+                        _dateController.text =
+                            "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
+                      });
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Submit Button
+              Container(
+                height: 45,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if(_trainController.text.isNotEmpty){
+                      validateAndSave(context);
+                      FocusScope.of(context).unfocus();
+                    }
+                    else{
+                      AapoortiUtilities.showInSnackBar(context, "Please enter train number");
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1976D2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Reset Button
+              Container(
+                height: 45,
+                child: OutlinedButton(
+                  onPressed: _resetForm,
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.blue.shade300),
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    'Reset',
+                    style: TextStyle(
+                      color: Colors.blue.shade600,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+
+   Widget buildDropdown() {
+     // Define options based on selected type
+     List<String> options = _selectedType == 'SLR'
+         ? ['F1', 'F2', 'F3']
+         : ['1', '2', '3', '4', '5'];
+
+     return Container(
+       height: 50,
+       child: DropdownButtonFormField<String>(
+         value: _selectedValue,
+         decoration: InputDecoration(
+           labelText: 'Value',
+           labelStyle: TextStyle(
+             color: AapoortiConstants.primary,
+             fontWeight: FontWeight.w500,
+           ),
+           border: OutlineInputBorder(
+             borderRadius: BorderRadius.circular(8),
+           ),
+         ),
+         items: options.map((String value) {
+           return DropdownMenuItem<String>(
+             value: value,
+             child: Text(value),
+           );
+         }).toList(),
+         onChanged: (newValue) {
+           setState(() {
+             _selectedValue = newValue;
+           });
+         },
+       ),
+     );
+   }
+}

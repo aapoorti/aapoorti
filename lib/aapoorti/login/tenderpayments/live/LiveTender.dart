@@ -68,7 +68,7 @@ class _LiveTenderState extends State<LiveTender> {
         AapoortiUtilities.user!.CUSTOM_WK_AREA;
 
     jsonResult = await AapoortiUtilities.fetchPostPostLogin(
-        'Log/LiveTenderList', 'LiveTenderList', inputParam1, inputParam2);
+        'Log/LiveTenderList', 'LiveTenderList', inputParam1, inputParam2, context);
     debugPrint(jsonResult!.length.toString());
     debugPrint(jsonResult.toString());
     if (jsonResult!.length == 0) {
@@ -173,7 +173,7 @@ class _LiveTenderState extends State<LiveTender> {
     } else if (AapoortiUtilities.user!.CUSTOM_WK_AREA == 'LT') {
       worka = "Earning/Leasing";
     }
-    return worka!;
+    return worka ?? "NA";
   }
 
   Widget _myListView(BuildContext context) {

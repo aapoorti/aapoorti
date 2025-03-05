@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -51,7 +52,7 @@ class _CaseTrackerDataScreenState extends State<CaseTrackerDataScreen> {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         title: Text(language.text('casetracker'), style: TextStyle(color: Colors.white)),
       ),
       body: Container(

@@ -35,7 +35,7 @@ class _InvoiceState extends State<Invoice> {
     String inputParam1 = AapoortiUtilities.user!.C_TOKEN + "," +AapoortiUtilities.user!.S_TOKEN + ",Flutter,0,0";
     String inputParam2 = AapoortiUtilities.user!.MAP_ID ;
 
-    jsonResult = await AapoortiUtilities.fetchPostPostLogin('AFLAuction/INVOICE', 'INVOICE' ,inputParam1, inputParam2) ;
+    jsonResult = await AapoortiUtilities.fetchPostPostLogin('AFLAuction/INVOICE', 'INVOICE' ,inputParam1, inputParam2, context) ;
     if(jsonResult!.length==0)
     {
       jsonResult=null;

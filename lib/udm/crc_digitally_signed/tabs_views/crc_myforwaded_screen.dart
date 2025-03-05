@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fluttericon/typicons_icons.dart';
 import 'package:intl/intl.dart';
@@ -178,7 +179,7 @@ class _CrcmyforwardedScreenState extends State<CrcmyforwardedScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4.0),
                                   side: BorderSide(
-                                    color: Colors.red.shade300,
+                                    color: AapoortiConstants.primary,
                                     width: 1.0,
                                   )
                               ),
@@ -323,7 +324,7 @@ class _CrcmyforwardedScreenState extends State<CrcmyforwardedScreen> {
                                     Align(
                                       alignment: Alignment.topRight,
                                       child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(shape: CircleBorder(), backgroundColor: Colors.red.shade300),
+                                          style: ElevatedButton.styleFrom(shape: CircleBorder(), backgroundColor: AapoortiConstants.primary),
                                           onPressed: () async{
                                             bool check = await UdmUtilities.checkconnection();
                                             if(check == true) {
@@ -379,7 +380,7 @@ class _CrcmyforwardedScreenState extends State<CrcmyforwardedScreen> {
                                 top: 1,
                                 left: 2,
                                 child: CircleAvatar(
-                                  backgroundColor: Colors.red[300],
+                                  backgroundColor: AapoortiConstants.primary,
                                   radius: 12,
                                   child: Text(
                                     '${index+1}',

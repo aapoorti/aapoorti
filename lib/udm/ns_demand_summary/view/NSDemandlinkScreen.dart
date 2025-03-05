@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/ns_demand_summary/providers/change_nsdscroll_visibility_provider.dart';
@@ -89,7 +90,7 @@ class _NSDemandlinkScreenState extends State<NSDemandlinkScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           title: Consumer<SearchNSDScreenProvider>(
               builder: (context, value, child) {
@@ -102,21 +103,21 @@ class _NSDemandlinkScreenState extends State<NSDemandlinkScreen> {
                         borderRadius: BorderRadius.circular(5)),
                     child: Center(
                       child: TextField(
-                        cursorColor: Colors.red[300],
+                        cursorColor: AapoortiConstants.primary,
                         controller: _textsearchController,
                         decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                            prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                             suffixIcon: IconButton(
-                              icon: Icon(Icons.clear, color: Colors.red[300]),
+                              icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                               onPressed: () {
                                 Provider.of<SearchNSDScreenProvider>(context, listen: false).updatelinkScreen(false);
                                 _textsearchController.text = "";
                                 Provider.of<NSDemandSummaryViewModel>(context, listen: false).searchingNSDMDlink(_textsearchController.text, context);
                               },
                             ),
-                            focusColor: Colors.red[300],
+                            focusColor: AapoortiConstants.primary,
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.red.shade300, width: 1.0),
+                              borderSide: BorderSide(color: AapoortiConstants.primary, width: 1.0),
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             errorBorder: OutlineInputBorder(
@@ -392,7 +393,7 @@ class _NSDemandlinkScreenState extends State<NSDemandlinkScreen> {
                                                           fontSize: 16),
                                                       trimLines: 3,
                                                       colorClickableText:
-                                                      Colors.red[300],
+                                                      AapoortiConstants.primary,
                                                       trimMode: TrimMode.Line,
                                                       trimCollapsedText:
                                                       ' ...${language.text('more')}',
@@ -479,9 +480,9 @@ class _NSDemandlinkScreenState extends State<NSDemandlinkScreen> {
                                                 Row(
                                                   mainAxisAlignment: MainAxisAlignment.end,
                                                   children: [
-                                                    Text(language.text('viemdmd'), style: TextStyle(color: Colors.red.shade300, fontSize: 16)),
+                                                    Text(language.text('viemdmd'), style: TextStyle(color: AapoortiConstants.primary, fontSize: 16)),
                                                     ElevatedButton(
-                                                        style: ElevatedButton.styleFrom(shape: CircleBorder(),backgroundColor: Colors.red.shade300),
+                                                        style: ElevatedButton.styleFrom(shape: CircleBorder(),backgroundColor: AapoortiConstants.primary),
                                                         onPressed: () async {
                                                           bool check = await UdmUtilities.checkconnection();
                                                           if(check == true) {

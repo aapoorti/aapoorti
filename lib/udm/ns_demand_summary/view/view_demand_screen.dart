@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/ns_demand_summary/providers/change_nsdscroll_visibility_provider.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/utils/NoConnection.dart';
@@ -54,7 +55,7 @@ class _ViewDemandScreenState extends State<ViewDemandScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(language.text('nsdemandtitle'), style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
       ),
       body: Container(
         padding: EdgeInsets.all(6.0),

@@ -50,31 +50,31 @@ class _EDocumentsLinksState extends State<EDocumentsLinks> {
   ];
 
   final List<Map<String, String>> pdfGoodsandServices = [
-    {'title': "User Manual for Vendors (Goods and Services)\nVersion 1.0"},
+    {'title': "User Manual for Vendors (Goods and Services) Version 1.0"},
     {'title': "How to Turn Off Compatibility View Settings"},
-    {'title': "User manual for vendors on Post Contract\nActivities"},
-    {'title': "User Manual for Vendors- for Reverse Auction\n(Goods and Services Module) Version 2"},
-    {'title': "User Manual for On-line Submission of\nSupplementary Bills by Vendors(Version-1.0)"}];
+    {'title': "User manual for vendors on Post Contract Activities"},
+    {'title': "User Manual for Vendors- for Reverse Auction (Goods and Services Module) Version 2"},
+    {'title': "User Manual for On-line Submission of Supplementary Bills by Vendors(Version-1.0)"}];
 
   final List<Map<String, String>> pdfWorks = [
     {'title': "User Manual for Contractors"},
-    {'title': "User Manual for Standard Railway User\n( Version 1.0 )"},
-    {'title': "User Manual for Department Admins(Version 1.0)\n( for Railway Users )"},
-    {'title': "Creation and Management of SOR and NS Item\nDirectories ( for Railway Users )"},
-    {'title': "User Manual for Contractors - For Two Stage\nReverse Auction (Works Module) Version 2.0"}];
+    {'title': "User Manual for Standard Railway User ( Version 1.0 )"},
+    {'title': "User Manual for Department Admins(Version 1.0) ( for Railway Users )"},
+    {'title': "Creation and Management of SOR and NS Item Directories ( for Railway Users )"},
+    {'title': "User Manual for Contractors - For Two Stage Reverse Auction (Works Module) Version 2.0"}];
 
   List<Map<String, String>> pdfEarningLeasing = [{'title' : "User Manual for Contractors (Earning / Leasing)\nVersion 1.0"}];
 
   List<Map<String, String>> pdfE_Auction = [
     {'title' : "Bidder User Manual"},
     {'title' : "Guide For SBI Corporate Account User"},
-    {'title' : "User Manual of Balance Sale Value and Invoice\nGeneration"},
-    {'title' : "User Manual for Bidders On Lot Publishing\nModule"}];
+    {'title' : "User Manual of Balance Sale Value and Invoice Generation"},
+    {'title' : "User Manual for Bidders On Lot Publishing Module"}];
 
   List<Map<String, String>> pdf_iMMS = [
     {'title' : "User Manual for HQ users (HQ Module)"},
-    {'title' : "User Manual for Depot users Depot Module)"},
-    {'title' : "User Manual for Depot and Division users\n(LP Module)"},
+    {'title' : "User Manual for Depot users Depot Module"},
+    {'title' : "User Manual for Depot and Division users (LP Module)"},
     {'title' : "User Manual for System Administrator"},
     {'title' : "Procedure For Installation of Java And PKI Server"},
     {'title' : "Procedure For Change Digital Certificate(DSC)"}];

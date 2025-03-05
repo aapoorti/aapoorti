@@ -1178,7 +1178,6 @@ class ProductBox extends StatelessWidget {
                                   flex: 4,
                                   child: Text.rich(() {
                                     if(item!.tRANSTYPE == 'R') {if (item!.tRANSQTY == '0.000' && item!.cARDCODE == '41' && item!.lOANINDDESC == '1') {
-                                        //return item.vOUCHERNO+'\ndt. '+item.tRANSDATE+'\n'+"No discrepancy found during Stock Verification \nOn Loan \nIssues against Receipt Vr.";
                                         return TextSpan(children: <InlineSpan>[
                                           TextSpan(
                                               text: 'RO No.',
@@ -1367,32 +1366,24 @@ class ProductBox extends StatelessWidget {
                                         return TextSpan(children: <InlineSpan>[
                                           TextSpan(
                                               text: () {
-                                                if (item!.cARDCODE == '30' &&
-                                                    item!.rEJIND == 'W') {
+                                                if(item!.cARDCODE == '30' && item!.rEJIND == 'W') {
                                                   return 'Warranty Claim No. ';
                                                 } else {
                                                   return 'Issue Note No. ';
                                                 }
                                               }(),
-                                              style:
-                                                  TextStyle(color: Colors.red)),
+                                              style: TextStyle(color: Colors.red)),
                                           TextSpan(
                                               text: item!.vOUCHERNO,
                                               style:
                                                   TextStyle(color: Colors.blue),
                                               recognizer: TapGestureRecognizer()
                                                 ..onTap = () {
-                                                  print(item!.cARDCODE);
                                                   _toast(
                                                       item!.cARDCODE, context,
                                                       temp: item!);
                                                   if (item!.cARDCODE == '47') {
-                                                    print('Launched Screen');
-                                                    Navigator.of(context)
-                                                        .pushNamed(
-                                                      ItemReceiptDetails
-                                                          .routeName,
-                                                    );
+                                                    Navigator.of(context).pushNamed(ItemReceiptDetails.routeName);
                                                   }
                                                 }),
                                           TextSpan(
@@ -1404,7 +1395,8 @@ class ProductBox extends StatelessWidget {
                                                   color: Colors.red,
                                                   fontWeight: FontWeight.bold)),
                                         ]);
-                                      } else if (item!.tRANSQTY == '0.000' &&
+                                      }
+                                      else if (item!.tRANSQTY == '0.000' &&
                                           item!.cARDCODE == '41' &&
                                           item!.lOANINDDESC == '2') {
                                         return TextSpan(children: <InlineSpan>[
@@ -1492,7 +1484,6 @@ class ProductBox extends StatelessWidget {
                                                   fontWeight: FontWeight.bold)),
                                         ]);
                                       } else if (item!.lOANINDDESC == '2') {
-                                        // return item.vOUCHERNO+'\ndt. '+item.tRANSDATE+'\n'+"\nReturn On Loan";
                                         return TextSpan(children: <InlineSpan>[
                                           TextSpan(text: () {
                                             if (item!.cARDCODE == '30' &&
@@ -1848,9 +1839,6 @@ class ProductBox extends StatelessWidget {
   }
 
   _toast(String? cARDCODE, BuildContext context, {TransactionListDataModel? temp}) {
-    print(cARDCODE);
-    print(temp?.cARDCODE);
-    print(temp?.iSSEDEPOTTYPE);
     if((cARDCODE == '43' || cARDCODE == '47') && temp?.iSSEDEPOTTYPE == '1') {
       Navigator.of(context).pushNamed(
         IssueNoteDetails.routeName,
@@ -1865,7 +1853,6 @@ class ProductBox extends StatelessWidget {
     }
     // cardcode == 40, 46 or 48, launch item receipt details
     else if (cARDCODE == '40' || cARDCODE == '46' || cARDCODE == '48') {
-      print(temp?.tRANSKEY);
       Navigator.of(context).pushNamed(
         ItemReceiptDetails.routeName,
         arguments: temp?.tRANSKEY,

@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/utils/NoConnection.dart';
@@ -172,7 +173,7 @@ class _WarrantyRejectionRegisterlistScreenState
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.red[300],
+            backgroundColor: AapoortiConstants.primary,
             automaticallyImplyLeading: false,
             title: Consumer<WarrantyRejectionRegisterViewModel>(
                 builder: (context, value, child) {
@@ -185,14 +186,14 @@ class _WarrantyRejectionRegisterlistScreenState
                       borderRadius: BorderRadius.circular(5)),
                   child: Center(
                     child: TextField(
-                      cursorColor: Colors.red[300],
+                      cursorColor: AapoortiConstants.primary,
                       controller: _textsearchController,
                       decoration: InputDecoration(
                           prefixIcon:
-                              Icon(Icons.search, color: Colors.red[300]),
+                              Icon(Icons.search, color: AapoortiConstants.primary),
                           suffixIcon: value.getchangetextlistener == false
                               ? IconButton(
-                                  icon: Icon(Icons.mic, color: Colors.red[300]),
+                                  icon: Icon(Icons.mic, color: AapoortiConstants.primary),
                                   onPressed: () async {
                                     hideSoftKeyBoard(KeyboardVisibilityProvider
                                         .isKeyboardVisible(context));
@@ -207,7 +208,7 @@ class _WarrantyRejectionRegisterlistScreenState
                                 )
                               : IconButton(
                                   icon:
-                                      Icon(Icons.clear, color: Colors.red[300]),
+                                      Icon(Icons.clear, color: AapoortiConstants.primary),
                                   onPressed: () {
                                     _textsearchController.text = "";
                                     Provider.of<WarrantyRejectionRegisterViewModel>(
@@ -226,20 +227,20 @@ class _WarrantyRejectionRegisterlistScreenState
                                         .updateScreen(false);
                                   },
                                 ),
-                          focusColor: Colors.red[300],
+                          focusColor: AapoortiConstants.primary,
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Colors.red.shade300, width: 1.0),
+                                color: AapoortiConstants.primary, width: 1.0),
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                           errorBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Colors.red.shade300, width: 1.0),
+                                color: AapoortiConstants.primary, width: 1.0),
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Colors.red.shade300, width: 1.0),
+                                color: AapoortiConstants.primary, width: 1.0),
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                           hintText: language.text('search'),

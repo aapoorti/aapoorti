@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_app/aapoorti/models/CountryCode.dart';
 import 'package:flutter_app/aapoorti/views/search_po_oz_screen.dart';
 import 'package:flutter_app/mmis/routes/routes.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
+import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:flutter_app/udm/screens/login_screen.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
@@ -500,6 +503,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    fetchPostBF();
+    fetchLoginDtls();
+  }
+
+  @override
   void dispose() {
     //_controller!.dispose();
     _animationController.dispose(); // Dispose the animation controller
@@ -578,14 +589,202 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         Navigator.pushNamed(context, "/lot_search");
       }
       else if(route == '/e-auction-1/e-sale'){
-        var fileUrl = "https://www.ireps.gov.in//ireps/upload/resources/Uniform_E_Sale_condition.pdf";
+        var fileUrl = "https://www.ireps.gov.in/ireps/upload/resources/Uniform_E_Sale_condition.pdf";
         var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
-        AapoortiUtilities.ackAlert(context, fileUrl, fileName);
+        if(Platform.isIOS){
+          AapoortiUtilities.openPdf(context, fileUrl, fileName);
+        }
+        else{
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: Colors.white,
+                contentPadding: EdgeInsets.all(20),
+                content: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Choose an option for file  ',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Roboto',
+                                color: Colors.black,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                padding: EdgeInsets.all(4),
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          "E-Sale Condition",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Roboto',
+                            color: Colors.lightBlue[700],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.lightBlue[700],
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                AapoortiUtilities.downloadpdf(fileUrl, fileName, context);
+                              },
+                              child: Text('Download'),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.lightBlue[700],
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                AapoortiUtilities.openPdf(context, fileUrl, fileName);
+                              },
+                              child: Text('Open'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
       }
       else if(route == '/e-auction-1/auction-units'){
-        var fileUrl = "https://www.ireps.gov.in//ireps/upload/resources/DepotContactDetails.pdf";
+        var fileUrl = "https://www.ireps.gov.in/ireps/upload/resources/DepotContactDetails.pdf";
         var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
-        AapoortiUtilities.ackAlert(context, fileUrl, fileName);
+        if(Platform.isIOS){
+          AapoortiUtilities.openPdf(context, fileUrl, fileName);
+        }
+        else{
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: Colors.white,
+                contentPadding: EdgeInsets.all(20),
+                content: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Choose an option for file  ',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Roboto',
+                                color: Colors.black,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                padding: EdgeInsets.all(4),
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          "Auctioning Units",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Roboto',
+                            color: Colors.lightBlue[700],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.lightBlue[700],
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                AapoortiUtilities.downloadpdf(fileUrl, fileName, context);
+                              },
+                              child: Text('Download'),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.lightBlue[700],
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                AapoortiUtilities.openPdf(context, fileUrl, fileName);
+                              },
+                              child: Text('Open'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
       }
 
       //--- UDM & CRIS MMIS -----
@@ -606,12 +805,61 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return result;
   }
 
+  final dbhelper = DatabaseHelper.instance;
+  List<dynamic>? jsonResult1;
+  void fetchLoginDtls() async {
+    int? n = await dbhelper.rowCountLoginUser();
+    AapoortiConstants.n = n!;
+    debugPrint("Login row count = " + n.toString());
+    if (n > 0) {
+      List<dynamic> tblResult = await dbhelper.fetchLoginUser();
+      List<dynamic> tb2Result = await dbhelper.fetchSaveLoginUser();
+      AapoortiConstants.loginUserEmailID = tblResult[0]['EmailId'].toString();
+      AapoortiConstants.hash = tb2Result[0]['Hash'].toString();
+      AapoortiConstants.date = tb2Result[0]['Date'].toString();
+      AapoortiConstants.ans = tb2Result[0]['Ans'].toString();
+      AapoortiConstants.check = tb2Result[0]['Log'].toString();
+
+      debugPrint('Value from table = ' +
+          tblResult[0]['EmailId'].toString() +
+          "  ,  " +
+          tblResult[0]['LoginFlag'].toString() +
+          " , " +
+          tb2Result[0]['Hash'].toString() +
+          " , " +
+          tb2Result[0]['Date'].toString() +
+          " , " +
+          tb2Result[0]['Ans'].toString() +
+          " , " +
+          tb2Result[0]['Log'].toString());
+      if (tblResult[0]['LoginFlag'].toString() == "1") {
+        AapoortiUtilities.loginflag = true;
+        debugPrint("login flag " + tblResult[0]['LoginFlag'].toString());
+      } else {
+        debugPrint("tb result-------------------------" + tblResult[0]['LoginFlag'].toString());
+      }
+    }
+  }
+
+  void fetchPostBF() async {
+    rowCount = await dbhelper.rowCountBanned();
+    if (rowCount! > 0) {
+      jsonResult1 = await dbhelper.fetchBanned();
+      debugPrint("fetchBanned ${jsonResult1.toString()}");
+      AapoortiConstants.jsonResult2 = jsonResult1!;
+      AapoortiConstants.count = jsonResult1![0]['Count'];
+      AapoortiConstants.date2 = jsonResult1![0]['Date1'];
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height,
       width: size.width,
+      color: Colors.white30,
       child: Stack(
         children: [
           SingleChildScrollView(
@@ -1186,7 +1434,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       onTap: () async{
         bool connectionstatus = await AapoortiUtilities.check();
         if(connectionstatus){
-          _navigateToPage(context, item.route);
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+          if(providedTime.isBefore(DateTime.now())){
+            await fetchToken(context);
+            _navigateToPage(context, item.route);
+          }
+          else{
+            _navigateToPage(context, item.route);
+          }
         }
         else{
           AapoortiUtilities.showInSnackBar(context, "Please check your internet connection!!");

@@ -42,26 +42,22 @@ class _upcoming3State extends State<upcoming3> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                    child: Text('Upcoming Auctions(Sale)',
-                        style: TextStyle(color: Colors.white))),
-                IconButton(
-                  icon: Icon(
-                    Icons.home,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, "/common_screen", (route) => false);
-                    // Navigator.of(context, rootNavigator: true).pop();
-                  },
+            backgroundColor: AapoortiConstants.primary,
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.home,
+                  color: Colors.white,
                 ),
-              ],
-            )),
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, "/common_screen", (route) => false);
+                  // Navigator.of(context, rootNavigator: true).pop();
+                },
+              ),
+            ],
+            title: Text('Upcoming Auctions(Sale)',
+                style: TextStyle(color: Colors.white))),
         body: Container(
           child: Column(
             children: <Widget>[
@@ -69,9 +65,10 @@ class _upcoming3State extends State<upcoming3> {
                 width: MediaQuery.of(context).size.width,
                 height: 30,
                 color: Colors.cyan.shade600,
+                alignment: Alignment.center,
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
-                  '   Auction Catalogue>> Lot Details',
+                  'Auction Catalogue>> Lot Details',
                   style: TextStyle(
                       color: Colors.white,
                       backgroundColor: Colors.cyan.shade600,
@@ -81,12 +78,7 @@ class _upcoming3State extends State<upcoming3> {
                 ),
               ),
               Expanded(
-                  child: jsonResult == null
-                      ? SpinKitFadingCircle(
-                          color: Colors.cyan,
-                          size: 120.0,
-                        )
-                      : _myListView(context))
+                  child: jsonResult == null ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : _myListView(context))
             ],
           ),
         ),

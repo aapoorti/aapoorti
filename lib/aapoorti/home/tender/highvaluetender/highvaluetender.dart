@@ -25,29 +25,33 @@ class DropDownState extends State<DropDownhvt> {
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 15.0);
 
 
-  DateTime _valuefrom = DateTime.now();
-  DateTime _valueto = DateTime.now().add(Duration(days: 30));
+  DateTime _valuefrom = DateTime.now().subtract(Duration(days: 333));
+  DateTime _valueto = DateTime.now();
+
 
   String? orgName, orgCode = "-1";
   String? zoneName, zoneCode = "-1;-1";
   String? deptName, deptCode = "-1";
-  String? unitName, unitCode = "-1";
+  String? unitName = "Select Unit", unitCode = "-1";
   String? workArea = "PT";
   List<dynamic>? jsonResult1;
   List<dynamic>? jsonResult2;
   List<dynamic>? jsonResult3;
   List<dynamic>? jsonResult4;
   String? url;
-  String? selectedOption;
+
+  String? selectedOption = 'Goods & Services';
 
   int counter = 0;
   GlobalKey<ScaffoldState> _snackKey = GlobalKey<ScaffoldState>();
+
+
   @override
   void initState() {
     super.initState();
     pr = ProgressDialog(context);
     Future.delayed(Duration.zero, () async{
-      //fetchPost();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
       if(providedTime.isBefore(DateTime.now())){
         await fetchToken(context);
@@ -61,10 +65,10 @@ class DropDownState extends State<DropDownhvt> {
 
   void reset() {
     setState(() {
-      orgCode = null;
-      zoneCode = null;
-      deptCode = null;
-      unitCode = null;
+      orgCode = "-1";
+      zoneCode = "-1;-1";
+      deptCode = "-1";
+      unitCode = "-1";
       orgName = null;
       zoneName = null;
       deptName = null;
@@ -74,8 +78,8 @@ class DropDownState extends State<DropDownhvt> {
       dataUnit.clear();
       workArea = "PT";
       selectedOption = "Goods & Services";
-      _valuefrom = DateTime.now();
-      _valueto = DateTime.now().add(Duration(days: 30));
+      _valuefrom = DateTime.now().subtract(Duration(days: 333));
+      _valueto = DateTime.now();
     });
   }
 
@@ -100,7 +104,6 @@ class DropDownState extends State<DropDownhvt> {
   Future<void> fetchOrganisation() async {
     //debugPrint("Parameter $demandType~$fromDate~$toDate~$deptCode~$statusCode~$demandnum~05~98");
     _progressShow();
-    fetchToken(context);
     try{
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final url = Uri.parse("${AapoortiConstants.webirepsServiceUrl}P4/V1/GetData");
@@ -263,11 +266,13 @@ class DropDownState extends State<DropDownhvt> {
           var listJson = listdata['data'];
           if(listJson != null) {
             setState(() {
+              unitName = null;
               dataUnit = listJson;
             });
           }
           else{
             setState(() {
+              unitName = null;
               dataUnit = [];
             });
           }
@@ -390,11 +395,11 @@ class DropDownState extends State<DropDownhvt> {
                   ),
                 ),
                 popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
-                onChanged: (newVal) {
+                onChanged: (newVal) async{
                   setState(() {
-                    zoneCode = null;
-                    deptCode = null;
-                    unitCode = null;
+                    zoneCode = "-1;-1";
+                    deptCode = "-1";
+                    unitCode = "-1";
 
                     dataZone.clear();
                     dataDepartment.clear();
@@ -406,13 +411,44 @@ class DropDownState extends State<DropDownhvt> {
                         orgCode = element['key2'].toString();
                       }
                     });
-                    debugPrint("orgID $orgCode orgname $newVal");
                   });
-                  fetchZone(orgCode!);
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+                  if(providedTime.isBefore(DateTime.now())){
+                    await fetchToken(context);
+                    fetchZone(orgCode!);
+                  }
+                  else{
+                    fetchZone(orgCode!);
+                  }
                 },
               ),
             ),
-            Container(
+            orgCode == "-1" ? InkWell(
+              onTap: (){
+                AapoortiUtilities.showInSnackBar(context, "Please select organization");
+              },
+              child: Container(
+                width: size.width,
+                height: 50,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(color: Colors.grey[800]!)
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10),
+                child: Row(
+                  children: [
+                    Icon(Icons.train, color: Colors.blue[800]),
+                    SizedBox(width: 10),
+                    Text(zoneName ?? "Select Zone", style: TextStyle(color: Colors.black)),
+                    SizedBox(width: 10),
+                    Spacer(),
+                    Icon(Icons.arrow_drop_down, size: 24, color: Colors.grey[800]),
+                  ],
+                ),
+              ),
+            ) : Container(
               margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10),
               child: DropdownSearch<String>(
                 selectedItem: zoneName ?? "Select Zone",
@@ -449,9 +485,7 @@ class DropDownState extends State<DropDownhvt> {
                 },
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10),
-              child: DropdownSearch<String>(
+            Container(margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10), child: DropdownSearch<String>(
                 selectedItem: deptName ?? "Select Department",
                 items: (filter, loadProps) => dataDepartment.map((e) {
                   return e['key1'].toString().trim();
@@ -466,10 +500,8 @@ class DropDownState extends State<DropDownhvt> {
                   ),
                 ),
                 popupProps: PopupProps.menu(fit: FlexFit.loose, showSearchBox: true, constraints: BoxConstraints(maxHeight: 400)),
-                onChanged: (newVal) {
+                onChanged: (newVal) async{
                   setState(() {
-                    unitCode = null;
-                    unitName = null;
                     dataUnit.clear();
                     dataDepartment.forEach((element){
                       if(newVal.toString() == element['key1'].toString()) {
@@ -478,20 +510,49 @@ class DropDownState extends State<DropDownhvt> {
                       }
                     });
                   });
-                  // if(deptCode == "-1") {
-                  //   url = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,UNIT,-1,-1,-1,-1';
-                  // }
-                  // if (deptCode != "-1") {
-                  //   url = AapoortiConstants.webServiceUrl + '/getData?input=SPINNERS,UNIT,${orgCode},${zoneCode!.substring(zoneCode!.indexOf(';') + 1)},${deptCode},';
-                  // }
-                  fetchUnit(orgCode!, zoneCode!, deptCode!, "-1");
+                  if(deptCode == "-1"){
+                    setState(() {
+                      unitCode = "-1";
+                      unitName = "All";
+                    });
+                  }
+                  else{
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+                    if(providedTime.isBefore(DateTime.now())){
+                      await fetchToken(context);
+                      fetchUnit(orgCode!, zoneCode!, deptCode!, "-1");
+                    }
+                    else{
+                      fetchUnit(orgCode!, zoneCode!, deptCode!, "-1");
+                    }
+                  }
                 },
+              )),
+            deptCode == "-1" ? Container(
+              width: size.width,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                border: Border.all(color: Colors.grey[800]!)
               ),
-            ),
-            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              margin: EdgeInsets.only(top: 10.0, left: 10, right: 10),
+              child: Row(
+                children: [
+                  Icon(Icons.location_city, color: Colors.blue[800]),
+                  SizedBox(width: 10),
+                  Text(unitName ?? "Select Unit", style: TextStyle(color: Colors.black)),
+                  SizedBox(width: 10),
+                  Spacer(),
+                  Icon(Icons.arrow_drop_down, size: 24, color: Colors.grey[800]),
+                ],
+              ),
+            ) : Container(
               margin: EdgeInsets.only(top: 10.0, left: 10, right: 10),
               child: DropdownSearch<String>(
                 selectedItem: unitName ?? "Select Unit",
+                //suffixProps: DropdownSuffixProps(dropdownButtonProps: DropdownButtonProps(isVisible: false)),
                 items: (filter, loadProps) => dataUnit.map((e) {
                   return e['key1'].toString().trim();
                 }).toList(),
@@ -542,7 +603,7 @@ class DropDownState extends State<DropDownhvt> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(4.0),
               child: Row(
                 children: [
                   Expanded(
@@ -562,72 +623,85 @@ class DropDownState extends State<DropDownhvt> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  debugPrint("myselection1 $orgCode myselection2 $zoneCode myselection3 $deptCode myselection4 $unitCode myselection5 $workArea valufrom $_valuefrom valueto $_valueto");
-                  if(orgCode != null || orgCode == "-1" && zoneCode != null || zoneCode == "-1" && deptCode != null || deptCode == "-1" && unitCode != null || unitCode != "-1") {
-                    if(_valueto.difference(_valuefrom).inDays < 30) {
-                      debugPrint("fdfdfdf ${_valuefrom.difference(_valueto).inDays}");
-                      AapoortiUtilities.showInSnackBar(context, "Please select a valid date range");
+              padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+              child: Container(
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    debugPrint("myselection1 $orgCode myselection2 $zoneCode myselection3 $deptCode myselection4 $unitCode myselection5 $workArea valufrom $_valuefrom valueto $_valueto");
+                    if(orgName != null && zoneName != null && deptName != null && unitName != null) {
+                      if(_valueto.difference(_valuefrom).inDays < 30) {
+                        debugPrint("days ${_valueto.difference(_valuefrom).inDays}");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HighValueStatus(
+                                  item1: orgCode,
+                                  item2: zoneCode!.split(";").first.trim(),
+                                  item3: deptCode,
+                                  item4: unitCode,
+                                  item5: workArea,
+                                  item6: DateFormat('dd/MM/yyyy').format(_valuefrom),
+                                  item7: DateFormat('dd/MM/yyyy').format(_valueto),
+                                )));
+                      }
+                      else {
+                        AapoortiUtilities.showInSnackBar(context, "Please select a valid date range");
+                      }
                     }
                     else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HighValueStatus(
-                                item1: orgCode,
-                                item2: zoneCode!.split(";").first.trim(),
-                                item3: deptCode,
-                                item4: unitCode,
-                                item5: workArea,
-                                item6: DateFormat('dd/MM/yyyy').format(_valuefrom),
-                                item7: DateFormat('dd/MM/yyyy').format(_valueto),
-                              )));
+                      debugPrint("days ${_valueto.difference(_valuefrom).inDays}");
+                      AapoortiUtilities.showInSnackBar(context, "Please select values.");
                     }
-                  }
-                  else {
-                    AapoortiUtilities.showInSnackBar(context, "Please select values.");
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[800],
-                  fixedSize: Size(size.width, 55),
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[800],
+                    fixedSize: Size(size.width, 55),
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                ),
-                child: Text(
-                  'Show Results',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  child: Text(
+                    'Show Results',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: TextButton(
-                onPressed: () {
-                  reset();
-                },
-                style: TextButton.styleFrom(
-                  fixedSize: Size(size.width, 55),
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: Colors.blue[800]!),
-                  ),
-                ),
-                child: Text(
-                  'Reset',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.blue[800],
-                  ),
-                ),
+              child: _buildActionButton(
+                "Reset",
+                Colors.blue.shade400,
+                onPressed: reset,
+                isOutlined: true,
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.all(10.0),
+            //   child: TextButton(
+            //     onPressed: () {
+            //       reset();
+            //     },
+            //     style: TextButton.styleFrom(
+            //       fixedSize: Size(size.width, 55),
+            //       padding: EdgeInsets.symmetric(vertical: 16),
+            //       backgroundColor: Colors.white,
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(12),
+            //         side: BorderSide(color: Colors.blue[800]!),
+            //       ),
+            //     ),
+            //     child: Text(
+            //       'Reset',
+            //       style: TextStyle(
+            //         fontSize: 16,
+            //         color: Colors.blue[800],
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
     );
@@ -647,21 +721,7 @@ class DropDownState extends State<DropDownhvt> {
             appBar: AppBar(
                 iconTheme: IconThemeData(color: Colors.white),
                 backgroundColor: AapoortiConstants.primary,
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(child: Text('High Value Tender', style: TextStyle(color: Colors.white,fontSize: 18))),
-                    IconButton(
-                      icon: Icon(
-                        Icons.home,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context, rootNavigator: true).pop();
-                      },
-                    ),
-                  ],
-                )),
+                title: Text('High Value Tender', style: TextStyle(color: Colors.white,fontSize: 18))),
             backgroundColor: Colors.white,
             body: Builder(
               builder: (context) => Material(
@@ -672,7 +732,6 @@ class DropDownState extends State<DropDownhvt> {
 
             ));
   }
-  
 
   Widget _buildDatePicker(
       String label,
@@ -692,22 +751,28 @@ class DropDownState extends State<DropDownhvt> {
         }
       },
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            color: Colors.grey.shade300,
+            width: 1.5,
+          ),
         ),
         child: Row(
           children: [
-            Icon(Icons.calendar_today, size: 20, color: Colors.blue[800]),
+            Text(label, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
             SizedBox(width: 8),
             Text(
               selectedDate != null ? formatDate(selectedDate) : label,
               style: TextStyle(
-                color: selectedDate != null ? Colors.black87 : Colors.grey[600],
+                color: selectedDate != null ? Colors.blue.shade800 : Colors.grey[600],
                 fontSize: 14,
               ),
             ),
+            SizedBox(width: 10),
+            Icon(Icons.calendar_today, size: 16, color: Colors.blue[800]),
           ],
         ),
       ),
@@ -753,5 +818,41 @@ class DropDownState extends State<DropDownhvt> {
 
   String formatDate(DateTime date) {
     return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
+
+  Widget _buildActionButton(
+      String text,
+      Color color, {
+        VoidCallback? onPressed,
+        bool isOutlined = false,
+      }) {
+    return SizedBox(
+      width: double.infinity,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isOutlined ? Colors.white : color,
+            foregroundColor: isOutlined ? color : Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: isOutlined ? BorderSide(color: color, width: 1.5) : BorderSide.none,
+            ),
+            elevation: isOutlined ? 0 : 2,
+          ),
+          onPressed: onPressed,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: isOutlined ? color : Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/onlineBillStatus/statusProvider.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/widgets/custom_progress_indicator.dart';
@@ -527,7 +528,7 @@ class _ProductBoxState extends State<ProductBox>
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 shape: const CircleBorder(),
-                                backgroundColor: Colors.red.shade300
+                                backgroundColor: AapoortiConstants.primary
                               ),
                               onPressed: () {
                                 //_formKey.currentState.save();

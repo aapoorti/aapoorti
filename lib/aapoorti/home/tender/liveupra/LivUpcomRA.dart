@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:marquee/marquee.dart';
+import 'package:readmore/readmore.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -179,7 +181,7 @@ class _LivUpcomRAState extends State<LivUpcomRA> {
                 SizedBox(width: 10),
                 Container(
                     height: size.height * 0.10,
-                    width: size.width / 1.9,
+                    width: size.width / 1.5,
                     child: Marquee(
                       text: " Live & Upcoming(RA)",
                       scrollAxis: Axis.horizontal,
@@ -196,12 +198,12 @@ class _LivUpcomRAState extends State<LivUpcomRA> {
               ],
             ),
             actions: [
-              searchAction == true ? SizedBox() : IconButton(icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              ), onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop();
-              }),
+              // searchAction == true ? SizedBox() : IconButton(icon: Icon(
+              //   Icons.home,
+              //   color: Colors.white,
+              // ), onPressed: () {
+              //   Navigator.of(context, rootNavigator: true).pop();
+              // }),
               searchAction == true ? SizedBox() : IconButton(onPressed: (){
                 changetoolbarUi(true);
               }, icon: Icon(Icons.search, color: Colors.white))
@@ -213,7 +215,7 @@ class _LivUpcomRAState extends State<LivUpcomRA> {
                 Container(child: Expanded(child: _myListView(context)))
               ]),
             ),
-          )
+       )
       ),
     );
   }
@@ -223,398 +225,23 @@ class _LivUpcomRAState extends State<LivUpcomRA> {
     return ListView.separated(
         itemCount: jsonResult.length != 0 ? jsonResult.length : 0,
         itemBuilder: (context, index) {
-          return GestureDetector(
-              child: Container(
-            child: Card(
-              elevation: 4,
-              color: Colors.white,
-              surfaceTintColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-                side: BorderSide(width: 1, color: Colors.grey[300]!),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 8)),
-                  Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(padding: EdgeInsets.only(left: 8)),
-                            Text(
-                              (index + 1).toString() + ". ",
-                              style:
-                                  TextStyle(color: Colors.indigo, fontSize: 16),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(children: <Widget>[
-                                  Expanded(
-                                      child: Text(
-                                    jsonResult[index]['key1'] != null ? jsonResult[index]['key1'] : "",
-                                    style: TextStyle(
-                                        color: Colors.indigo,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600),
-                                  ))
-                                ]),
-                                Padding(
-                                  padding: EdgeInsets.all(5),
-                                ),
-                                Row(children: <Widget>[
-                                  Container(
-                                    height: 30,
-                                    width: 125,
-                                    child: Text(
-                                      "Tender No.",
-                                      style: TextStyle(
-                                          color: Colors.indigo, fontSize: 16),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    //height: 30,
-                                    child: Text(
-                                      jsonResult[index]['key2'] != null
-                                          ? jsonResult[index]['key2']
-                                          : "",
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 16),
-                                    ),
-                                  )
-                                ]),
-                                Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Container(
-                                        height: 30,
-                                        width: 125,
-                                        child: Text(
-                                          "Tender Title",
-                                          style: TextStyle(
-                                              color: Colors.indigo,
-                                              fontSize: 16),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          //height: 30,
-                                          child: Text(
-                                            jsonResult[index]['key3'] !=
-                                                    null
-                                                ? jsonResult[index]
-                                                    ['key3']
-                                                : "",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 16),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ]),
-                                Row(children: <Widget>[
-                                  Container(
-                                    height: 30,
-                                    width: 125,
-                                    child: Text(
-                                      "Work Area",
-                                      style: TextStyle(
-                                          color: Colors.indigo, fontSize: 16),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 30,
-                                    child: Text(
-                                      jsonResult[index]['key4'] != null ? jsonResult[index]['key4'] : "",
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 16),
-                                    ),
-                                  )
-                                ]),
-                                Row(children: <Widget>[
-                                  Container(
-                                    height: 30,
-                                    width: 125,
-                                    child: Text(
-                                      "Start Date",
-                                      style: TextStyle(
-                                          color: Colors.indigo, fontSize: 16),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 30,
-                                    child: Text(
-                                      jsonResult[index]['key5'] != null ? changeTimeZone(jsonResult[index]['key5']) : "",
-                                      style: TextStyle(
-                                          color: Colors.green, fontSize: 16),
-                                    ),
-                                  )
-                                ]),
-                                Row(children: <Widget>[
-                                  Container(
-                                    height: 30,
-                                    width: 125,
-                                    child: Text(
-                                      "End Date",
-                                      style: TextStyle(
-                                          color: Colors.indigo, fontSize: 16),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 30,
-                                    child: Text(
-                                      jsonResult[index]['key6'] != null ? changeTimeZone(jsonResult[index]['key6']) : "",
-                                      style: TextStyle(color: Colors.red, fontSize: 16),
-                                    ),
-                                  )
-                                ]),
-                                Row(children: <Widget>[
-                                  Container(
-                                    height: 30,
-                                    width: 125,
-                                    child: Text(
-                                      "Status",
-                                      style: TextStyle(
-                                          color: Colors.indigo, fontSize: 16),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 30,
-                                    child: Text(
-                                      jsonResult[index]['key10'] != null
-                                          ? jsonResult[index]['key10']
-                                          : "",
-                                      style: TextStyle(
-                                          color: Colors.blue[900],
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )
-                                ]),
-                                Row(children: <Widget>[
-                                  Container(
-                                    height: 30,
-                                    width: 125,
-                                    child: Text(
-                                      "Links",
-                                      style: TextStyle(
-                                          color: Colors.indigo, fontSize: 16),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          GestureDetector(
-                                              onTap: () {
-                                                if(jsonResult[index]['key7'] == "NA" || jsonResult[index]['key7'] == "NULL") {
-                                                  AapoortiUtilities.showInSnackBar(context, "No PDF attached with this Tender!!");
-                                                } else {
-                                                  var fileUrl = jsonResult[index]['key7'].toString();
-                                                  var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
-                                                  AapoortiUtilities.ackAlert(context, fileUrl, fileName);
-                                                }
-                                              },
-                                              child: Column(children: <Widget>[
-                                                Container(
-                                                  child: Image(
-                                                      image: AssetImage(
-                                                          'images/pdf_home.png'),
-                                                      height: 30,
-                                                      width: 20),
-                                                ),
-                                                Padding(
-                                                    padding:
-                                                        EdgeInsets.all(0.0)),
-                                                Container(
-                                                  child: Text('NIT',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          fontSize: 9),
-                                                      textAlign:
-                                                          TextAlign.center),
-                                                ),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 5)),
-                                              ])),
-                                          GestureDetector(
-                                              onTap: () {
-                                                if (jsonResult[index]['key8'] == "NA" || jsonResult[index]['key8'] == "NULL") {
-                                                  AapoortiUtilities.showInSnackBar(context, "No Documents attached with this Tender!!");
-                                                } else {
-                                                  showDialog(context: context, builder: (_) => Material(
-                                                      type: MaterialType
-                                                          .transparency,
-                                                      child: Center(
-                                                          child: Container(
-                                                              margin: EdgeInsets
-                                                                  .only(
-                                                                  top:
-                                                                  55),
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                  bottom:
-                                                                  50),
-                                                              color: Color(
-                                                                  0xAB000000),
-
-                                                              child: Column(
-                                                                  children: <
-                                                                      Widget>[
-                                                                    Expanded(
-                                                                      child:
-                                                                      Container(
-                                                                        padding:
-                                                                        EdgeInsets.only(bottom: 20),
-                                                                        child:
-                                                                        AapoortiUtilities.attachDocsListView(context, jsonResult[index]['key8'].toString()),
-                                                                      ),
-                                                                    ),
-                                                                    Align(
-                                                                      alignment:
-                                                                      Alignment.bottomCenter,
-                                                                      child: GestureDetector(
-                                                                          onTap: () {
-                                                                            Navigator.of(context, rootNavigator: true).pop('dialog');
-                                                                          },
-                                                                          child: Image(
-                                                                            image: AssetImage('images/close_overlay.png'),
-                                                                            height: 50,
-                                                                          )),
-                                                                    )
-                                                                  ])))));
-                                                }
-                                              },
-                                              child: Column(children: <Widget>[
-                                                Container(
-                                                  height: 30,
-                                                  child: Image(
-                                                      image: AssetImage(
-                                                          'images/attach_icon.png'),
-                                                      color: jsonResult[index]['key8'] == "NA" || jsonResult[index]['key8'] == "NULL"
-                                                          ? Colors.brown
-                                                          : Colors.green,
-                                                      height: 30,
-                                                      width: 20),
-                                                ),
-                                                Padding(
-                                                    padding:
-                                                        EdgeInsets.all(0.0)),
-                                                Container(
-                                                  child: Text('  DOCS',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          fontSize: 9),
-                                                      textAlign:
-                                                          TextAlign.center),
-                                                ),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 5)),
-                                              ])),
-                                          GestureDetector(
-                                              onTap: () {
-                                                if(jsonResult[index]['key9'] == "NA" || jsonResult[index]['key9'] == "NULL") {
-                                                  AapoortiUtilities.showInSnackBar(context, "No corrigendum issued with this Tender!!");
-
-                                                } else {
-                                                  showDialog(context: context, builder: (_) => Material(
-                                                    type: MaterialType
-                                                        .transparency,
-                                                    child: Center(
-                                                        child: Container(
-                                                            margin: EdgeInsets.only(top: 55),
-                                                            padding: EdgeInsets.only(bottom: 50),
-                                                            color: Color(0xAB000000),
-
-                                                            // Aligns the container to center
-                                                            child: Column(children: <Widget>[
-                                                              Expanded(
-                                                                child:
-                                                                Container(
-                                                                  padding:
-                                                                  EdgeInsets.only(bottom: 20),
-                                                                  child: AapoortiUtilities.corrigendumListView(
-                                                                      context,
-                                                                      jsonResult[index]['key9'].toString()),
-                                                                ),
-                                                              ),
-                                                              Align(
-                                                                alignment:
-                                                                Alignment.bottomCenter,
-                                                                child: GestureDetector(
-                                                                    onTap: () {
-                                                                      Navigator.of(context, rootNavigator: true).pop('dialog');
-                                                                    },
-                                                                    child: Image(
-                                                                      image: AssetImage('images/close_overlay.png'),
-                                                                      height: 50,
-                                                                    )),
-                                                              )
-                                                            ]))),
-                                                  ));
-                                                }
-                                              },
-                                              child: Column(children: <Widget>[
-                                                Container(
-                                                  height: 30,
-                                                  child: Text(
-                                                    "C",
-                                                    style: TextStyle(
-                                                        color: jsonResult[index]['key9'] == "NA" || jsonResult[index]['key9'] == "NULL"
-                                                            ? Colors.brown
-                                                            : Colors.green,
-                                                        fontSize: 23,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                    padding:
-                                                        EdgeInsets.all(0.0)),
-                                                Container(
-                                                  child: Text(
-                                                      '  CORRIGENDA',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          fontSize: 9),
-                                                      textAlign:
-                                                          TextAlign.center),
-                                                ),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 5)),
-                                              ])),
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 0),
-                                          ),
-                                        ]),
-                                  ),
-                                ]),
-                              ]),
-                        ),
-                      ])
-                ],
-              ),
+          return Container(
+            child: TenderCard(
+              department: "${jsonResult[index]['key1'] != null ? "${index + 1}. ${jsonResult[index]['key1']}" : ""}",
+              tenderNo: jsonResult[index]['key2'] != null ? jsonResult[index]['key2'] : "",
+              title: jsonResult[index]['key3'] != null ? jsonResult[index]['key3'] : "",
+              workArea: jsonResult[index]['key4'] != null ? jsonResult[index]['key4'] : "",
+              startDate: jsonResult[index]['key5'] != null ? changeTimeZone(jsonResult[index]['key5']) : "",
+              endDate: jsonResult[index]['key6'] != null ? changeTimeZone(jsonResult[index]['key6']) : "",
+              nitlinks: jsonResult[index]['key7'],
+              docslinks: jsonResult[index]['key8'],
+              corrigendalinks: jsonResult[index]['key9'],
+              isLive : jsonResult[index]['key10'] != null ? jsonResult[index]['key10'] : "",
             ),
-          ));
+          );
         },
         separatorBuilder: (context, index) {
-          return Container(
-            height: 10,
-          );
+          return Container(height: 10);
         });
   }
 
@@ -677,5 +304,408 @@ class _LivUpcomRAState extends State<LivUpcomRA> {
     else{
       return data;
     }
+  }
+}
+
+class TenderCard extends StatelessWidget {
+  final String department;
+  final String tenderNo;
+  final String title;
+  final String workArea;
+  final String startDate;
+  final String endDate;
+  final String nitlinks;
+  final String docslinks;
+  final String corrigendalinks;
+  final String isLive;
+
+  const TenderCard({
+    super.key,
+    required this.department,
+    required this.tenderNo,
+    required this.title,
+    required this.workArea,
+    required this.startDate,
+    required this.endDate,
+    required this.nitlinks,
+    required this.docslinks,
+    required this.corrigendalinks,
+    required this.isLive
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 3,
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: Colors.blue.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    department,
+                    style: const TextStyle(
+                      fontSize: 16, // Reduced from 18 to make it fit on one line
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    isLive,
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            _buildInfoRow('Tender No', tenderNo),
+            _buildInfoRow('Work Area', workArea),
+            _buildInfoRow('Title', title),
+            const Divider(height: 24),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Start Date',
+                          style: TextStyle(
+                            color: Colors.red, // Changed from grey to blue to match theme
+                            fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          startDate,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.blue, // Changed to blue to match theme
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    width: 1,
+                    color: Colors.grey[300],
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'End Date',
+                            style: TextStyle(
+                              color: Colors.red, // Changed from grey to blue to match theme
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            endDate,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blue, // Changed to blue to match theme
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildActionButton(Icons.description, 'NIT', Colors.red, nitlinks, context),
+                _buildActionButton(Icons.article, 'Docs', docslinks == "NA" || docslinks == "NULL" ? Colors.brown : Colors.green, docslinks, context),
+                _buildActionButton(Icons.edit_note, 'Corrigenda', corrigendalinks == "NA" || corrigendalinks == "NULL" ? Colors.brown : Colors.green, corrigendalinks, context),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Expanded(
+            child: label == 'Title' ? ReadMoreText(
+              value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              trimLines: 2,
+              colorClickableText: Colors.brown[300],
+              trimMode: TrimMode.Line,
+              trimCollapsedText: '...more',
+              trimExpandedText: '...less',
+              delimiter: '',
+            ) : Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton(IconData icon, String label, Color color, String links, BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () {
+          if(label == 'NIT'){
+            if(links != 'NA') {
+              var fileUrl = links.toString();
+              var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
+              if(Platform.isIOS){
+                AapoortiUtilities.openPdf(context, fileUrl, fileName);
+              }
+              else{
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      backgroundColor: Colors.white,
+                      contentPadding: EdgeInsets.all(20),
+                      content: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Choose an option for file  ',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Roboto',
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      padding: EdgeInsets.all(4),
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "NIT",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Roboto',
+                                  color: Colors.lightBlue[700],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.lightBlue[700],
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      AapoortiUtilities.downloadpdf(fileUrl, fileName, context);
+                                    },
+                                    child: Text('Download'),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.lightBlue[700],
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      AapoortiUtilities.openPdf(context, fileUrl, fileName);
+                                    },
+                                    child: Text('Open'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }
+            }
+            else {
+              AapoortiUtilities.showInSnackBar(context, "No PDF attached with this Tender!!");
+            }
+          }
+          else if(label == 'Docs'){
+            if(links == "NA" || links == "NULL") {
+              AapoortiUtilities.showInSnackBar(context, "No Documents attached with this Tender!!");
+            }
+            else {
+              showDialog(context: context, builder: (_) => Material(
+                      type: MaterialType.transparency,
+                      child: Center(
+                          child: Container(
+                              margin: EdgeInsets.only(top: 55),
+                              padding: EdgeInsets.only(bottom: 50),
+                              color: Color(0xAB000000),
+                              child: Column(children: <Widget>[
+                                Expanded(
+                                  child:
+                                  Container(
+                                    padding:
+                                    EdgeInsets.only(bottom: 20),
+                                    child:
+                                    AapoortiUtilities.attachDocsListView(context, links.toString()),
+                                  ),
+                                ),
+                                Align(
+                                  alignment:
+                                  Alignment.bottomCenter,
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                                      },
+                                      child: Image(
+                                        image: AssetImage('images/close_overlay.png'),
+                                        height: 50,
+                                      )),
+                                )
+                              ])))));
+            }
+          }
+          else if(label == 'Corrigenda'){
+            if(links.toString() == "NA" || links.toString() == "NULL") {
+              AapoortiUtilities.showInSnackBar(context, "No corrigendum issued with this Tender!!");
+            }
+            else {
+              showDialog(context: context, builder: (_) => Material(
+                type: MaterialType.transparency,
+                child: Center(
+                    child: Container(
+                        margin: EdgeInsets.only(top: 55),
+                        padding: EdgeInsets.only(bottom: 50),
+                        color: Color(0xAB000000),
+                        child: Column(children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.only(bottom: 20),
+                              child: AapoortiUtilities.corrigendumListView(context, links.toString()),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context, rootNavigator: true).pop('dialog');
+                                },
+                                child: Image(
+                                  image: AssetImage('images/close_overlay.png'),
+                                  height: 50,
+                                )),
+                          )
+                        ]))),
+              ));
+            }
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              label == 'NIT' ? Image.asset('images/pdf_home.png', height: 30, width: 20) : Icon(icon, color: color),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

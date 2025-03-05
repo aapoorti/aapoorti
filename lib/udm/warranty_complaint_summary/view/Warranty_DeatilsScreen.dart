@@ -4,6 +4,7 @@ import 'package:blinking_text/blinking_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/warranty_complaint_summary/provider/search.dart';
 import 'package:flutter_app/udm/warranty_complaint_summary/view/warranty_details_linkScreen.dart';
@@ -165,7 +166,7 @@ class _WarrantyDeatilsScreenState extends State<WarrantyDeatilsScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
                             side: BorderSide(
-                              color: Colors.red.shade300,
+                              color: AapoortiConstants.primary,
                               width: 1.0,
                             )
                         ),

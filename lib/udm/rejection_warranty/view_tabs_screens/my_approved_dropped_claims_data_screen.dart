@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/rejection_warranty/providers/change_rwadscroll_visibility_provider.dart';
@@ -89,7 +90,7 @@ class _MyApprovedDroppedClaimsDataScreenState
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           title: Consumer<SearchRWADCScreenProvider>(
               builder: (context, value, child) {
@@ -102,12 +103,12 @@ class _MyApprovedDroppedClaimsDataScreenState
                     borderRadius: BorderRadius.circular(5)),
                 child: Center(
                   child: TextField(
-                    cursorColor: Colors.red[300],
+                    cursorColor: AapoortiConstants.primary,
                     controller: _textsearchController,
                     decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                        prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                         suffixIcon: IconButton(
-                          icon: Icon(Icons.clear, color: Colors.red[300]),
+                          icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                           onPressed: () {
                             Provider.of<SearchRWADCScreenProvider>(context,
                                     listen: false)
@@ -588,7 +589,7 @@ class _MyApprovedDroppedClaimsDataScreenState
                                                             fontSize: 16),
                                                         trimLines: 2,
                                                         colorClickableText:
-                                                            Colors.red[300],
+                                                            AapoortiConstants.primary,
                                                         trimMode: TrimMode.Line,
                                                         trimCollapsedText:
                                                             ' ...${language.text('more')}',

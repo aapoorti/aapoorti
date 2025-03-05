@@ -4,6 +4,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/crn_summary/view/crn_summary_data_screen.dart';
@@ -85,7 +86,7 @@ class _CrnSummaryScreenState extends State<CrnSummaryScreen> {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         title: Text(language.text('crnsum'), style: TextStyle(color: Colors.white)), iconTheme: IconThemeData(color: Colors.white)
       ),
       body: Container(

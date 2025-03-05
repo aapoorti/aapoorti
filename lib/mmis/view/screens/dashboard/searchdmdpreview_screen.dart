@@ -1,7 +1,15 @@
+import 'dart:io';
+
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/mmis/controllers/searchdmdpreview_controller.dart';
+import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+import 'package:readmore/readmore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchdmdpreviewScreen extends StatefulWidget {
   const SearchdmdpreviewScreen({super.key});
@@ -14,11 +22,42 @@ class _SearchdmdpreviewScreenState extends State<SearchdmdpreviewScreen> {
 
   final searchdmdPreviewcontroller = Get.put<SearchdmdPreviewController>(SearchdmdPreviewController());
 
+  String? dmdKey = Get.arguments[0];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    searchdmdPreviewcontroller.getSearchdmdPreview();
+
+    //searchdmdPreviewcontroller.getSearchdmdPreview();
+    fetSearchdmdPreview();
+  }
+
+  Future<void> fetSearchdmdPreview() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+    if (providedTime.isBefore(DateTime.now())) {
+      await fetchToken(context);
+      await searchdmdPreviewcontroller.getSearchdmdPreviewHeader(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewLPR(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewLS(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewDoc(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewCondition(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewAllocation(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewItemCon(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewAuthentication(dmdKey);
+      //choosedeptcontroller.fetchDepartmentCount(prefs.getString('userid')!);
+    } else {
+      await searchdmdPreviewcontroller.getSearchdmdPreviewHeader(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewLPR(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewLS(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewDoc(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewCondition(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewAllocation(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewItemCon(dmdKey);
+      searchdmdPreviewcontroller.getSearchdmdPreviewAuthentication(dmdKey);
+      //choosedeptcontroller.fetchDepartmentCount(prefs.getString('userid')!);
+    }
   }
 
   @override
@@ -30,68 +69,129 @@ class _SearchdmdpreviewScreenState extends State<SearchdmdpreviewScreen> {
         title: const Text(
           'Non-Stock Demand',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.w500,
-            color: Colors.white
           ),
         ),
         actions: [
-          TextButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.check_circle, color: Colors.green),
-            label: const Text(
-              'Demand Approved',
-              style: TextStyle(color: Colors.green),
-            ),
-          )
+          Obx((){
+            if(searchdmdPreviewcontroller.searchdmdPreviewHeaderState == SearchdmdPreviewHeaderState.success){
+              return TextButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.check_circle, color: Colors.green),
+                label: Text(
+                  searchdmdPreviewcontroller.headerData.length != 0 ? searchdmdPreviewcontroller.headerData[0].key18 == "NULL" ? "NA" : searchdmdPreviewcontroller.headerData[0].key18! : "NA",
+                  style: TextStyle(color: Colors.green),
+                ),
+              );
+            }
+            return SizedBox();
+          })
+
         ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
-            child: Obx((){
-               if(searchdmdPreviewcontroller.searchdmdPreviewState.value == SearchdmdPreviewState.loading){
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Obx(() {
+                if(searchdmdPreviewcontroller.searchdmdPreviewHeaderState == SearchdmdPreviewHeaderState.loading) {
                  return Container(
-                   height: Get.height,
-                   width: Get.width,
-                   child: Column(
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     crossAxisAlignment: CrossAxisAlignment.center,
-                     children: [
-                       CircularProgressIndicator(),
-                     ],
-                   ),
-                 );
-               }
-               else if(searchdmdPreviewcontroller.searchdmdPreviewState.value == SearchdmdPreviewState.success){
-                 return Padding(
-                   padding: const EdgeInsets.all(16.0),
-                   child: Column(
-                     crossAxisAlignment: CrossAxisAlignment.start,
-                     children: [
-                       DemandHeader(searchdmdPreviewController: searchdmdPreviewcontroller),
-                       const SizedBox(height: 16),
-                       ConstrainedBox(
-                         constraints: BoxConstraints(maxWidth: constraints.maxWidth),
-                         child: const Wrap(
-                           spacing: 16,
-                           runSpacing: 16,
-                           children: [
-                             ExpandableCard(title: 'Items & Consignees', child: ItemsConsigneesPanel()),
-                             ExpandableCard(title: 'LPR', child: LPRPanel()),
-                             ExpandableCard(title: 'Likely Suppliers', child: SuppliersPanel()),
-                             ExpandableCard(title: 'Documents', child: DocumentsPanel()),
-                             ExpandableCard(title: 'Conditions', child: ConditionsPanel()),
-                             ExpandableCard(title: 'Authentication Details', child: AuthenticationPanel()),
-                           ],
-                         ),
-                       ),
-                     ],
-                   ),
-                 );
-               }
-               return SizedBox();
-            }),
+                  height: Get.height,
+                  width: Get.width,
+                  child: Center(child: CircularProgressIndicator()));
+                }
+                else if(searchdmdPreviewcontroller.searchdmdPreviewHeaderState == SearchdmdPreviewHeaderState.success) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        margin: const EdgeInsets.fromLTRB(4, 0, 0, 4),
+                        decoration: BoxDecoration(
+                          color: const Color(
+                              0xFFE3F2FD), // Slightly darker blue background
+                          borderRadius: BorderRadius.circular(4),
+                          border:
+                          Border.all(color: const Color(0xFFBBDEFB)),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.info,
+                                color: const Color(0xFF1565C0), size: 16),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                'In case of any issues in data,please report.',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: const Color(0xFF1565C0),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const DemandHeader(),
+                      const SizedBox(height: 16),
+                      ConstrainedBox(
+                        constraints:
+                            BoxConstraints(maxWidth: constraints.maxWidth),
+                        child: Wrap(
+                          spacing: 16,
+                          runSpacing: 16,
+                          children: [
+
+                            //ExpandableCard(title: 'Items & Consignees', child: ItemsConsigneesPanel()),
+                            ExpandableCard(title: 'LPR', child: LPRPanel()),
+                            ExpandableCard(
+                                title: 'Likely Suppliers',
+                                child: SuppliersPanel()),
+                            ExpandableCard(
+                                title: 'Documents', child: DocumentsPanel()),
+                            ExpandableCard(
+                                title: 'Conditions', child: ConditionsPanel()),
+                            ExpandableCard(
+                                title: 'Allocation', child: AllocationPanel()),
+                            ExpandableCard(title: 'Authentication Details', child: AuthenticationPanel()),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                else if(searchdmdPreviewcontroller.searchdmdPreviewHeaderState == SearchdmdPreviewHeaderState.failure) {
+                  return Container(
+                    height: Get.height,
+                    width: Get.width,
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 120,
+                            width: 120,
+                            child: Lottie.asset('assets/json/no_data.json'),
+                          ),
+                          AnimatedTextKit(
+                              isRepeatingAnimation: false,
+                              animatedTexts: [
+                                TyperAnimatedText("Data not found",
+                                    speed: Duration(milliseconds: 150),
+                                    textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                              ])
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox();
+              }),
+            ),
           );
         },
       ),
@@ -114,12 +214,7 @@ class ExpandableCard extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final screenWidth = MediaQuery.of(context).size.width;
-        final cardWidth = screenWidth > 1200
-            ? 400.0
-            : (screenWidth > 800
-            ? (screenWidth / 2) - 24
-            : screenWidth - 32);
-
+        final cardWidth = screenWidth > 1200 ? 400.0 : (screenWidth > 800 ? (screenWidth / 2) - 24 : screenWidth - 32);
         return SizedBox(
           width: cardWidth,
           child: Card(
@@ -145,8 +240,7 @@ class ExpandableCard extends StatelessWidget {
 }
 
 class DemandHeader extends StatefulWidget {
-  final SearchdmdPreviewController searchdmdPreviewController;
-  const DemandHeader({super.key, required this.searchdmdPreviewController});
+  const DemandHeader({Key? key}) : super(key: key);
 
   @override
   State<DemandHeader> createState() => _DemandHeaderState();
@@ -156,6 +250,63 @@ class _DemandHeaderState extends State<DemandHeader> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
+  final searchdmdPreviewcontroller =
+      Get.put<SearchdmdPreviewController>(SearchdmdPreviewController());
+
+  String? fundavlyear(String? yrvalue) {
+    if (yrvalue == "21") {
+      return "2021-22";
+    } else if (yrvalue == "22") {
+      return "2022-23";
+    } else if (yrvalue == "23") {
+      return "2023-24";
+    } else if (yrvalue == "24") {
+      return "2024-25";
+    } else if (yrvalue == "25") {
+      return "2025-26";
+    } else if (yrvalue == "26") {
+      return "2026-27";
+    } else if (yrvalue == "27") {
+      return "2027-28";
+    }
+    return null;
+  }
+
+  String? getmodeofprocurent(String? s) {
+    if (s == "0") {
+      return "Variation/optional Clause";
+    } else if (s == "1") {
+      return "Open Tender";
+    } else if (s == "2") {
+      return "Limited Tender";
+    } else if (s == "3") {
+      return "Single Tender";
+    } else if (s == "4") {
+      return "Rate Contract";
+    }
+    return null;
+  }
+
+  String? getDemandtype(String? s) {
+    if (s == "1") {
+      return "ICT ITEMS";
+    } else if (s == "2") {
+      return "NON-ICT ITEMS";
+    }
+    return null;
+  }
+
+  String? getProcurementtype(String? s) {
+    if (s == "1") {
+      return "Purchase Through Stores(IREPS)";
+    } else if (s == "2") {
+      return "Purchase Through Stores(GeM)";
+    } else if (s == "3") {
+      return "Purchase Through Group(3BQs/IREPS)";
+    }
+    return null;
+  }
+
   @override
   void dispose() {
     _pageController.dispose();
@@ -164,51 +315,48 @@ class _DemandHeaderState extends State<DemandHeader> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Column(
-          children: [
-            SizedBox(
-              height: 300,
-              child: Card(
-                elevation: 0,
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentPage = index;
-                    });
-                  },
-                  children: [
-                    _buildBasicDetails(widget.searchdmdPreviewController),
-                    _buildFundDetails(widget.searchdmdPreviewController),
-                    _buildProcurementDetails(widget.searchdmdPreviewController),
-                    _buildEstimateDetails(widget.searchdmdPreviewController),
-                    _buildTechnicalDetails(widget.searchdmdPreviewController),
-                  ],
-                ),
+    return Container(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 300,
+            child: Card(
+              elevation: 2,
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentPage = index;
+                  });
+                },
+                children: [
+                  _buildBasicDetails(),
+                  _buildFundDetails(),
+                  _buildProcurementDetails(),
+                  _buildEstimateDetails(),
+                  _buildTechnicalDetails(),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ...List.generate(5, (index) => _buildPageIndicator(index)),
-                const SizedBox(width: 16),
-
-                Text(
-                  ' ',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                    fontStyle: FontStyle.italic,
-                  ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ...List.generate(5, (index) => _buildPageIndicator(index)),
+              const SizedBox(width: 16),
+              Text(
+                ' ',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                  fontStyle: FontStyle.italic,
                 ),
-              ],
-            ),
-          ],
-        );
-      },
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -224,7 +372,7 @@ class _DemandHeaderState extends State<DemandHeader> {
     );
   }
 
-  Widget _buildBasicDetails(SearchdmdPreviewController controller) {
+  Widget _buildBasicDetails() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -240,84 +388,54 @@ class _DemandHeaderState extends State<DemandHeader> {
               ),
             ),
             const SizedBox(height: 18),
-            Obx((){
-              if(SearchdmdPreviewState.idle == controller.searchdmdPreviewState.value){
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Demand No.', "-------", Icons.comment_bank_sharp),
-                    ),
-                    const SizedBox(width: 18),
-                    Expanded(
-                      child: _buildHeaderItem('Indentor', '------', Icons.person),
-                    ),
-                  ],
-                );
-              }
-              else if(SearchdmdPreviewState.success == controller.searchdmdPreviewState.value){
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Demand No.', controller.headerData[0].key2!, Icons.comment_bank_sharp),
-                    ),
-                    const SizedBox(width: 18),
-                    Expanded(
-                      child: _buildHeaderItem('Indentor', controller.headerData[0].key3!, Icons.person),
-                    ),
-                  ],
-                );
-              }
-              return SizedBox();
-            }),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Demand No.',
+                      searchdmdPreviewcontroller.headerData[0].key2!,
+                      Icons.comment_bank_sharp),
+                ),
+                const SizedBox(width: 18),
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Indentor',
+                      "${searchdmdPreviewcontroller.headerData[0].key3!}",
+                      Icons.person),
+                ),
+              ],
+            ),
             const SizedBox(height: 18),
-            Obx((){
-              if(SearchdmdPreviewState.idle == controller.searchdmdPreviewState.value){
-                return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: _buildHeaderItem('Demand Value', 'Rs. 90,000/-\n(Rupees Ninety Thousand Only)', Icons.currency_rupee),
-                  ),
-                  const SizedBox(width: 18),
-                  Expanded(
-                    child: _buildHeaderItem('Purpose',
-                        'S1: Sanctioned Estimate\n'
-                            'S2: Sanctioned Estimate\n'
-                            'S3: Sanctioned Estimate\n'
-                            'S4: Sanctioned Estimate',
-                        Icons.description),
-                  ),
-                ],
-              );
-              }
-              else if(SearchdmdPreviewState.success == controller.searchdmdPreviewState.value) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Demand Value', 'Rs. ${controller.headerData[0].key12!}/-\n(Rupees Ninety Thousand Only)', Icons.currency_rupee),
-                    ),
-                    const SizedBox(width: 18),
-                    Expanded(
-                      child: _buildHeaderItem('Purpose',
-                          controller.headerData[0].key5!,
-                          Icons.description),
-                    ),
-                  ],
-                );
-              }
-              return SizedBox();
-            })
-
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Demand Value',
+                      searchdmdPreviewcontroller.headerData[0].key12 == "NULL"
+                          ? "NA"
+                          : "Rs. ${searchdmdPreviewcontroller.headerData[0].key12!}",
+                      Icons.currency_rupee),
+                ),
+                const SizedBox(width: 18),
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Purpose',
+                      searchdmdPreviewcontroller.headerData[0].key5 == "NULL"
+                          ? "NA"
+                          : "${searchdmdPreviewcontroller.headerData[0].key5!}",
+                      Icons.description),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFundDetails(SearchdmdPreviewController controller) {
+  Widget _buildFundDetails() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -333,84 +451,50 @@ class _DemandHeaderState extends State<DemandHeader> {
               ),
             ),
             const SizedBox(height: 24),
-            Obx((){
-              if(SearchdmdPreviewState.idle == controller.searchdmdPreviewState.value) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem(
-                          'Fund Availability Year', '-----',
-                          Icons.account_balance),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: _buildHeaderItem(
-                          'Indentor Demand Reference', '-----',
-                          Icons.bookmark),
-                    ),
-                  ],
-                );
-              }
-              else if(SearchdmdPreviewState.success == controller.searchdmdPreviewState.value){
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem(
-                          'Fund Availability Year', fundavlyear(controller.headerData[0].key13!)!,
-                          Icons.account_balance),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: _buildHeaderItem(
-                          'Indentor Demand Reference', controller.headerData[0].key14!,
-                          Icons.bookmark),
-                    ),
-                  ],
-                );
-              }
-              return SizedBox();
-            }),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Fund Availability Year',
+                      fundavlyear(searchdmdPreviewcontroller
+                              .headerData[0].key13!) ??
+                          "NA",
+                      Icons.account_balance),
+                ),
+                const SizedBox(width: 32),
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Indentor Demand Reference',
+                      searchdmdPreviewcontroller.headerData[0].key14 == "NULL" ? "NA" : searchdmdPreviewcontroller.headerData[0].key14!,
+                      Icons.bookmark),
+                ),
+              ],
+            ),
             const SizedBox(height: 24),
-            Obx((){
-               if(SearchdmdPreviewState.idle == controller.searchdmdPreviewState.value){
-                 return Row(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Expanded(
-                       child: _buildHeaderItem('Whether PAC Case?', '-----', Icons.help_outline),
-                     ),
-                     const SizedBox(width: 32),
-                     Expanded(
-                       child: _buildHeaderItem('Estimate Date', '-----', Icons.event),
-                     ),
-                   ],
-                 );
-               }
-               else if(SearchdmdPreviewState.success == controller.searchdmdPreviewState.value){
-                 return Row(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Expanded(
-                       child: _buildHeaderItem('Whether PAC Case?', controller.headerData[0].key6!, Icons.help_outline),
-                     ),
-                     const SizedBox(width: 32),
-                     Expanded(
-                       child: _buildHeaderItem('Estimate Date', controller.headerData[0].key15!, Icons.event),
-                     ),
-                   ],
-                 );
-               }
-               return SizedBox();
-            }),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Whether PAC Case?', 'No', Icons.help_outline),
+                ),
+                const SizedBox(width: 32),
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Estimate Date',
+                      searchdmdPreviewcontroller.headerData[0].key15 == "NULL" ? "NA" : searchdmdPreviewcontroller.headerData[0].key15!,
+                      Icons.event),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildProcurementDetails(SearchdmdPreviewController controller) {
+  Widget _buildProcurementDetails() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -426,83 +510,56 @@ class _DemandHeaderState extends State<DemandHeader> {
               ),
             ),
             const SizedBox(height: 24),
-            Obx((){
-              if(SearchdmdPreviewState.idle == controller.searchdmdPreviewState.value) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Bill Passing Officer', 'GM/01',
-                          Icons.assignment_ind),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: _buildHeaderItem(
-                          'Procurement Type', 'Purchase Through Stores(IREPS)',
-                          Icons.store),
-                    ),
-                  ],
-                );
-              }
-              else if(SearchdmdPreviewState.success == controller.searchdmdPreviewState.value){
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Bill Passing Officer', controller.headerData[0].key4!,
-                          Icons.assignment_ind),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: _buildHeaderItem(
-                          'Procurement Type', getProcurementtype(controller.headerData[0].key10!)!,
-                          Icons.store),
-                    ),
-                  ],
-                );
-              }
-              return SizedBox();
-            }),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Bill Passing Officer',
+                      searchdmdPreviewcontroller.headerData[0].key4 ?? "NA",
+                      Icons.assignment_ind),
+                ),
+                const SizedBox(width: 32),
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Procurement Type',
+                      getProcurementtype(
+                              searchdmdPreviewcontroller.headerData[0].key10) ??
+                          "NA",
+                      Icons.store),
+                ),
+              ],
+            ),
             const SizedBox(height: 24),
-            Obx((){
-              if(SearchdmdPreviewState.idle == controller.searchdmdPreviewState.value){
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Demand Type', '-----', Icons.category),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: _buildHeaderItem('Mode of Procurement', '-----', Icons.shopping_cart),
-                    ),
-                  ],
-                );
-              }
-              else if(SearchdmdPreviewState.success == controller.searchdmdPreviewState.value){
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Demand Type', getDemandtype(controller.headerData[0].key7!)!, Icons.category),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: _buildHeaderItem('Mode of Procurement',  getmodeofprocurent(controller.headerData[0].key8!)!, Icons.shopping_cart),
-                    ),
-                  ],
-                );
-              }
-              return SizedBox();
-            })
-
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Demand Type',
+                      getDemandtype(
+                              searchdmdPreviewcontroller.headerData[0].key7) ??
+                          "NA",
+                      Icons.category),
+                ),
+                const SizedBox(width: 32),
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Mode of Procurement',
+                      getmodeofprocurent(
+                              searchdmdPreviewcontroller.headerData[0].key8) ??
+                          "NA",
+                      Icons.shopping_cart),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildEstimateDetails(SearchdmdPreviewController controller) {
+  Widget _buildEstimateDetails() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -518,77 +575,48 @@ class _DemandHeaderState extends State<DemandHeader> {
               ),
             ),
             const SizedBox(height: 24),
-            Obx((){
-              if(SearchdmdPreviewState.idle == controller.searchdmdPreviewState.value){
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Sanctioned Estimate No.', '------', Icons.receipt),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: _buildHeaderItem('Bill Paying Officer', '-------', Icons.payments),
-                    ),
-                  ],
-                );
-              }
-              else if(SearchdmdPreviewState.success == controller.searchdmdPreviewState.value){
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Sanctioned Estimate No.', controller.headerData[0].key17!, Icons.receipt),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: _buildHeaderItem('Bill Paying Officer', controller.headerData[0].key16!, Icons.payments),
-                    ),
-                  ],
-                );
-              }
-              return SizedBox();
-            }),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Sanctioned Estimate No.',
+                      searchdmdPreviewcontroller.headerData[0].key17 == "NULL" ? "NA" : searchdmdPreviewcontroller.headerData[0].key17!,
+                      Icons.receipt),
+                ),
+                const SizedBox(width: 32),
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Bill Paying Officer',
+                      searchdmdPreviewcontroller.headerData[0].key16 ?? "NA",
+                      Icons.payments),
+                ),
+              ],
+            ),
             const SizedBox(height: 24),
-            Obx((){
-              if(SearchdmdPreviewState.idle == controller.searchdmdPreviewState.value){
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Estimate Item No.', "------", Icons.list_alt),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: _buildHeaderItem('Purchase Unit', "------", Icons.business),
-                    ),
-                  ],
-                );
-              }
-              else if(SearchdmdPreviewState.success == controller.searchdmdPreviewState.value){
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _buildHeaderItem('Estimate Item No.', controller.headerData[0].key17!, Icons.list_alt),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: _buildHeaderItem('Purchase Unit', controller.headerData[0].key11!, Icons.business),
-                    ),
-                  ],
-                );
-              }
-              return SizedBox();
-            })
-
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Estimate Item No.', 'NA', Icons.list_alt),
+                ),
+                const SizedBox(width: 32),
+                Expanded(
+                  child: _buildHeaderItem(
+                      'Purchase Unit',
+                      searchdmdPreviewcontroller.headerData[0].key11 == "NULL" ? "NA" : searchdmdPreviewcontroller.headerData[0].key11!,
+                      Icons.business),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTechnicalDetails(SearchdmdPreviewController controller) {
+  Widget _buildTechnicalDetails() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -604,23 +632,19 @@ class _DemandHeaderState extends State<DemandHeader> {
               ),
             ),
             const SizedBox(height: 24),
-            Obx((){
-              if(SearchdmdPreviewState.idle == controller.searchdmdPreviewState.value){
-                return _buildHeaderItem('Technical Vetting Required', '-----', Icons.gavel, showViewButton: true);
-              }
-              else if(SearchdmdPreviewState.success == controller.searchdmdPreviewState.value){
-                return _buildHeaderItem('Technical Vetting Required', controller.headerData[0].key9!, Icons.gavel, showViewButton: true);
-              }
-              return SizedBox();
-            })
-
+            _buildHeaderItem(
+                'Technical Vetting Required',
+                searchdmdPreviewcontroller.headerData[0].key7 == "2" ? "NA" : searchdmdPreviewcontroller.headerData[0].key7 == "1" && searchdmdPreviewcontroller.headerData[0].key9 == "1" ? "Yes" : "No",
+                Icons.gavel,
+                showViewButton:  searchdmdPreviewcontroller.headerData[0].key7 == "2" && searchdmdPreviewcontroller.headerData[0].key7 == "1" && searchdmdPreviewcontroller.headerData[0].key9 == "1" ? true : false),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeaderItem(String label, String value, IconData icon, {bool showViewButton = false}) {
+  Widget _buildHeaderItem(String label, String value, IconData icon,
+      {bool showViewButton = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -638,7 +662,7 @@ class _DemandHeaderState extends State<DemandHeader> {
                 ),
               ),
             ),
-            if (showViewButton)
+            if(showViewButton)
               TextButton.icon(
                 onPressed: () {},
                 icon: const Icon(Icons.visibility, size: 18),
@@ -653,7 +677,15 @@ class _DemandHeaderState extends State<DemandHeader> {
         const SizedBox(height: 4),
         Padding(
           padding: const EdgeInsets.only(left: 26),
-          child: Text(
+          child: label == "Purpose" ? ReadMoreText(value, style: const TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+          ),
+            trimLines: 4,
+            colorClickableText: Colors.blue[700],
+            trimMode: TrimMode.Line,
+            trimCollapsedText: '... More',
+            trimExpandedText: '...less',): Text(
             value,
             style: const TextStyle(
               fontSize: 14,
@@ -664,74 +696,8 @@ class _DemandHeaderState extends State<DemandHeader> {
       ],
     );
   }
-
-  String? fundavlyear(String? yrvalue) {
-    if(yrvalue == "21"){
-      return "2021-22";
-    }
-    else if(yrvalue == "22"){
-      return "2022-23";
-    }
-    else if(yrvalue == "23"){
-      return "2023-24";
-    }
-    else if(yrvalue == "24"){
-      return "2024-25";
-    }
-    else if(yrvalue == "25"){
-      return "2025-26";
-    }
-    else if(yrvalue == "26"){
-      return "2026-27";
-    }
-    else if(yrvalue == "27"){
-      return "2027-28";
-    }
-    return null;
-  }
-
-  String? getmodeofprocurent(String? s) {
-    if(s == "0"){
-      return "Variation/optional Clause";
-    }
-    else if(s == "1"){
-      return "Open Tender";
-    }
-    else if(s == "2"){
-      return "Limited Tender";
-    }
-    else if(s == "3"){
-      return "Single Tender";
-    }
-    else if(s == "4"){
-      return "Rate Contract";
-    }
-    return null;
-  }
-
-  String? getDemandtype(String? s) {
-   if(s == "1"){
-      return "ICT ITEMS";
-    }
-    else if(s == "2"){
-      return "NON-ICT ITEMS";
-    }
-    return null;
-  }
-
-  String? getProcurementtype(String? s) {
-    if(s == "1"){
-      return "Purchase Through Stores(IREPS)";
-    }
-    else if(s == "2"){
-      return "Purchase Through Stores(GeM)";
-    }
-    else if(s == "3"){
-      return "Purchase Through Group(3BQs/IREPS)";
-    }
-    return null;
-  }
 }
+
 class ItemsConsigneesPanel extends StatelessWidget {
   const ItemsConsigneesPanel({Key? key}) : super(key: key);
 
@@ -787,7 +753,8 @@ class ItemsConsigneesPanel extends StatelessWidget {
                 elevation: 1,
                 child: Container(
                   width: 250,
-                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 20.0),
                   child: Column(
                     children: [
                       const Text(
@@ -878,28 +845,23 @@ class ItemsConsigneesPanel extends StatelessWidget {
       columns: const [
         DataColumn(
           label: Text('SN',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-          ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
         DataColumn(
           label: Text('Item Details',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-          ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
         DataColumn(
           label: Text('Total Qty./Rate/Value',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-          ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
       ],
       rows: [
         DataRow(cells: [
-          const DataCell(
-              Padding(
-                padding: EdgeInsets.only(right: 4),
-                child: Text('1.', style: TextStyle(fontSize: 13)),
-              )
-          ),
+          const DataCell(Padding(
+            padding: EdgeInsets.only(right: 4),
+            child: Text('1.', style: TextStyle(fontSize: 13)),
+          )),
           DataCell(
             Container(
               constraints: const BoxConstraints(
@@ -907,21 +869,17 @@ class ItemsConsigneesPanel extends StatelessWidget {
                 maxWidth: 250,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 4.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildDetailRow('Code:','57010012010'),
+                    _buildDetailRow('Code:', '57010012010'),
                     const SizedBox(height: 8),
                     _buildDetailRow('Type:', 'Supply'),
                     const SizedBox(height: 8),
                     _buildDetailRow('Description:', 'Computer Hardware'),
                     const SizedBox(height: 8),
-                    _buildDetailRow(
-                      'Warranty:',
-                      '30 month(s) from the date of Supply',
-                      valueColor: Colors.red.shade700,
-                    ),
+                    _buildDetailRow('Warranty:', '30 month(s) from the date of Supply', valueColor: Colors.red.shade700),
                   ],
                 ),
               ),
@@ -992,33 +950,27 @@ class ItemsConsigneesPanel extends StatelessWidget {
       columns: const [
         DataColumn(
           label: Text('Consignee',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-          ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
         DataColumn(
           label: Text('Delivery Reqd. by',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-          ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
         DataColumn(
           label: Text('Quantity',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-          ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
         DataColumn(
           label: Text('State',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-          ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
         DataColumn(
           label: Text('Required at',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-          ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
         DataColumn(
           label: Text('Address',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-          ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
       ],
       rows: [
@@ -1027,29 +979,113 @@ class ItemsConsigneesPanel extends StatelessWidget {
             'ACCTS-ACCTS-IMMSTEST',
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
           )),
-          const DataCell(Text('12/11/2024',
-              style: TextStyle(fontSize: 13)
-          )),
+          const DataCell(Text('12/11/2024', style: TextStyle(fontSize: 13))),
           const DataCell(Text(
             '2 Number',
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
           )),
-          const DataCell(Text('Andhra Pradesh',
-              style: TextStyle(fontSize: 13)
-          )),
-          const DataCell(Text('NDLS',
-              style: TextStyle(fontSize: 13)
-          )),
-          const DataCell(Text('NEW DELHI',
-              style: TextStyle(fontSize: 13)
-          )),
+          const DataCell(
+              Text('Andhra Pradesh', style: TextStyle(fontSize: 13))),
+          const DataCell(Text('NDLS', style: TextStyle(fontSize: 13))),
+          const DataCell(Text('NEW DELHI', style: TextStyle(fontSize: 13))),
         ]),
       ],
     );
   }
 }
+
 class LPRPanel extends StatelessWidget {
-  const LPRPanel({Key? key}) : super(key: key);
+  final searchdmdPreviewcontroller = Get.put<SearchdmdPreviewController>(SearchdmdPreviewController());
+
+  List<DataRow> getDataRows() {
+    return searchdmdPreviewcontroller.lprData.asMap().entries.map((entry) {
+      int index = entry.key + 1; // Get index
+      var item = entry.value; // Get item
+      return DataRow(cells: [
+        DataCell(Text(index.toString())), // Serial No
+        DataCell(
+          Container(
+            constraints: const BoxConstraints(
+              minWidth: 120,
+              maxWidth: 250,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(item.key4!,
+                    style:
+                        TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                SizedBox(height: 4),
+                Text(item.key5!,
+                    style: TextStyle(fontSize: 13, color: Colors.grey)),
+              ],
+            ),
+          ),
+        ),
+        DataCell(
+          Container(
+            constraints: const BoxConstraints(
+              minWidth: 160,
+              maxWidth: 200,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center, // Changed from start
+              children: [
+                Text(item.key16!,
+                    style:
+                        TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.all(6), // Reduced from 8
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(
+                      color: Colors.grey.shade200,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      item.key12 == "NULL" ? Text("PO No.: NA", style: TextStyle(fontSize: 13)) : Text('PO No.: ${item.key12}', style: TextStyle(fontSize: 13)),
+                      SizedBox(height: 2),
+                      item.key13 == "NULL" ? Text("dt. NA", style: TextStyle(fontSize: 13)) : Text('PO No.: ${item.key13!}', style: TextStyle(fontSize: 13)),
+                      SizedBox(height: 2),
+                      Text('(Non-IMMS PO)',
+                          style: TextStyle(
+                              fontSize: 13,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.grey)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        DataCell(
+          Container(
+            constraints: const BoxConstraints(
+              minWidth: 100,
+              maxWidth: 240,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(item.key5!,
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w500)),
+              ],
+            ),
+          ),
+        ),
+        DataCell(Text('Rs.${item.key9} per ${item.key10}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
+      ]);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1101,152 +1137,88 @@ class LPRPanel extends StatelessWidget {
         dataRowMinHeight: 80, // Reduced from 80
         dataRowMaxHeight: 100, // Reduced from 120
         columns: const [
-          DataColumn(label: Text('SN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13))),
+          DataColumn(
+            label: Text('SN',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+          ),
           DataColumn(
             label: Text('Item Details',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-            ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           ),
           DataColumn(
             label: Text('Rate Type & Details',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-            ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           ),
           DataColumn(
             label: Text('     Firm',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-            ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           ),
           DataColumn(
             label: Text('All Incl. Rate',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-            ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           ),
         ],
-        rows: [
-          DataRow(cells: [
-            const DataCell(
-              Text('1',
-                  style: TextStyle(fontSize: 13)
-              ),
-            ),
-            DataCell(
-              Container(
-                constraints: const BoxConstraints(
-                  minWidth: 120,
-                  maxWidth: 250,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text('570100120010',
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500
-                        )
-                    ),
-                    SizedBox(height: 4),
-                    Text('Computer Hardware',
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey
-                        )
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            DataCell(
-              Container(
-                constraints: const BoxConstraints(
-                  minWidth: 160,
-                  maxWidth: 200,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center, // Changed from start
-                  children: [
-                    const Text('LPR(My By: IMMSTEST)',
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500
-                        )
-                    ),
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.all(6), // Reduced from 8
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(
-                          color: Colors.grey.shade200,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text('PO No.: gsm-Test',
-                              style: TextStyle(fontSize: 13)
-                          ),
-                          SizedBox(height: 2),
-                          Text('dt. 03/04/2024',
-                              style: TextStyle(fontSize: 13)
-                          ),
-                          SizedBox(height: 2),
-                          Text('(Non-IMMS PO)',
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.grey
-                              )
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            DataCell(
-              Container(
-                constraints: const BoxConstraints(
-                  minWidth: 100,
-                  maxWidth: 240,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                        'TEST BIDDER\n10-ODISHA',
-                        style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500
-                        )
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const DataCell(
-              Text('Rs.500 per Nos.',
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500
-                  )
-              ),
-            ),
-          ]),
-        ],
+        rows: getDataRows(),
       ),
     );
   }
 }
-class SuppliersPanel extends StatelessWidget {
-  const SuppliersPanel({Key? key}) : super(key: key);
 
-  Widget _buildDetailRow(String label, String value, {Color? labelColor, Color? valueColor}) {
+class SuppliersPanel extends StatelessWidget {
+  final searchdmdPreviewcontroller = Get.put<SearchdmdPreviewController>(SearchdmdPreviewController());
+
+  List<DataRow> getDataRows() {
+    return searchdmdPreviewcontroller.lsData.asMap().entries.map((entry) {
+      int index = entry.key + 1; // Get index
+      var item = entry.value; // Get item
+
+      return DataRow(cells: [
+        DataCell(Text(index.toString())), // Serial No
+        DataCell(
+          Container(
+            constraints: const BoxConstraints(
+              minWidth: 200,
+              maxWidth: 400,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildDetailRow('         Name:', '${item.key3!}'),
+                  const SizedBox(height: 4),
+                  _buildDetailRow('         Address:', '${item.key4!}'),
+                  const SizedBox(height: 4),
+                  _buildDetailRow('         Mobile:', item.key5 == "NULL" ? "NA" : '${item.key5!}'),
+                  const SizedBox(height: 4),
+                  _buildDetailRow('         Email:', item.key6 == "NULL" ? "NA" : '${item.key6!}'),
+                ],
+              ),
+            ),
+          ),
+        ),
+        DataCell(
+          Container(
+            constraints: const BoxConstraints(
+              minWidth: 120,
+              maxWidth: 300,
+            ),
+            child: Text(
+              '      ${item.key11!}',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+      ]);
+    }).toList();
+  }
+
+  Widget _buildDetailRow(String label, String value,
+      {Color? labelColor, Color? valueColor}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1264,6 +1236,7 @@ class SuppliersPanel extends StatelessWidget {
         Expanded(
           child: Text(
             value,
+            maxLines: label == "Address:" ? 2 : 3,
             style: TextStyle(
               fontSize: 13,
               color: valueColor ?? Colors.black87,
@@ -1301,7 +1274,7 @@ class SuppliersPanel extends StatelessWidget {
                   constraints: BoxConstraints(
                     minWidth: MediaQuery.of(context).size.width - 32,
                   ),
-                  child: _buildSuppliersTable(),
+                  child: _buildSuppliersTable(getDataRows()),
                 ),
               ),
             ),
@@ -1311,7 +1284,7 @@ class SuppliersPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildSuppliersTable() {
+  Widget _buildSuppliersTable(List<DataRow> data) {
     return Theme(
       data: ThemeData(
         dividerTheme: const DividerThemeData(
@@ -1327,74 +1300,191 @@ class SuppliersPanel extends StatelessWidget {
         columns: const [
           DataColumn(
             label: Text('SN',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-            ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           ),
           DataColumn(
             label: Text('                         Firm Details',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-            ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           ),
           DataColumn(
             label: Text('              Category',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)
-            ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           ),
         ],
-        rows: [
-          DataRow(cells: [
-            const DataCell(
-              Text('1',
-                  style: TextStyle(fontSize: 13)
-              ),
-            ),
-            DataCell(
-              Container(
-                constraints: const BoxConstraints(
-                  minWidth: 200,
-                  maxWidth: 400,
+        rows: data,
+      ),
+    );
+  }
+}
+
+class DocumentsPanel extends StatelessWidget {
+  final searchdmdPreviewcontroller = Get.put<SearchdmdPreviewController>(SearchdmdPreviewController());
+
+  List<DataRow> getDataRows(BuildContext context) {
+    return searchdmdPreviewcontroller.docData.asMap().entries.map((entry) {
+      int index = entry.key + 1; // Get index
+      var item = entry.value; // Get item
+
+      return DataRow(
+        cells: [
+          DataCell(Text(index.toString())), // Display Index
+          DataCell(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (item.key1!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      item.key1!,
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Text(
+                    item.key3!,
+                    style: const TextStyle(fontSize: 13, color: Colors.grey),
+                  ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+              ],
+            ),
+          ),
+          DataCell(
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  var fileUrl = "https://www.ireps.gov.in/${item.key4}";
+                  var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
+                  if (Platform.isIOS) {
+                    AapoortiUtilities.openPdf(context, fileUrl, fileName);
+                  }
+                  else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          backgroundColor: Colors.white,
+                          contentPadding: EdgeInsets.all(20),
+                          content: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Choose an option for file',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto',
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          padding: EdgeInsets.all(4),
+                                          child: Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    fileName,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Roboto',
+                                      color: Colors.lightBlue[700],
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.lightBlue[700],
+                                          foregroundColor: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          AapoortiUtilities.downloadpdf(fileUrl, fileName, context);
+                                        },
+                                        child: Text('Download'),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.lightBlue[700],
+                                          foregroundColor: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          AapoortiUtilities.openPdf(context, fileUrl, fileName);
+                                        },
+                                        child: Text('Open'),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      _buildDetailRow('         Name:', 'TEST BIDDER 10-ODISHA'),
-                      const SizedBox(height: 8),
-                      _buildDetailRow('         Address:', 'Odisha Odisha, Odisha, India, 221014'),
-                      const SizedBox(height: 8),
-                      _buildDetailRow('         Mobile:', '+91 9876543216'),
-                      const SizedBox(height: 8),
-                      _buildDetailRow('         Email:', 'tb11.testbidder@gmail.com'),
+                      Flexible(
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: Text(
+                            item.key2!.length > 12 ? "${item.key2!.substring(0, 10).trim()}.pdf" : item.key2!,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
-            DataCell(
-              Container(
-                constraints: const BoxConstraints(
-                  minWidth: 120,
-                  maxWidth: 300,
-                ),
-                child: const Text(
-                  '      Last Supplier (LPR)',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-          ]),
+            placeholder: false,
+          ),
         ],
-      ),
-    );
+      );
+    }).toList();
+
   }
-}
-class DocumentsPanel extends StatelessWidget {
-  const DocumentsPanel({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1404,61 +1494,106 @@ class DocumentsPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDocumentSection('Technical Documents'),
-            const SizedBox(height: 16),
-            _buildDocumentSection('Commercial Documents'),
-            const SizedBox(height: 16),
-            _buildDocumentSection('Other Documents'),
+            Container(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: const Text(
+                'Documents',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            Card(
+              elevation: 1,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: MediaQuery.of(context).size.width - 32,
+                  ),
+                  child: _buildDocumentsTable(context),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDocumentSection(String title) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 3,
-              itemBuilder: (context, index) => ListTile(
-                leading: const Icon(Icons.file_present),
-                title: Text('Document ${index + 1}'),
-                subtitle: Text('Uploaded on: ${30 - index}/10/2024'),
-                trailing: Wrap(
-                  spacing: 8,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.remove_red_eye),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.download),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
+  Widget _buildDocumentsTable(BuildContext context) {
+    return Theme(
+      data: ThemeData(
+        dividerTheme: const DividerThemeData(
+          space: 5,
+        ),
+      ),
+      child: DataTable(
+        headingRowColor: MaterialStateProperty.all(Colors.grey.shade100),
+        columnSpacing: 32,
+        horizontalMargin: 25,
+        dataRowMinHeight: 52,
+        dataRowMaxHeight: 64,
+        headingRowHeight: 48,
+        columns: const [
+          DataColumn(
+            label: Padding(
+              padding: EdgeInsets.only(bottom: 4.0),
+              child: Text(
+                'SN',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),
             ),
-          ],
-        ),
+          ),
+          DataColumn(
+            label: Padding(
+              padding: EdgeInsets.only(bottom: 4.0),
+              child: Text(
+                'Details',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Padding(
+              padding: EdgeInsets.only(bottom: 4.0),
+              child: Text(
+                'File Name',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+            ),
+          ),
+        ],
+        rows: getDataRows(context),
       ),
     );
   }
 }
 
 class ConditionsPanel extends StatelessWidget {
-  const ConditionsPanel({Key? key}) : super(key: key);
+  final searchdmdPreviewcontroller =
+      Get.put<SearchdmdPreviewController>(SearchdmdPreviewController());
+
+  List<DataRow> getDataRows() {
+    return searchdmdPreviewcontroller.conditionData.asMap().entries.map((entry) {
+      int index = entry.key + 1;
+      var item = entry.value; // Get item
+
+      return DataRow(cells: [
+        DataCell(Text(index.toString())), // Serial No
+        DataCell(Text(item.key2 == "NULL" ? "NA" : item.key2!,
+            style: const TextStyle(fontSize: 13))),
+        DataCell(Text(item.key13 == "NULL" ? "NA" : item.key13!,
+            style: const TextStyle(fontSize: 13))),
+        DataCell(Text(item.key3 == "NULL" ? "NA" : item.key3!,
+            style: const TextStyle(fontSize: 13))),
+        DataCell(Text(item.key5!, style: const TextStyle(fontSize: 13))),
+        DataCell(Text(item.key6!, style: const TextStyle(fontSize: 13))),
+        DataCell(Text(item.key7!, style: const TextStyle(fontSize: 13))),
+      ]);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1468,54 +1603,75 @@ class ConditionsPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildConditionCard(
-              'Special Conditions',
-              [
-                'Delivery within 30 days',
-                'Installation and configuration included',
-                'Three years warranty required',
-                'On-site technical support'
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildConditionCard(
-              'General Conditions',
-              [
-                'Payment terms: 100% after delivery and installation',
-                'Performance security: 3% of contract value',
-                'Liquidated damages: 0.5% per week of delay',
-                'Maximum LD: 10% of contract value'
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildConditionCard(String title, List<String> conditions) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-            ...conditions.map((condition) => Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.circle, size: 8, color: Colors.blue),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(condition)),
-                ],
+            Card(
+              elevation: 1,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: MediaQuery.of(context).size.width - 32,
+                  ),
+                  child: DataTable(
+                    headingRowColor:
+                        MaterialStateProperty.all(Colors.grey.shade100),
+                    columnSpacing: 24,
+                    horizontalMargin: 25,
+                    columns: const [
+                      DataColumn(
+                        label: Text(
+                          'SN',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Condition Type',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Template',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Condition Heading/Description',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Confirmation Required',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Remarks Allowed',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Document Allowed',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                    ],
+                    rows: getDataRows(),
+                  ),
+                ),
               ),
-            )),
+            ),
           ],
         ),
       ),
@@ -1523,112 +1679,441 @@ class ConditionsPanel extends StatelessWidget {
   }
 }
 
-class AuthenticationPanel extends StatelessWidget {
-  const AuthenticationPanel({Key? key}) : super(key: key);
+class AllocationPanel extends StatelessWidget {
+  final searchdmdPreviewcontroller = Get.put<SearchdmdPreviewController>(SearchdmdPreviewController());
+
+  List<DataRow> getDataRows() {
+    return searchdmdPreviewcontroller.allocationData.asMap().entries.map((entry) {
+
+      int index = entry.key + 1;
+      var item = entry.value;
+
+      return DataRow(cells: [
+        DataCell(Text(index.toString())), // Serial No
+        DataCell(Text("${item.key9!}${item.key10!}", style: const TextStyle(fontSize: 13))),
+        DataCell(Text(item.key7!, style: const TextStyle(fontSize: 13))),
+        DataCell(Text(item.key5!, style: const TextStyle(fontSize: 13))),
+        DataCell(Text("${item.key1!}${item.key2!}", style: const TextStyle(fontSize: 13))),
+        DataCell(Text(item.key11!, style: const TextStyle(fontSize: 13))),
+      ]);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Digital Signatures',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              elevation: 1,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: MediaQuery.of(context).size.width - 32,
+                  ),
+                  child: DataTable(
+                    headingRowColor:
+                        MaterialStateProperty.all(Colors.grey.shade100),
+                    columnSpacing: 24,
+                    horizontalMargin: 25,
+                    columns: const [
+                      DataColumn(
+                        label: Text(
+                          'SN',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Item',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Consignee',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Qty',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Allocation',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Value (Rs.)',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ),
+                    ],
+                    rows: getDataRows(),
+                    // rows: [
+                    //   _buildAllocationRow(
+                    //     '1.',
+                    //     '5170100120010- Computer Hardware (@#\$%^&*()_++ - []}{\\/:9<<??',
+                    //     'ACCTS - ADCTS\n(CHS -RLMS TESTING)',
+                    //     '2.0 Number',
+                    //     'EPSW020000\nEPSW020000-Integration of e-tendering in Works Contracts with IPSM',
+                    //     '90,000/-',
+                    //   ),
+                    //   _buildAllocationRow(
+                    //     '',
+                    //     'Input Tax Credit (ITC) Flag: TI-No ITC (Input goods or services used exclusively for non',
+                    //     '',
+                    //     '',
+                    //     '',
+                    //     '',
+                    //   ),
+                    // ],
+                  ),
                 ),
-                const SizedBox(height: 16),
-                _buildSignatureRow(
-                  'Indentor',
-                  'NAVAL KUMAR GUPTA',
-                  'Signed on 30/10/2024 10:30 AM',
-                  true,
-                ),
-                _buildSignatureRow(
-                  'Approving Authority',
-                  'RAJESH KUMAR',
-                  'Signed on 30/10/2024 02:15 PM',
-                  true,
-                ),
-                _buildSignatureRow(
-                  'Purchase Officer',
-                  'AMIT SHARMA',
-                  'Signed on 30/10/2024 04:45 PM',
-                  true,
-                ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildSignatureRow(
-      String role,
-      String name,
-      String timestamp,
-      bool isSigned,
-      ) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Row(
-        children: [
-          Expanded(
+  DataRow _buildAllocationRow(
+    String sn,
+    String item,
+    String consignee,
+    String qty,
+    String allocation,
+    String value,
+  ) {
+    return DataRow(
+      cells: [
+        DataCell(Text(sn, style: const TextStyle(fontSize: 13))),
+        DataCell(Text(item, style: const TextStyle(fontSize: 13))),
+        DataCell(Text(consignee, style: const TextStyle(fontSize: 13))),
+        DataCell(Text(qty, style: const TextStyle(fontSize: 13))),
+        DataCell(Text(allocation, style: const TextStyle(fontSize: 13))),
+        DataCell(Text(value, style: const TextStyle(fontSize: 13))),
+      ],
+    );
+  }
+}
+
+class AuthenticationPanel extends StatefulWidget {
+  const AuthenticationPanel({super.key});
+
+  @override
+  State<AuthenticationPanel> createState() => _AuthenticationPanelState();
+}
+
+class _AuthenticationPanelState extends State<AuthenticationPanel> {
+
+  final searchdmdPreviewcontroller = Get.put<SearchdmdPreviewController>(SearchdmdPreviewController());
+
+  List<DataRow> getDataRows() {
+    return searchdmdPreviewcontroller.authenticationData.asMap().entries.map((entry) {
+
+      int index = entry.key + 1;
+      var item = entry.value;
+
+      return DataRow(
+        cells: [
+          DataCell(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                index.toString(),
+                style: const TextStyle(fontSize: 13),
+              ),
+            ),
+          ),
+          DataCell(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "${item.key6} ${item.key7}",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "${item.key3}",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          DataCell(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    item.key10!.split(",").first,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    item.key10!.split(",").last.trim(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    item.key11!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          DataCell(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    item.key12!.split(",").first,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    item.key12!.split(",").last.trim(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    item.key13!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // DataCell(
+          //   Padding(
+          //     padding: const EdgeInsets.symmetric(vertical: 8.0),
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Container(
+          //           padding: const EdgeInsets.symmetric(
+          //             horizontal: 10,
+          //             vertical: 6,
+          //           ),
+          //           decoration: BoxDecoration(
+          //             color: Colors.green.shade50,
+          //             borderRadius: BorderRadius.circular(12),
+          //           ),
+          //           child: Row(
+          //             mainAxisSize: MainAxisSize.min,
+          //             children: [
+          //               Icon(
+          //                 Icons.verified_rounded,
+          //                 size: 16,
+          //                 color: Colors.green.shade700,
+          //               ),
+          //               const SizedBox(width: 6),
+          //               Text(
+          //                 'Verified',
+          //                 style: TextStyle(
+          //                   fontSize: 12,
+          //                   color: Colors.green.shade700,
+          //                   fontWeight: FontWeight.w500,
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //         const SizedBox(height: 8),
+          //         TextButton(
+          //           onPressed: () => _showRemarksDialog(
+          //             context,
+          //             data['remarks']!,
+          //           ),
+          //           style: TextButton.styleFrom(
+          //             padding: const EdgeInsets.symmetric(
+          //               horizontal: 12,
+          //               vertical: 6,
+          //             ),
+          //             minimumSize: Size.zero,
+          //             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          //           ),
+          //           child: const Text(
+          //             'View Remarks',
+          //             style: TextStyle(fontSize: 12),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+        ],
+      );
+    }).toList();
+  }
+
+  void _showRemarksDialog(BuildContext context, String remarks) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 500),
+            padding: const EdgeInsets.all(20),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  role,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Remarks',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(name),
+                const SizedBox(height: 16),
                 Text(
-                  timestamp,
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 12,
-                  ),
+                  remarks,
+                  style: const TextStyle(fontSize: 14),
                 ),
               ],
             ),
           ),
-          Icon(
-            isSigned ? Icons.verified : Icons.pending,
-            color: isSigned ? Colors.green : Colors.orange,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  String? fundavlyear(String yrvalue) {
-    if(yrvalue == "21"){
-      return "2021-22";
-    }
-    else if(yrvalue == "22"){
-      return "2022-23";
-    }
-    else if(yrvalue == "23"){
-      return "2023-24";
-    }
-    else if(yrvalue == "24"){
-      return "2024-25";
-    }
-    else if(yrvalue == "25"){
-      return "2025-26";
-    }
-    else if(yrvalue == "26"){
-      return "2026-27";
-    }
-    else if(yrvalue == "27"){
-      return "2027-28";
-    }
-    return null;
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            headingRowColor: MaterialStateProperty.all(Colors.grey.shade50),
+            columnSpacing: 28,
+            horizontalMargin: 20,
+            dataRowHeight: 90,
+            headingRowHeight: 56,
+            columns: const [
+              DataColumn(
+                label: Text(
+                  'S.No.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Stage/Activity',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Name & Designation',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Forwarded To',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              // DataColumn(
+              //   label: Text(
+              //     'Status',
+              //     style: TextStyle(
+              //       fontWeight: FontWeight.bold,
+              //       fontSize: 14,
+              //     ),
+              //   ),
+              // ),
+            ],
+            rows: getDataRows(),
+          ),
+        ),
+      ),
+    );
   }
 }

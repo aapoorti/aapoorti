@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fluttericon/typicons_icons.dart';
 import 'package:intl/intl.dart';
@@ -171,7 +172,7 @@ class _CrcFinalizedScreenState extends State<CrcFinalizedScreen> with SingleTick
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(4.0),
                                   side: BorderSide(
-                                    color: Colors.red.shade300,
+                                    color: AapoortiConstants.primary,
                                     width: 1.0,
                                   )
                               ),
@@ -319,8 +320,7 @@ class _CrcFinalizedScreenState extends State<CrcFinalizedScreen> with SingleTick
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(language.text('dropremarks'), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 14)),
-                                        value.crcfinaliseddatalist[index].dropcomment != null ? Text(value.crcfinaliseddatalist[index].dropcomment.toString(), maxLines: 5, style: TextStyle(color: Colors.red.shade300, fontSize: 14))
-                                            : Text("NA", style: TextStyle(color: Colors.red.shade300, fontSize: 14))
+                                        Text(value.crcfinaliseddatalist[index].dropcomment.toString(), maxLines: 5, style: TextStyle(color: AapoortiConstants.primary, fontSize: 14))
                                       ],
                                     ),
                                     SizedBox(height: 5.0),
@@ -334,7 +334,7 @@ class _CrcFinalizedScreenState extends State<CrcFinalizedScreen> with SingleTick
                                             Text(language.text('status'), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 14)),
                                             SizedBox(
                                                 width: size.width * 0.40,
-                                                child: Text(value.crcfinaliseddatalist![index].crnstatus.toString(), maxLines: 1, style: TextStyle(color: Colors.black, fontSize: 14))
+                                                child: Text(value.crcfinaliseddatalist[index].crnstatus.toString(), maxLines: 1, style: TextStyle(color: Colors.black, fontSize: 14))
                                             )
                                           ],
                                         ),
@@ -371,7 +371,7 @@ class _CrcFinalizedScreenState extends State<CrcFinalizedScreen> with SingleTick
                                 top: 1,
                                 left: 2,
                                 child: CircleAvatar(
-                                  backgroundColor: Colors.red[300],
+                                  backgroundColor: AapoortiConstants.primary,
                                   radius: 12,
                                   child: Text(
                                     '${index+1}',

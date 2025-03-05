@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/crc_digitally_signed/providers/crcscreen_update_changes.dart';
 import 'package:flutter_app/udm/crc_digitally_signed/tabs_views/crc_approval_screen.dart';
 import 'package:flutter_app/udm/crc_digitally_signed/tabs_views/crc_finalized_screen.dart';
@@ -59,7 +60,7 @@ class _CrcScreenState extends State<CrcScreen> with SingleTickerProviderStateMix
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           // leading: Consumer<CrcupdateChangesScreenProvider>(builder: (context, value, child) {
           //    if(value.getSearchValue){
@@ -86,12 +87,12 @@ class _CrcScreenState extends State<CrcScreen> with SingleTickerProviderStateMix
                     height: 40,
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                     child: Center(child: TextField(
-                      cursorColor: Colors.red[300],
+                      cursorColor: AapoortiConstants.primary,
                       controller: _textsearchController,
                       decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                          prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.clear, color: Colors.red[300]),
+                            icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                             onPressed: () {
                               if(_activeindex == 0 && gradecode == "N"){
                                 _textsearchController.text = "";
@@ -192,7 +193,7 @@ class _CrcScreenState extends State<CrcScreen> with SingleTickerProviderStateMix
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    color: Colors.red[300],
+                    color: AapoortiConstants.primary,
                     borderRadius: BorderRadius.circular(0),
                   ),
                   child: Column(

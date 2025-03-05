@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:flutter_app/udm/helpers/database_helper.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
@@ -750,7 +751,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     return Scaffold(
        key: _scaffoldKey,
        appBar: AppBar(
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         iconTheme: IconThemeData(color: Colors.white),
         leading: IconButton(
           splashRadius: 30,

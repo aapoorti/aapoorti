@@ -52,7 +52,7 @@ class _PaymentDtlsState extends State<PaymentDtls> {
     String inputParam1 = AapoortiUtilities.user!.C_TOKEN + "," +AapoortiUtilities.user!.S_TOKEN + ",Flutter,0,0";
     String inputParam2 = AapoortiUtilities.user!.MAP_ID + "," + AapoortiUtilities.user!.CUSTOM_WK_AREA+","+tenderoid!;
 
-    jsonResult = await AapoortiUtilities.fetchPostPostLogin('Log/PaymentDtls', 'PaymentDtls' ,inputParam1, inputParam2) ;
+    jsonResult = await AapoortiUtilities.fetchPostPostLogin('Log/PaymentDtls', 'PaymentDtls' ,inputParam1, inputParam2, context) ;
     print(jsonResult!.length);
     print(jsonResult!.toString());
     if(jsonResult!.length==0)
