@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
@@ -459,6 +460,7 @@ class _UserHomeState extends State<UserHome> {
                             MaterialButton(
                                 onPressed: () async {
                                   try {
+                                    log("jsut testing them...");
                                     var connectivityresult = await AapoortiUtilities.check();
                                     if (connectivityresult) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => PendingBill()));
