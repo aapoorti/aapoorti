@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -56,7 +57,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
         title: const Text("Privacy Policy", style: TextStyle(color: Colors.white)),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: Colors.cyan[400],
+        backgroundColor: AapoortiConstants.primary,
       ),
       body: WebViewWidget(controller: _controller),
     );

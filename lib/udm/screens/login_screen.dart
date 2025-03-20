@@ -1089,7 +1089,7 @@ class RadioOption extends StatelessWidget {
     return Row(
       children: [
         Radio<String>(
-          activeColor: label == 'IREPS' || label == 'आईआरईपीएस' ? Colors.cyan[400] : AapoortiConstants.primary,
+          activeColor: label == 'IREPS' || label == 'आईआरईपीएस' ? AapoortiConstants.primary : AapoortiConstants.primary,
           value: value,
           groupValue: groupValue,
           onChanged: onChanged,

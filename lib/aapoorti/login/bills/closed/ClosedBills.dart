@@ -488,11 +488,7 @@ class _ClosedBillState extends State<ClosedBill> {
                           padding: const EdgeInsets.only(top: 8.0, left: 120),
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.access_time,
-                                color: Colors.grey[600],
-                                size: 14,
-                              ),
+                              Icon(Icons.access_time, color: Colors.grey[600], size: 14),
                               SizedBox(width: 4),
                               Text(
                                 "Acknowledgement Pending",

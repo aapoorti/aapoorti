@@ -147,7 +147,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
     // return Scaffold(
     //   backgroundColor: Colors.white,
     //   appBar: AppBar(elevation: 0,
-    //       backgroundColor: Colors.cyan[400],
+    //       backgroundColor: AapoortiConstants.primary,
     //       iconTheme: IconThemeData(color: Colors.white), title : Text("Generate OTP", style: TextStyle(color: Colors.white))),
     //   body: Container(
     //     height : MediaQuery.of(context).size.height,
@@ -184,7 +184,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
     //                   });
     //                 },
     //                 style: ElevatedButton.styleFrom(
-    //                    backgroundColor: Colors.cyan[400],
+    //                    backgroundColor: AapoortiConstants.primary,
     //                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))
     //                  ), child: const Text("Generate OTP for today", style: TextStyle(color: Colors.white))
     //                 )
@@ -293,7 +293,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
               //       },
               //       child: Container(
               //         decoration: BoxDecoration(
-              //             color: Colors.cyan[400],
+              //             color: AapoortiConstants.primary,
               //             borderRadius: BorderRadius.circular(8.0)
               //         ),
               //         padding: const EdgeInsets.all(14),
@@ -348,7 +348,7 @@ class _GenerateOtpScreenState extends State<GenerateOtpScreen> {
                    //       },
                    //       child: Container(
                    //         decoration: BoxDecoration(
-                   //             color: Colors.cyan[400],
+                   //             color: AapoortiConstants.primary,
                    //             borderRadius: BorderRadius.circular(8.0)
                    //         ),
                    //         padding: const EdgeInsets.all(14),

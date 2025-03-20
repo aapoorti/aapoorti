@@ -235,7 +235,7 @@ class published_filters_state extends State<published_filters> {
                 )
               ],
             ),
-            backgroundColor: Colors.cyan[400],
+            backgroundColor: AapoortiConstants.primary,
           ),
           backgroundColor: Colors.black,
           body: Material(

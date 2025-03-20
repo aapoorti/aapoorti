@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 
 
@@ -76,7 +77,7 @@ class ReportaproblemOptState extends State<ReportaproblemOpt>{
       appBar: AppBar(
         iconTheme: new IconThemeData(color: Colors.white),
 
-        backgroundColor:  (ReportaproblemOpt.rec!="0") ? Colors.teal:Colors.cyan[400],
+        backgroundColor:  (ReportaproblemOpt.rec!="0") ? Colors.teal : AapoortiConstants.primary,
         title: Text('Report A Problem',style: TextStyle(color:Colors.white),),
 
       ),
@@ -120,7 +121,7 @@ class ReportaproblemOptState extends State<ReportaproblemOpt>{
                   child: Row(
                     children: <Widget>[
                       Padding(padding: EdgeInsets.only(left: 5.0)),
-                      Text("Yes.  ", style: TextStyle(color:_filter == 1 ?  (ReportaproblemOpt.rec!="0" ? Colors.teal:Colors.cyan[400]) : Colors.grey)),
+                      Text("Yes.  ", style: TextStyle(color:_filter == 1 ?  (ReportaproblemOpt.rec!="0" ? Colors.teal:AapoortiConstants.primary) : Colors.grey)),
                       Padding(padding: EdgeInsets.only(left: 5.0)),
                       Visibility(
                         child: Image.asset(
@@ -150,7 +151,7 @@ class ReportaproblemOptState extends State<ReportaproblemOpt>{
                   child: Row(
                     children: <Widget>[
                       Padding(padding: EdgeInsets.only(left: 5.0)),
-                      Text("No   ",style: new TextStyle(color:_filter != 1 ?  (ReportaproblemOpt.rec!="0" ? Colors.teal:Colors.cyan[400]) : Colors.grey)),
+                      Text("No   ",style: new TextStyle(color:_filter != 1 ?  (ReportaproblemOpt.rec!="0" ? Colors.teal:AapoortiConstants.primary) : Colors.grey)),
                       Padding(padding: EdgeInsets.only(left: 5.0)),
                       Visibility(
                         child: Image.asset(

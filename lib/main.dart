@@ -1,6 +1,7 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/CommonScreen.dart';
 import 'package:flutter_app/aapoorti/common/NoResponse.dart';
 import 'package:flutter_app/aapoorti/dashboard/dashboard.dart';
@@ -429,8 +430,8 @@ class MyApp extends StatelessWidget {
           child: GetMaterialApp(
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
-                primarySwatch: Colors.cyan,
-                primaryColor: Colors.cyan[400],
+                primarySwatch: Colors.lightBlue,
+                primaryColor: AapoortiConstants.primary,
                 fontFamily: 'Roboto',
                 useMaterial3: true,
                 textTheme: TextTheme(

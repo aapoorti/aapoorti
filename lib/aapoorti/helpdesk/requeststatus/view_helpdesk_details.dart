@@ -54,7 +54,7 @@ class DetailsState extends State<Details> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.cyan[400],
+        backgroundColor: AapoortiConstants.primary,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

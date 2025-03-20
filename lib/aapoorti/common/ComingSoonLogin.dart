@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 
 class ComingSoonLogin extends StatelessWidget{
@@ -12,14 +13,14 @@ class ComingSoonLogin extends StatelessWidget{
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-        primaryColor: Colors.cyan[400],
+        primaryColor: AapoortiConstants.primary,
         textTheme: TextTheme(
         /* headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold, color: Colors.green),
           title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic,color: Colors.red),
           body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind',color: Colors.orange),*/
         //caption:  TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold, color: Colors.blueGrey),
     ),
-    primarySwatch: Colors.cyan,
+    primarySwatch: Colors.lightBlue,
 
     ),
     home: Scaffold(
@@ -28,7 +29,7 @@ class ComingSoonLogin extends StatelessWidget{
       // //resizeToAvoidBottomPadding: true,
     appBar: AppBar(
     iconTheme: IconThemeData(color: Colors.white),
-    backgroundColor:Colors.cyan[400],
+    backgroundColor:AapoortiConstants.primary,
     title: Text('IREPS',style: TextStyle(color: Colors.white,
     fontWeight: FontWeight.bold,),),
 

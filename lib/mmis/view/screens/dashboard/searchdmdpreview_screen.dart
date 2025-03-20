@@ -711,10 +711,10 @@ class ItemsConsigneesPanel extends StatelessWidget {
         )),
         DataCell(
           Container(
-            constraints: const BoxConstraints(
-              minWidth: 100,
-              maxWidth: 250,
-            ),
+            // constraints: const BoxConstraints(
+            //   minWidth: 100,
+            //   maxWidth: 250,
+            // ),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
               child: Column(
@@ -726,7 +726,7 @@ class ItemsConsigneesPanel extends StatelessWidget {
                   const SizedBox(height: 8),
                   _buildDetailRow('Description:', item.key6!),
                   const SizedBox(height: 8),
-                  _buildDetailRow('Warranty:', '${item.key7!} month(s) from the date of Supply', valueColor: Colors.red.shade700),
+                  _buildDetailRow('Warranty:', item.key7 == "NULL" ? "N/A" : '${item.key7!} month(s) from the date of Supply', valueColor: Colors.red.shade700),
                 ],
               ),
             ),
@@ -900,9 +900,9 @@ class ItemsConsigneesPanel extends StatelessWidget {
             ),
           ),
         ),
-        Flexible(
+        Expanded(
           child: Text(
-            value,
+            value == "NULL" ? "N/A" : value,
             maxLines: 2,
             style: TextStyle(
               color: valueColor ?? Colors.black87,

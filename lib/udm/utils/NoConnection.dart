@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -78,7 +79,7 @@ class _LottieDemoState extends State<LottieDemo> with SingleTickerProviderStateM
                 height: 40,
                 width: 200,
                 decoration: BoxDecoration(
-                  color: Colors.cyan[400],
+                  color: AapoortiConstants.primary,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child:  MaterialButton(

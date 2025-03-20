@@ -136,7 +136,7 @@ class ReportaproblemOptYesState extends State<ReportaproblemOptYes> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor:
-            (ReportaproblemOpt.rec != "0") ? Colors.teal : Colors.cyan[400],
+            (ReportaproblemOpt.rec != "0") ? Colors.teal : AapoortiConstants.primary,
         title: Text(
           'Raise A Query',
           style: TextStyle(color: Colors.white),
@@ -163,7 +163,7 @@ class ReportaproblemOptYesState extends State<ReportaproblemOptYes> {
                       child: Row(
                         children: <Widget>[
                           Padding(padding: EdgeInsets.only(left: 5.0)),
-                          Text("Suggestions", style: TextStyle(color: _filter == 1 ? (ReportaproblemOpt.rec != "0" ? Colors.teal : Colors.cyan[400]) : Colors.grey)),
+                          Text("Suggestions", style: TextStyle(color: _filter == 1 ? (ReportaproblemOpt.rec != "0" ? Colors.teal : AapoortiConstants.primary) : Colors.grey)),
                           Padding(padding: EdgeInsets.only(left: 5.0)),
                           Visibility(
                             child: Image.asset(
@@ -197,7 +197,7 @@ class ReportaproblemOptYesState extends State<ReportaproblemOptYes> {
                                   color: _filter == 2
                                       ? (ReportaproblemOpt.rec != "0"
                                           ? Colors.teal
-                                          : Colors.cyan[400])
+                                          : AapoortiConstants.primary)
                                       : Colors.grey)),
                           Padding(padding: EdgeInsets.only(left: 5.0)),
                           Visibility(

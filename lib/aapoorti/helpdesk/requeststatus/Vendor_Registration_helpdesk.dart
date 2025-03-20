@@ -191,7 +191,7 @@ class Vendor_Registration_helpdeskState
           // //resizeToAvoidBottomPadding: true,
           appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
+            backgroundColor: AapoortiConstants.primary,
             title: Row(
               children: <Widget>[
                 Padding(padding: EdgeInsets.only(left: 1.0)),

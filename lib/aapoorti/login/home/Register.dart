@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/home/home_screen.dart';
 import 'package:flutter_app/main.dart';
 class Register extends StatelessWidget
@@ -10,8 +11,8 @@ class Register extends StatelessWidget
         resizeToAvoidBottomInset: false,
         //resizeToAvoidBottomPadding: true,
         appBar: AppBar(
-          iconTheme: new IconThemeData(color: Colors.white),
-          title:Text("Enable Login Access"),backgroundColor: Colors.cyan[400],
+          iconTheme: IconThemeData(color: Colors.white),
+          title:Text("Enable Login Access"),backgroundColor: AapoortiConstants.primary,
           actions: <Widget>[
             IconButton(icon: Icon(Icons.home), onPressed: () {
               //Navigator.pushNamed(context, "/home");
@@ -23,39 +24,39 @@ class Register extends StatelessWidget
         body: Material(
             color: Colors.cyan[50],
             child:
-            new ListView(
+            ListView(
               children: <Widget>[
-                new Padding(padding: new EdgeInsets.fromLTRB(35.0, 10.0, 30.0, 20.0)),
-                new Card(
+                Padding(padding: EdgeInsets.fromLTRB(35.0, 10.0, 30.0, 20.0)),
+                Card(
                   color: Colors.white,
-                  child: new Column(
+                  child: Column(
                     children: <Widget>[
-                      new Padding(padding: new EdgeInsets.all(5.0)),
-                      new  Row(
+                      Padding(padding: EdgeInsets.all(5.0)),
+                      Row(
                         children: <Widget>[
                           Text("   Note: ",style: TextStyle(fontSize:15.0,fontWeight: FontWeight.normal,color: Colors.red),)
                         ],
                       ),
-                      new Padding(padding: new EdgeInsets.fromLTRB(35.0, 0.0, 30.0, 10.0)),
+                      Padding(padding: EdgeInsets.fromLTRB(35.0, 0.0, 30.0, 10.0)),
                       //new Padding(padding: new EdgeInsets.fromLTRB(35.0, 0.0, 30.0, 20.0)),
-                      new Row(
+                      Row(
                         children: <Widget>[
-                          Padding(padding: new EdgeInsets.only(left:15.0)),
+                          Padding(padding: EdgeInsets.only(left:15.0)),
                           Text("1. Login feature is available to users already \n    registered in IREPS.",style: TextStyle(fontSize:15.0,color: Colors.black,)),
-                          Padding(padding: new EdgeInsets.only(left:20.0)),
+                          Padding(padding: EdgeInsets.only(left:20.0)),
                         ],
                       ),
-                      new Padding(padding: new EdgeInsets.fromLTRB(35.0, 0.0, 30.0, 10.0)),
-                      new Row(
+                      Padding(padding: EdgeInsets.fromLTRB(35.0, 0.0, 30.0, 10.0)),
+                      Row(
                         children: <Widget>[
-                          Padding(padding: new EdgeInsets.only(left:15.0)),
+                          Padding(padding: EdgeInsets.only(left:15.0)),
                           Text("2. Login feature is available on Mobile App for:\n",style: TextStyle(fontSize:15.0,color: Colors.black,)),
                           //Padding(padding: new EdgeInsets.only(bottom: 35.0)),
                         ],
                       ),
-                      new Row(
+                      Row(
                         children: <Widget>[
-                          Padding(padding: new EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 10.0)),
+                          Padding(padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 10.0)),
                           //Padding(padding: new EdgeInsets.only(top:1.0)),
                           RichText(
                             text: TextSpan(
@@ -71,9 +72,9 @@ class Register extends StatelessWidget
                           ),
                         ],
                       ),
-                      new Row(
+                      Row(
                         children: <Widget>[
-                          Padding(padding: new EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 10.0)),
+                          Padding(padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 10.0)),
                           RichText(
                             text: TextSpan(
                               text: 'Railway User(Tender)',
@@ -87,9 +88,9 @@ class Register extends StatelessWidget
                             ),
                           ),
                         ],
-                      ), new Row(
+                      ), Row(
                         children: <Widget>[
-                          Padding(padding: new EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 10.0)),
+                          Padding(padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 10.0)),
                           RichText(
                             text: TextSpan(
                               text: 'Bidder',

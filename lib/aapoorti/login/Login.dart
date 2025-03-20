@@ -1145,7 +1145,7 @@ class _LoginTypeButton extends StatelessWidget {
 //                                             width: 120,
 //                                             decoration: BoxDecoration(
 //                                                 borderRadius: BorderRadius.circular(8.0),
-//                                                 //border: Border.all(color: Colors.cyan[400]!, strokeAlign: 1.0)
+//                                                 //border: Border.all(color: AapoortiConstants.primary!, strokeAlign: 1.0)
 //                                             ),
 //                                             child: RadioOption(
 //                                               value: 'IREPS',
@@ -1168,7 +1168,7 @@ class _LoginTypeButton extends StatelessWidget {
 //                                             width: 120,
 //                                             decoration: BoxDecoration(
 //                                                 borderRadius: BorderRadius.circular(8.0),
-//                                                 //border: Border.all(color: Colors.cyan[400]!, strokeAlign: 1.0)
+//                                                 //border: Border.all(color: AapoortiConstants.primary!, strokeAlign: 1.0)
 //                                             ),
 //                                             child: RadioOption(
 //                                               value: 'UDM',

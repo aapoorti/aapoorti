@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/helpdesk/requeststatus/view_helpdesk_details.dart';
 import 'package:flutter_app/aapoorti/home/home_screen.dart';
 import 'package:http/http.dart' as http;
@@ -170,7 +171,7 @@ class View_Reply_helpdeskState extends State<View_Reply_helpdesk> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.cyan[400],
+        backgroundColor: AapoortiConstants.primary,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

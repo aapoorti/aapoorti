@@ -225,7 +225,7 @@
 //         key:_scaffoldkey,
 //         appBar: AppBar(
 //           iconTheme: new IconThemeData(color: Colors.white),
-//           backgroundColor: Colors.cyan[400],
+//           backgroundColor: AapoortiConstants.primary,
 //           title: Text('आपूर्ति (IREPS)',
 //             style: new TextStyle(color: Colors.white,
 //               fontWeight: FontWeight.bold,),),

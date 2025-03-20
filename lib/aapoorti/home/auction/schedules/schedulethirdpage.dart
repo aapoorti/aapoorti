@@ -69,7 +69,6 @@ class _schedule3State extends State<schedule3> {
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: 30,
                 color: Colors.blue.shade600,
                 alignment: Alignment.center,
                 child: Text(
@@ -82,12 +81,7 @@ class _schedule3State extends State<schedule3> {
                 ),
               ),
               Expanded(
-                  child: jsonResult == null
-                      ? SpinKitFadingCircle(
-                          color: Colors.cyan,
-                          size: 120.0,
-                        )
-                      : _myListView(context))
+                  child: jsonResult == null ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : _myListView(context))
             ],
           ),
         ),

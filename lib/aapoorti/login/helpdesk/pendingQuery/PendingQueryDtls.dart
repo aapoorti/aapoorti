@@ -614,9 +614,9 @@ class _PendingQueryDtlsState extends State<PendingQueryDtls> {
                                         0.8
                                       ],
                                       colors: [
-                                        Colors.cyan[400]!,
+                                        AapoortiConstants.primary!,
                                         Colors.cyan[600]!,
-                                        Colors.cyan[400]!,
+                                        AapoortiConstants.primary!,
                                       ])),
                               child: MaterialButton(
                                 onPressed: () {
@@ -662,9 +662,9 @@ class _PendingQueryDtlsState extends State<PendingQueryDtls> {
                                         0.8
                                       ],
                                       colors: [
-                                        Colors.cyan[400]!,
+                                        AapoortiConstants.primary!,
                                         Colors.cyan[600]!,
-                                        Colors.cyan[400]!,
+                                        AapoortiConstants.primary!,
                                       ])),
                               child: MaterialButton(
                                 onPressed: () {
@@ -789,9 +789,9 @@ class _PendingQueryDtlsState extends State<PendingQueryDtls> {
                                           0.8
                                         ],
                                         colors: [
-                                          Colors.cyan[400]!,
+                                          AapoortiConstants.primary!,
                                           Colors.cyan[600]!,
-                                          Colors.cyan[400]!,
+                                          AapoortiConstants.primary!,
                                         ])),
                                 child: MaterialButton(
                                   onPressed: () {
@@ -831,9 +831,9 @@ class _PendingQueryDtlsState extends State<PendingQueryDtls> {
                                           0.8
                                         ],
                                         colors: [
-                                          Colors.cyan[400]!,
+                                          AapoortiConstants.primary!,
                                           Colors.cyan[600]!,
-                                          Colors.cyan[400]!,
+                                          AapoortiConstants.primary!,
                                         ])),
                                 child: MaterialButton(
                                   onPressed: () {

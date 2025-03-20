@@ -368,7 +368,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
-              color: Colors.cyan[400],
+              color: AapoortiConstants.primary,
               minWidth: 150,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
@@ -382,7 +382,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
-              color: Colors.cyan[400],
+              color: AapoortiConstants.primary,
               minWidth: 150,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),

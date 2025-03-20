@@ -61,7 +61,7 @@ class SearchPoZonalDetailsState extends State<SearchPoZonalDetails> {
           //resizeToAvoidBottomPadding: true,
           appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
+            backgroundColor: AapoortiConstants.primary,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -367,7 +367,7 @@ class SearchPoZonalDetailsState extends State<SearchPoZonalDetails> {
         separatorBuilder: (context, index) {
           return Container(
             height: 2.0,
-            color: Colors.cyan[400],
+            color: AapoortiConstants.primary,
           );
         });
   }

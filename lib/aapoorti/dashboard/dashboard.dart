@@ -25,12 +25,12 @@ class DashboardState extends State<Dashboard> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Colors.cyan[400],
+          backgroundColor: AapoortiConstants.primary,
           //backgroundColor: Color(0xff308e1c),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(0),
             child: Container(
-              color: Colors.cyan[400],
+              color: AapoortiConstants.primary,
               child: TabBar(
                 indicatorColor: Colors.blue.shade900,
                 tabs: [
