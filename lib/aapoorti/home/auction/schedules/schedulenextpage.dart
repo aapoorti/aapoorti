@@ -48,17 +48,14 @@ class _schedule2State extends State<schedule2> {
 
   void initState() {
     super.initState();
-    var fetchPost = this.fetchPost();
+    fetchPost();
   }
 
   List data = [];
   void fetchPost() async {
-    var url = AapoortiConstants.webServiceUrl +
-        'Auction/CatalogueDesc?CID=${widget.value1!.sid}&CATEGORY=${widget.value1!.category}';
+    var url = AapoortiConstants.webServiceUrl + 'Auction/CatalogueDesc?CID=${widget.value1!.sid}&CATEGORY=${widget.value1!.category}';
     final response = await http.post(Uri.parse(url));
-    jsonResult = json.decode(response.body);
-
-    setState(() {});
+    setState(() {jsonResult = json.decode(response.body);});
   }
 
   @override
@@ -72,38 +69,22 @@ class _schedule2State extends State<schedule2> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                    child: Text('Auction Schedule',
-                        style: TextStyle(color: Colors.white))),
-                IconButton(
-                  icon: Icon(
-                    Icons.home,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, "/common_screen", (route) => false);
-                  },
-                ),
-              ],
-            )),
+            backgroundColor: AapoortiConstants.primary,
+            title: Text('Auction Schedule',
+                style: TextStyle(color: Colors.white))),
         body: Container(
           child: Column(
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 30,
-                color: Colors.cyan.shade600,
-                padding: const EdgeInsets.only(top: 10),
+                alignment: Alignment.center,
+                color: Colors.blue.shade600,
                 child: Text(
-                  '   Auction Catalogue',
+                  'Auction Catalogue',
                   style: TextStyle(
                       color: Colors.white,
-                      backgroundColor: Colors.cyan[600],
+                      backgroundColor: Colors.blue[600],
                       fontWeight: FontWeight.bold,
                       fontSize: 15),
                   textAlign: TextAlign.start,
@@ -112,7 +93,7 @@ class _schedule2State extends State<schedule2> {
               Expanded(
                   child: jsonResult == null
                       ? SpinKitFadingCircle(
-                          color: Colors.cyan,
+                          color: AapoortiConstants.primary,
                           size: 120.0,
                         )
                       : _myListView(context))
@@ -142,8 +123,7 @@ class _schedule2State extends State<schedule2> {
                     Widget>[
                   Row(
                     children: <Widget>[
-                      Padding(padding: EdgeInsets.only(top: 8)),
-                      Padding(padding: EdgeInsets.only(left: 8)),
+                      Padding(padding: EdgeInsets.only(top: 8,left: 8)),
                       Text(
                         (index + 1).toString() + ". ",
                         style: TextStyle(color: Colors.indigo, fontSize: 16),
@@ -320,15 +300,18 @@ class _schedule2State extends State<schedule2> {
                           Row(
                             children: <Widget>[
                               Expanded(
-                                  child: Text(
-                                jsonResult![index]['LOTMATDESC'] != null
-                                    ? jsonResult![index]['LOTMATDESC']
-                                    : "",
-                                textAlign: TextAlign.justify,
-                                maxLines: 3,
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 16),
-                              )),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right:10.0),
+                                    child: Text(
+                                                                    jsonResult![index]['LOTMATDESC'] != null
+                                      ? jsonResult![index]['LOTMATDESC']
+                                      : "",
+                                                                    textAlign: TextAlign.justify,
+                                                                    maxLines: 3,
+                                                                    style:
+                                      TextStyle(color: Colors.grey, fontSize: 16),
+                                                                  ),
+                                  )),
                             ],
                           ),
                         ]),

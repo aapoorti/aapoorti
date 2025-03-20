@@ -97,7 +97,7 @@ class EdocsWorksDATAState extends State<EdocsWorksDATA> {
                   style: TextStyle(fontSize: 15, color: Colors.white),
                   textAlign: TextAlign.start,
                 ),
-                color: Colors.cyan[700],
+                color: Colors.blueAccent,
               ),
               Expanded(
                 child: Row(

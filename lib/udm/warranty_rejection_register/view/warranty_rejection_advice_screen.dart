@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/utils/NoConnection.dart';
@@ -75,7 +76,7 @@ class _WarrantyRejectionAdviceScreenState
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.red[300],
+        backgroundColor: AapoortiConstants.primary,
         title: Text("${language.text('wrrtitle')}",
             style: TextStyle(color: Colors.white)),
         actions: [

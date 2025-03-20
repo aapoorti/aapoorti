@@ -1,6 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
@@ -76,7 +77,7 @@ class _StockingProposalSummaryScreenState extends State<StockingProposalSummaryS
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           title: Text(language.text('stkprptitle'),style: TextStyle(color: Colors.white)),
           iconTheme: IconThemeData(color: Colors.white)
       ),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -144,7 +145,7 @@ class _SearchdmdpreviewScreenState extends State<SearchdmdpreviewScreen> {
                           runSpacing: 16,
                           children: [
 
-                            //ExpandableCard(title: 'Items & Consignees', child: ItemsConsigneesPanel()),
+                            ExpandableCard(title: 'Items & Consignees', child: ItemsConsigneesPanel()),
                             ExpandableCard(title: 'LPR', child: LPRPanel()),
                             ExpandableCard(
                                 title: 'Likely Suppliers',
@@ -413,9 +414,7 @@ class _DemandHeaderState extends State<DemandHeader> {
                 Expanded(
                   child: _buildHeaderItem(
                       'Demand Value',
-                      searchdmdPreviewcontroller.headerData[0].key12 == "NULL"
-                          ? "NA"
-                          : "Rs. ${searchdmdPreviewcontroller.headerData[0].key12!}",
+                      searchdmdPreviewcontroller.headerData[0].key12 == "NULL" ? "NA" : "Rs. ${searchdmdPreviewcontroller.headerData[0].key12!}",
                       Icons.currency_rupee),
                 ),
                 const SizedBox(width: 18),
@@ -699,7 +698,87 @@ class _DemandHeaderState extends State<DemandHeader> {
 }
 
 class ItemsConsigneesPanel extends StatelessWidget {
-  const ItemsConsigneesPanel({Key? key}) : super(key: key);
+  final searchdmdPreviewcontroller = Get.put<SearchdmdPreviewController>(SearchdmdPreviewController());
+
+  List<DataRow> getItemDDataRows() {
+    return searchdmdPreviewcontroller.itemConData.asMap().entries.map((entry) {
+      int index = entry.key + 1; // Get index
+      var item = entry.value; // Get item
+      return DataRow(cells: [
+        DataCell(Padding(
+          padding: EdgeInsets.only(right: 4),
+          child: Text(index.toString(), style: TextStyle(fontSize: 13)),
+        )),
+        DataCell(
+          Container(
+            constraints: const BoxConstraints(
+              minWidth: 100,
+              maxWidth: 250,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDetailRow('Code:', item.key2!),
+                  const SizedBox(height: 8),
+                  _buildDetailRow('Type:', item.key9!),
+                  const SizedBox(height: 8),
+                  _buildDetailRow('Description:', item.key6!),
+                  const SizedBox(height: 8),
+                  _buildDetailRow('Warranty:', '${item.key7!} month(s) from the date of Supply', valueColor: Colors.red.shade700),
+                ],
+              ),
+            ),
+          ),
+        ),
+        DataCell(
+          Container(
+            constraints: const BoxConstraints(minWidth: 130),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12.0, left: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildQuantityRow('Total Qty:', '${item.key4!} ${item.key5!}'),
+                  // Padding(
+                  //   padding: EdgeInsets.only(left: 70),
+                  //   child: Text(
+                  //     '(Only ${item.key4!} Number)',
+                  //     style: TextStyle(
+                  //       fontSize: 12,
+                  //       color: Colors.grey,
+                  //       fontStyle: FontStyle.italic,
+                  //     ),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 8),
+                  _buildQuantityRow('Rate:', 'Rs. ${item.key3!}/-'),
+                  const SizedBox(height: 8),
+                  _buildQuantityRow('Value:', 'Rs. ${int.parse(item.key3.toString())*int.parse(item.key4.toString())}/-'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ]);
+    }).toList();
+  }
+
+  List<Map<String, dynamic>> getConsDDataRows() {
+    List<Map<String, dynamic>> allData = [];
+    searchdmdPreviewcontroller.itemConData.asMap().entries.forEach((entry) {
+      var item = entry.value; // Get item
+      try {
+        List<Map<String, dynamic>> dataList = List<Map<String, dynamic>>.from(json.decode(item.key13!));
+        allData.addAll(dataList); // Add decoded list to allData
+      } catch (e) {
+        debugPrint("Error decoding JSON: $e");
+      }
+    });
+
+    return allData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -709,20 +788,20 @@ class ItemsConsigneesPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(12.0),
-              decoration: BoxDecoration(
-                color: Colors.orange.shade50,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: const Text(
-                'Group A50001-Software, Hardware and Furniture',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
+            // Container(
+            //   padding: const EdgeInsets.all(12.0),
+            //   decoration: BoxDecoration(
+            //     color: Colors.orange.shade50,
+            //     borderRadius: BorderRadius.circular(4),
+            //   ),
+            //   child: const Text(
+            //     'Group A50001-Software, Hardware and Furniture',
+            //     style: TextStyle(
+            //       fontWeight: FontWeight.bold,
+            //       color: Colors.blue,
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 24),
             _buildSectionHeader('Item Details'),
             Card(
@@ -731,7 +810,7 @@ class ItemsConsigneesPanel extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(minWidth: 800),
-                  child: _buildItemDetailsTable(),
+                  child: _buildItemDetailsTable(getItemDDataRows()),
                 ),
               ),
             ),
@@ -743,7 +822,7 @@ class ItemsConsigneesPanel extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(minWidth: 800),
-                  child: _buildConsigneeTable(),
+                  child: _buildConsigneeTable(getConsDDataRows()),
                 ),
               ),
             ),
@@ -766,7 +845,7 @@ class ItemsConsigneesPanel extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Rs. 90,000/-',
+                        searchdmdPreviewcontroller.headerData[0].key12 == "NULL" ? "NA" : "Rs. ${searchdmdPreviewcontroller.headerData[0].key12!}/-",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -824,6 +903,7 @@ class ItemsConsigneesPanel extends StatelessWidget {
         Flexible(
           child: Text(
             value,
+            maxLines: 2,
             style: TextStyle(
               color: valueColor ?? Colors.black87,
               fontSize: 13,
@@ -835,7 +915,7 @@ class ItemsConsigneesPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildItemDetailsTable() {
+  Widget _buildItemDetailsTable(List<DataRow> data) {
     return DataTable(
       headingRowColor: MaterialStateProperty.all(Colors.grey.shade100),
       columnSpacing: 4,
@@ -856,66 +936,7 @@ class ItemsConsigneesPanel extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
       ],
-      rows: [
-        DataRow(cells: [
-          const DataCell(Padding(
-            padding: EdgeInsets.only(right: 4),
-            child: Text('1.', style: TextStyle(fontSize: 13)),
-          )),
-          DataCell(
-            Container(
-              constraints: const BoxConstraints(
-                minWidth: 100,
-                maxWidth: 250,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDetailRow('Code:', '57010012010'),
-                    const SizedBox(height: 8),
-                    _buildDetailRow('Type:', 'Supply'),
-                    const SizedBox(height: 8),
-                    _buildDetailRow('Description:', 'Computer Hardware'),
-                    const SizedBox(height: 8),
-                    _buildDetailRow('Warranty:', '30 month(s) from the date of Supply', valueColor: Colors.red.shade700),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          DataCell(
-            Container(
-              constraints: const BoxConstraints(minWidth: 130),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 12.0, left: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildQuantityRow('Total Qty:', '2 Number'),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 70),
-                      child: Text(
-                        '(Only Two Number)',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildQuantityRow('Rate:', 'Rs. 45,000/-'),
-                    const SizedBox(height: 8),
-                    _buildQuantityRow('Value:', 'Rs. 90,000/-'),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ]),
-      ],
+      rows: data,
     );
   }
 
@@ -942,7 +963,7 @@ class ItemsConsigneesPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildConsigneeTable() {
+  Widget _buildConsigneeTable(List<Map<String, dynamic>> dataList) {
     return DataTable(
       headingRowColor: MaterialStateProperty.all(Colors.grey.shade100),
       columnSpacing: 24,
@@ -973,23 +994,16 @@ class ItemsConsigneesPanel extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         ),
       ],
-      rows: [
-        DataRow(cells: [
-          const DataCell(Text(
-            'ACCTS-ACCTS-IMMSTEST',
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-          )),
-          const DataCell(Text('12/11/2024', style: TextStyle(fontSize: 13))),
-          const DataCell(Text(
-            '2 Number',
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-          )),
-          const DataCell(
-              Text('Andhra Pradesh', style: TextStyle(fontSize: 13))),
-          const DataCell(Text('NDLS', style: TextStyle(fontSize: 13))),
-          const DataCell(Text('NEW DELHI', style: TextStyle(fontSize: 13))),
-        ]),
-      ],
+      rows: dataList.map((item) {
+        return DataRow(cells: [
+          DataCell(Text("${item['consignee_code'].toString()}-${item['consignee_name'].toString()}-${item['consignee_zone'].toString()}")),
+          DataCell(Text(item['deliv_reqd_by'].toString())),
+          DataCell(Text('${item['cons_qty']} Number')),
+          DataCell(Text(item['reqd_at_state'].toString())),
+          DataCell(Text(item['reqd_at_stn'].toString())),
+          DataCell(Text(item['reqd_at_address'].toString())),
+        ]);
+      }).toList(),
     );
   }
 }

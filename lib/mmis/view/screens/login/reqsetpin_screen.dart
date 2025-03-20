@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/mmis/controllers/login_controller.dart';
 import 'package:flutter_app/mmis/controllers/network_controller.dart';
 import 'package:flutter_app/mmis/utils/toast_message.dart';
@@ -227,7 +228,7 @@ class _ReqSetPinScreen extends State<ReqSetPinScreen> {
                                               borderRadius:
                                               BorderRadius.circular(10.0),
                                             ),
-                                            focusColor: Colors.red[300],
+                                            focusColor: AapoortiConstants.primary,
                                           ),
                                           validator: ValidationBuilder().email().maxLength(60).build(),
                                         ),
@@ -272,7 +273,7 @@ class _ReqSetPinScreen extends State<ReqSetPinScreen> {
                                               borderRadius:
                                               BorderRadius.circular(10.0),
                                             ),
-                                            focusColor: Colors.red[300],
+                                            focusColor: AapoortiConstants.primary,
                                           ),
                                           validator: ValidationBuilder()
                                               .maxLength(10)

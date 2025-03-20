@@ -296,7 +296,7 @@ import 'CustomRadioController.dart';
 //   Widget buildDropdown() {
 //     // Define options based on selected type
 //     List<String> options = _selectedType == 'SLR'
-//         ? ['F1', 'F2', 'F3']
+//         ? ['F1', 'F2', 'R1']
 //         : ['1', '2', '3', '4', '5'];
 //
 //     return DropdownButtonFormField<String>(
@@ -1832,7 +1832,7 @@ import 'CustomRadioController.dart';
 //    Widget buildDropdown() {
 //      // Define options based on selected type
 //      List<String> options = _selectedType == 'SLR'
-//          ? ['F1', 'F2', 'F3']
+//          ? ['F1', 'F2', 'R1']
 //          : ['1', '2', '3', '4', '5'];
 //
 //      return DropdownButtonFormField<String>(
@@ -1986,7 +1986,7 @@ class _LeasePaymentStatusState extends State<LeasePaymentStatus> {
 
   List<String> options = [];
 
-  List<String> slroptions = ['F1', 'F2', 'F3'];
+  List<String> slroptions = ["F1", "F2", "R1"];
   List<String> vpoptions = ['1', '2', '3', '4', '5'];
 
   @override
@@ -2294,7 +2294,7 @@ class _LeasePaymentStatusState extends State<LeasePaymentStatus> {
    Widget buildDropdown() {
      // Define options based on selected type
      List<String> options = _selectedType == 'SLR'
-         ? ['F1', 'F2', 'F3']
+         ? ['F1', 'F2', 'R1']
          : ['1', '2', '3', '4', '5'];
 
      return Container(

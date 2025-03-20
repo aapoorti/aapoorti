@@ -442,7 +442,7 @@ class _StockHistorySelectlistScreenState extends State<StockHistorySelectlistScr
                                                   SizedBox(height: 4.0),
                                                   value.itemdetailData[0].des == null ? Text("NA", style: TextStyle(color: Colors.black, fontSize: 14)) : ReadMoreText(value.itemdetailData[0].des.toString().trim(),
                                                       trimLines: 4,
-                                                      colorClickableText: Colors.red[300],
+                                                      colorClickableText: AapoortiConstants.primary,
                                                       trimMode: TrimMode.Line,
                                                       trimCollapsedText: '... More',
                                                       trimExpandedText: '...less',  style: TextStyle(color: Colors.black, fontSize: 14))

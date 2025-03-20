@@ -57,7 +57,7 @@ class _UserHomeState extends State<UserHome> {
       this.username = AapoortiUtilities.user!.USER_NAME;
       if (usertype == "0")
         workarea = "HelpDesk";
-      else if (usertype == "8" || usertype == "9")
+      else if(usertype == "8" || usertype == "9")
         workarea = "Auction User";
       else if (AapoortiUtilities.user!.CUSTOM_WK_AREA == "PT") {
         workarea = "Goods and Services";
@@ -76,6 +76,7 @@ class _UserHomeState extends State<UserHome> {
     var s = DateTime.now().toString();
     _dropDownFocus = FocusNode();
 
+    debugPrint("hdhebbehebbeh ${widget.userType} ${widget.email}");
 
     if(AapoortiUtilities.user != null) {
       this.usertype = AapoortiUtilities.user!.USER_TYPE.toString();

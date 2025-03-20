@@ -69,7 +69,7 @@ class _Warranty_Details_linkScreenState extends State<Warranty_Details_linkScree
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           title: Consumer<SearchWarrantyComplaint>(
               builder: (context, value, child) {
@@ -82,12 +82,12 @@ class _Warranty_Details_linkScreenState extends State<Warranty_Details_linkScree
                         borderRadius: BorderRadius.circular(5)),
                     child: Center(
                       child: TextField(
-                        cursorColor: Colors.red[300],
+                        cursorColor: AapoortiConstants.primary,
                         controller: _textsearchController,
                         decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.search, color: Colors.red[300]),
+                            prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                             suffixIcon: IconButton(
-                              icon: Icon(Icons.clear, color: Colors.red[300]),
+                              icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                               onPressed: () {
                                 Provider.of<SearchWarrantyComplaint>(context, listen: false).updateScreen(false);
                                 _textsearchController.text = "";
@@ -580,7 +580,7 @@ class _Warranty_Details_linkScreenState extends State<Warranty_Details_linkScree
                             top: 1,
                             left: 2,
                             child: CircleAvatar(
-                              backgroundColor: Colors.red[300],
+                              backgroundColor: AapoortiConstants.primary,
                               radius: 12,
                               child: Text(
                                 '${index+1}',

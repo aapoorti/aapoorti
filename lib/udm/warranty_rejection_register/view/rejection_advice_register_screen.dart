@@ -219,7 +219,7 @@ class _RejectionAdviceRegisterScreenState extends State<RejectionAdviceRegisterS
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.red[300],
+            backgroundColor: AapoortiConstants.primary,
             automaticallyImplyLeading: false,
             title: Consumer<WarrantyRejectionRegisterViewModel>(
                 builder: (context, value, child) {
@@ -232,14 +232,14 @@ class _RejectionAdviceRegisterScreenState extends State<RejectionAdviceRegisterS
                           borderRadius: BorderRadius.circular(5)),
                       child: Center(
                         child: TextField(
-                          cursorColor: Colors.red[300],
+                          cursorColor: AapoortiConstants.primary,
                           controller: _textsearchController,
                           decoration: InputDecoration(
                               prefixIcon:
-                              Icon(Icons.search, color: Colors.red[300]),
+                              Icon(Icons.search, color: AapoortiConstants.primary),
                               suffixIcon: value.getchangetextlistener == false
                                   ? IconButton(
-                                icon: Icon(Icons.mic, color: Colors.red[300]),
+                                icon: Icon(Icons.mic, color: AapoortiConstants.primary),
                                 onPressed: () async {
                                   hideSoftKeyBoard(KeyboardVisibilityProvider
                                       .isKeyboardVisible(context));

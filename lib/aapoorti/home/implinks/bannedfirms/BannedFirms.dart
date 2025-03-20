@@ -873,184 +873,339 @@ class _BannedFirmsState extends State<BannedFirms> {
                                 ),
                               ],
                             ),
-                            Row(children: <Widget>[
-                              Container(
-                                height: 30,
-                                width: 100,
-                                child: Text(
-                                  "Banned Upto",
-                                  style: TextStyle(
-                                    color: Colors.lightBlue[800],
-                                    fontSize: 15,
+                            Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 30,
+                                    width: 100,
+                                    child: Text(
+                                      "Banned Upto",
+                                      style: TextStyle(
+                                        color: Colors.lightBlue[800],
+                                        fontSize: 15,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  Container(
+                                    height: 30,
+                                    child: Text(
+                                      jsonResult![index]['BAN_UPTO'] != null
+                                          ? jsonResult![index]['BAN_UPTO']
+                                          : "---",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 15),
+                                    ),
+                                  )
+                                ],
                               ),
-                              Container(
-                                height: 30,
-                                child: Text(
-                                  jsonResult![index]['BAN_UPTO'] != null
-                                      ? jsonResult![index]['BAN_UPTO']
-                                      : "---",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 15),
-                                ),
-                              )
-                            ]),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: <Widget>[
-                                      if (jsonResult![index]['DOC_PATH'].toString() != 'NA')
-                                        SizedBox.shrink()
-                                      else
-                                        Container(
-                                          height: 15,
-                                        ),
-                                      SizedBox(
-                                          height:
-                                              3), // Space between the URL and the text
-                                      GestureDetector(
-                                        onTap: () {
-                                          if(jsonResult![index]['DOC_PATH'].toString() != 'NA') {
-                                            var fileUrl = AapoortiConstants.contextPath + jsonResult![index]['DOC_PATH'].toString();
-                                            var fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-                                            if(Platform.isIOS){
-                                                AapoortiUtilities.openPdf(context, fileUrl, fileName);
-                                            }
-                                            else{
-                                              showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return AlertDialog(
-                                                    backgroundColor: Colors.white,
-                                                    contentPadding: EdgeInsets.all(20),
-                                                    content: Stack(
-                                                      clipBehavior: Clip.none,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  if (jsonResult![index]['DOC_PATH'].toString() != 'NA')
+                                    SizedBox.shrink()
+                                  else
+                                    Container(
+                                      height: 15,
+                                    ),
+                                  SizedBox(
+                                      height:
+                                      3), // Space between the URL and the text
+                                  GestureDetector(
+                                    onTap: () {
+                                      if(jsonResult![index]['DOC_PATH'].toString() != 'NA') {
+                                        var fileUrl = AapoortiConstants.contextPath + jsonResult![index]['DOC_PATH'].toString();
+                                        var fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+                                        if(Platform.isIOS){
+                                          AapoortiUtilities.openPdf(context, fileUrl, fileName);
+                                        }
+                                        else{
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                backgroundColor: Colors.white,
+                                                contentPadding: EdgeInsets.all(20),
+                                                content: Stack(
+                                                  clipBehavior: Clip.none,
+                                                  children: [
+                                                    Column(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        Column(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
                                                           children: [
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                Text(
-                                                                  'Choose an option for file  ',
-                                                                  style: TextStyle(
-                                                                    fontSize: 18,
-                                                                    fontWeight: FontWeight.bold,
-                                                                    fontFamily: 'Roboto',
-                                                                    color: Colors.black,
-                                                                  ),
-                                                                ),
-                                                                GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.of(context).pop();
-                                                                  },
-                                                                  child: Container(
-                                                                    decoration: BoxDecoration(
-                                                                      color: Colors.red,
-                                                                      shape: BoxShape.circle,
-                                                                    ),
-                                                                    padding: EdgeInsets.all(4),
-                                                                    child: Icon(
-                                                                      Icons.close,
-                                                                      color: Colors.white,
-                                                                      size: 16,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(height: 8),
                                                             Text(
-                                                              "$fileName",
+                                                              'Choose an option for file  ',
                                                               style: TextStyle(
                                                                 fontSize: 18,
                                                                 fontWeight: FontWeight.bold,
                                                                 fontFamily: 'Roboto',
-                                                                color: Colors.lightBlue[700],
+                                                                color: Colors.black,
                                                               ),
                                                             ),
-                                                            SizedBox(height: 20),
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                              children: [
-                                                                ElevatedButton(
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: Colors.lightBlue[700],
-                                                                    foregroundColor: Colors.white,
-                                                                  ),
-                                                                  onPressed: () {
-                                                                    Navigator.of(context).pop();
-                                                                      AapoortiUtilities.downloadpdf(fileUrl, fileName, context);
-
-
-
-
-
-
-
-                                                                  },
-                                                                  child: Text('Download'),
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.of(context).pop();
+                                                              },
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                  color: Colors.red,
+                                                                  shape: BoxShape.circle,
                                                                 ),
-                                                                ElevatedButton(
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: Colors.lightBlue[700],
-                                                                    foregroundColor: Colors.white,
-                                                                  ),
-                                                                  onPressed: () {
-                                                                    Navigator.of(context).pop();
-                                                                    AapoortiUtilities.openPdf(context, fileUrl, fileName);
-                                                                  },
-                                                                  child: Text('Open'),
+                                                                padding: EdgeInsets.all(4),
+                                                                child: Icon(
+                                                                  Icons.close,
+                                                                  color: Colors.white,
+                                                                  size: 16,
                                                                 ),
-                                                              ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 8),
+                                                        Text(
+                                                          "$fileName",
+                                                          style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight: FontWeight.bold,
+                                                            fontFamily: 'Roboto',
+                                                            color: Colors.lightBlue[700],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 20),
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                          children: [
+                                                            ElevatedButton(
+                                                              style: ElevatedButton.styleFrom(
+                                                                backgroundColor: Colors.lightBlue[700],
+                                                                foregroundColor: Colors.white,
+                                                              ),
+                                                              onPressed: () {
+                                                                Navigator.of(context).pop();
+                                                                AapoortiUtilities.downloadpdf(fileUrl, fileName, context);
+
+
+
+
+
+
+
+                                                              },
+                                                              child: Text('Download'),
+                                                            ),
+                                                            ElevatedButton(
+                                                              style: ElevatedButton.styleFrom(
+                                                                backgroundColor: Colors.lightBlue[700],
+                                                                foregroundColor: Colors.white,
+                                                              ),
+                                                              onPressed: () {
+                                                                Navigator.of(context).pop();
+                                                                AapoortiUtilities.openPdf(context, fileUrl, fileName);
+                                                              },
+                                                              child: Text('Open'),
                                                             ),
                                                           ],
                                                         ),
                                                       ],
                                                     ),
-                                                  );
-                                                },
-                                              );
-                                            }
-                                          }
-                                          else {
-                                            AapoortiUtilities.showInSnackBar(context, "File not available as it was not uploaded by the Railway Department.");
-                                          }
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              right: 10,
-                                              bottom:
-                                                  10), // Space between text and card boundary
-                                          child: Column(
-                                            children: [
-                                              Image(
-                                                  image: AssetImage(
-                                                      'images/pdf_home.png'),
-                                                  height: 30,
-                                                  width: 20),
-                                              Text(
-                                                "View Letter",
-                                                style: TextStyle(
-                                                  color: jsonResult![index]['DOC_PATH'].toString() != 'NA' ? Colors.green : Colors.red,
-                                                  fontSize: 13,
+                                                  ],
                                                 ),
-                                              ),
-                                            ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                      else {
+                                        AapoortiUtilities.showInSnackBar(context, "File not available as it was not uploaded by the Railway Department.");
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          right: 10,
+                                          bottom:
+                                          10), // Space between text and card boundary
+                                      child: Column(
+                                        children: [
+                                          Image(
+                                              image: AssetImage(
+                                                  'images/pdf_home.png'),
+                                              height: 30,
+                                              width: 20),
+                                          Text(
+                                            "View Letter",
+                                            style: TextStyle(
+                                              color: jsonResult![index]['DOC_PATH'].toString() != 'NA' ? Colors.green : Colors.red,
+                                              fontSize: 13,
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
+                                ],
+                              )
+                            ]),
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //       child: Column(
+                            //         crossAxisAlignment: CrossAxisAlignment.end,
+                            //         children: <Widget>[
+                            //           if (jsonResult![index]['DOC_PATH'].toString() != 'NA')
+                            //             SizedBox.shrink()
+                            //           else
+                            //             Container(
+                            //               height: 15,
+                            //             ),
+                            //           SizedBox(
+                            //               height:
+                            //                   3), // Space between the URL and the text
+                            //           GestureDetector(
+                            //             onTap: () {
+                            //               if(jsonResult![index]['DOC_PATH'].toString() != 'NA') {
+                            //                 var fileUrl = AapoortiConstants.contextPath + jsonResult![index]['DOC_PATH'].toString();
+                            //                 var fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+                            //                 if(Platform.isIOS){
+                            //                     AapoortiUtilities.openPdf(context, fileUrl, fileName);
+                            //                 }
+                            //                 else{
+                            //                   showDialog(
+                            //                     context: context,
+                            //                     builder: (BuildContext context) {
+                            //                       return AlertDialog(
+                            //                         backgroundColor: Colors.white,
+                            //                         contentPadding: EdgeInsets.all(20),
+                            //                         content: Stack(
+                            //                           clipBehavior: Clip.none,
+                            //                           children: [
+                            //                             Column(
+                            //                               mainAxisSize: MainAxisSize.min,
+                            //                               crossAxisAlignment: CrossAxisAlignment.start,
+                            //                               children: [
+                            //                                 Row(
+                            //                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //                                   crossAxisAlignment: CrossAxisAlignment.center,
+                            //                                   children: [
+                            //                                     Text(
+                            //                                       'Choose an option for file  ',
+                            //                                       style: TextStyle(
+                            //                                         fontSize: 18,
+                            //                                         fontWeight: FontWeight.bold,
+                            //                                         fontFamily: 'Roboto',
+                            //                                         color: Colors.black,
+                            //                                       ),
+                            //                                     ),
+                            //                                     GestureDetector(
+                            //                                       onTap: () {
+                            //                                         Navigator.of(context).pop();
+                            //                                       },
+                            //                                       child: Container(
+                            //                                         decoration: BoxDecoration(
+                            //                                           color: Colors.red,
+                            //                                           shape: BoxShape.circle,
+                            //                                         ),
+                            //                                         padding: EdgeInsets.all(4),
+                            //                                         child: Icon(
+                            //                                           Icons.close,
+                            //                                           color: Colors.white,
+                            //                                           size: 16,
+                            //                                         ),
+                            //                                       ),
+                            //                                     ),
+                            //                                   ],
+                            //                                 ),
+                            //                                 SizedBox(height: 8),
+                            //                                 Text(
+                            //                                   "$fileName",
+                            //                                   style: TextStyle(
+                            //                                     fontSize: 18,
+                            //                                     fontWeight: FontWeight.bold,
+                            //                                     fontFamily: 'Roboto',
+                            //                                     color: Colors.lightBlue[700],
+                            //                                   ),
+                            //                                 ),
+                            //                                 SizedBox(height: 20),
+                            //                                 Row(
+                            //                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            //                                   children: [
+                            //                                     ElevatedButton(
+                            //                                       style: ElevatedButton.styleFrom(
+                            //                                         backgroundColor: Colors.lightBlue[700],
+                            //                                         foregroundColor: Colors.white,
+                            //                                       ),
+                            //                                       onPressed: () {
+                            //                                         Navigator.of(context).pop();
+                            //                                           AapoortiUtilities.downloadpdf(fileUrl, fileName, context);
+                            //
+                            //
+                            //
+                            //
+                            //
+                            //
+                            //
+                            //                                       },
+                            //                                       child: Text('Download'),
+                            //                                     ),
+                            //                                     ElevatedButton(
+                            //                                       style: ElevatedButton.styleFrom(
+                            //                                         backgroundColor: Colors.lightBlue[700],
+                            //                                         foregroundColor: Colors.white,
+                            //                                       ),
+                            //                                       onPressed: () {
+                            //                                         Navigator.of(context).pop();
+                            //                                         AapoortiUtilities.openPdf(context, fileUrl, fileName);
+                            //                                       },
+                            //                                       child: Text('Open'),
+                            //                                     ),
+                            //                                   ],
+                            //                                 ),
+                            //                               ],
+                            //                             ),
+                            //                           ],
+                            //                         ),
+                            //                       );
+                            //                     },
+                            //                   );
+                            //                 }
+                            //               }
+                            //               else {
+                            //                 AapoortiUtilities.showInSnackBar(context, "File not available as it was not uploaded by the Railway Department.");
+                            //               }
+                            //             },
+                            //             child: Padding(
+                            //               padding: EdgeInsets.only(
+                            //                   right: 10,
+                            //                   bottom:
+                            //                       10), // Space between text and card boundary
+                            //               child: Column(
+                            //                 children: [
+                            //                   Image(
+                            //                       image: AssetImage(
+                            //                           'images/pdf_home.png'),
+                            //                       height: 30,
+                            //                       width: 20),
+                            //                   Text(
+                            //                     "View Letter",
+                            //                     style: TextStyle(
+                            //                       color: jsonResult![index]['DOC_PATH'].toString() != 'NA' ? Colors.green : Colors.red,
+                            //                       fontSize: 13,
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     ),
+                            //   ],
+                            // )
                           ]))
                     ])));
       },

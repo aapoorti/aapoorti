@@ -78,7 +78,7 @@ class _live2State extends State<live2> {
                   'Auction Catalogue',
                   style: TextStyle(
                       color: Colors.white,
-                      backgroundColor: Colors.cyan.shade600,
+                      backgroundColor: Colors.blue.shade600,
                       fontWeight: FontWeight.bold,
                       fontSize: 15),
                   textAlign: TextAlign.start,
@@ -87,7 +87,7 @@ class _live2State extends State<live2> {
               Expanded(
                   child: jsonResult == null
                       ? SpinKitFadingCircle(
-                          color: Colors.cyan,
+                          color: AapoortiConstants.primary,
                           size: 120.0,
                         )
                       : _myListView(context))

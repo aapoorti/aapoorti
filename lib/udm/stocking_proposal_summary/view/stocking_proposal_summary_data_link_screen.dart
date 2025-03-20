@@ -86,7 +86,7 @@ class _StockingProposalSummaryDatalinkScreenState extends State<StockingProposal
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           title: Consumer<StockingProposalSummaryProvider>(
               builder: (context, value, child) {
@@ -504,7 +504,7 @@ class _StockingProposalSummaryDatalinkScreenState extends State<StockingProposal
                                                       style: TextStyle(color: Colors.black, fontSize: 16),
                                                       trimLines: 3,
                                                       colorClickableText:
-                                                      Colors.red[300],
+                                                      AapoortiConstants.primary,
                                                       trimMode: TrimMode.Line,
                                                       trimCollapsedText:
                                                       ' ...${language.text('more')}',

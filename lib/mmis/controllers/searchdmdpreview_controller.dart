@@ -90,6 +90,7 @@ class SearchdmdPreviewController extends GetxController{
   }
 
   Future<void> getSearchdmdPreviewLPR(String? dmdKey) async{
+    debugPrint("hdhhdhdhhd $dmdKey");
     searchdmdPreviewLPRState.value = SearchdmdPreviewLPRState.loading;
     try{
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -292,7 +293,7 @@ class SearchdmdPreviewController extends GetxController{
         'Authorization': '${prefs.getString('token')}',
       };
       final body = json.encode({
-        "input_type":"CrisMMisDemandViewItemandConsignee",
+        "input_type":"CrisMMisItemAndConsignee",
         "input": dmdKey,
         "key_ver":"V2"
       });

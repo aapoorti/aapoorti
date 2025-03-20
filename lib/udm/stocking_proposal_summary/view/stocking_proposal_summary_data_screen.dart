@@ -147,7 +147,7 @@ class _StockingProposalSummaryDataScreenState extends State<StockingProposalSumm
                           decoration: InputDecoration(
                               prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                               suffixIcon: value.getchangetextlistener == false ? IconButton(
-                                icon: Icon(Icons.mic, color: Colors.red[300]),
+                                icon: Icon(Icons.mic, color: AapoortiConstants.primary),
                                 onPressed: () async {
                                   hideSoftKeyBoard(KeyboardVisibilityProvider.isKeyboardVisible(context));
                                   bool isAvailable = await _isAvailable();

@@ -42,19 +42,17 @@ class _schedule3State extends State<schedule3> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        // //resizeToAvoidBottomPadding: true,
         appBar: AppBar(
-            iconTheme: new IconThemeData(color: Colors.white),
-            backgroundColor: Colors.cyan[400],
-            title: new Row(
+            iconTheme: IconThemeData(color: Colors.white),
+            backgroundColor: AapoortiConstants.primary,
+            title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                     child: Text('Auction Schedule',
                         style: TextStyle(color: Colors.white))),
-                // new Padding(padding: new EdgeInsets.only(right: 35.0)),
-                new IconButton(
-                  icon: new Icon(
+                IconButton(
+                  icon: Icon(
                     Icons.home,
                     color: Colors.white,
                   ),
@@ -72,13 +70,12 @@ class _schedule3State extends State<schedule3> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 30,
-                color: Colors.cyan.shade600,
-                padding: const EdgeInsets.only(top: 10),
+                color: Colors.blue.shade600,
+                alignment: Alignment.center,
                 child: Text(
-                  '   Auction Catalogue>> Lot Details',
-                  style: new TextStyle(
+                  'Auction Catalogue>> Lot Details',
+                  style: TextStyle(
                       color: Colors.white,
-                      backgroundColor: Colors.cyan.shade600,
                       fontWeight: FontWeight.bold,
                       fontSize: 15),
                   textAlign: TextAlign.start,

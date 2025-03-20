@@ -55,6 +55,9 @@ class _SearchDemandsScreenState extends State<SearchDemandsScreen>
     {"value": "6", "label": "Approved & Forwarded to Purchase"},
     {"value": "13", "label": "Returned by Purchase Unit"},
     {"value": "12", "label": "Dropped"},
+    {"value": "16", "label": "Under Consolidation"},
+    {"value": "17", "label": "Demand Consolidated"},
+
   ];
 
   final List<Map<String, dynamic>> oldstatusOptions = [

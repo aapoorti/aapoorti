@@ -150,247 +150,231 @@ class _scheduleState extends State<schedule> {
   Widget _myListView(BuildContext context) {
     SpinKitWave(color: Colors.red, type: SpinKitWaveType.end);
 
-    if (jsonResult!.isEmpty) {
-      AapoortiUtilities.showInSnackBar(context, "No Schedule  Tender");
-    } else {
-      return ListView.separated(
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              child: Card(
-                  elevation: 4,
-                  color: Colors.white,
-                  surfaceTintColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    side: BorderSide(width: 1, color: Colors.grey[300]!),
-                  ),
+    if(jsonResult!.isEmpty) {
+      AapoortiUtilities.showInSnackBar(context, "No Schedule Tender");
+    }
+    else {
+      return ListView.builder(
+        itemCount: jsonResult!.length,
+        itemBuilder: (context, index) {
+          final item = jsonResult![index];
+          return Card(
+            margin: const EdgeInsets.only(bottom: 16),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
                   child: Column(
-                    children: <Widget>[
-                      Padding(padding: EdgeInsets.only(top: 6)),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Padding(padding: EdgeInsets.only(top: 8)),
-                              Padding(padding: EdgeInsets.only(left: 8)),
-                              Text(
-                                (index + 1).toString() + ". ",
-                                style: TextStyle(
-                                    color: Colors.indigo,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
+                        children: [
+                          Text(
+                            '${index+1}.',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(jsonResult![index]['RLYNAME'] != null ? (jsonResult![index]['RLYNAME'] + " / " + jsonResult![index]['DEPTNAME']) : "", style: Theme.of(context).textTheme.bodyMedium),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.receipt_outlined,
+                                      size: 16,
+                                      color: Colors.grey[600],
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Schedule No : ',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey[700],
+                                        letterSpacing: 0.2,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        jsonResult![index]['SCHDLNO'] != null ? jsonResult![index]['SCHDLNO'] : "",
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey[700],
+                                          letterSpacing: 0.2,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(left: 4),
+                          //   child: Container(
+                          //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          //     decoration: BoxDecoration(
+                          //       color: Colors.green[50],
+                          //       borderRadius: BorderRadius.circular(12),
+                          //       border: Border.all(color: Colors.green[200]!),
+                          //     ),
+                          //     child: Row(
+                          //       mainAxisSize: MainAxisSize.min,
+                          //       children: [
+                          //         Container(
+                          //           width: 6,
+                          //           height: 6,
+                          //           decoration: BoxDecoration(
+                          //             color: Colors.green[600],
+                          //             shape: BoxShape.circle,
+                          //           ),
+                          //         ),
+                          //         const SizedBox(width: 4),
+                          //         Text(
+                          //           'LIVE',
+                          //           style: TextStyle(
+                          //             color: Colors.green[700],
+                          //             fontSize: 11,
+                          //             fontWeight: FontWeight.w600,
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        child: Divider(height: 1),
+                      ),
+                      // Time information - centered in the card
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Start time with label
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Auction Start',
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      color: Colors.green[700],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    jsonResult![index]['START_DATETIME'] != null ? jsonResult![index]['START_DATETIME'] : "",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.green[700],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Container(
+                                  height: 20,
+                                  width: 1,
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                              // End time with label
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Auction End',
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      color: Colors.red[700],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    (jsonResult![index]
+                                    ['END_DATETIME'] !=
+                                        null
+                                        ? jsonResult![index]
+                                    ['END_DATETIME']
+                                        : ""),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.red[700],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-
-                          Expanded(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Row(children: <Widget>[
-                                    Expanded(
-                                      child: Row(children: <Widget>[
-                                        Expanded(
-                                          child: Text(
-                                            jsonResult![index]['RLYNAME'] != null
-                                                ? (jsonResult![index]
-                                                        ['RLYNAME'] +
-                                                    " / " +
-                                                    jsonResult![index]
-                                                        ['DEPTNAME'])
-                                                : "",
-                                            style: TextStyle(
-                                              color: Colors.indigo,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ]),
-                                    )
-                                  ]),
-                                  Padding(padding: EdgeInsets.only(top: 5.0)),
-                                  Row(children: <Widget>[
-                                    Expanded(
-                                      child: Container(
-                                        height: 30,
-                                        width: 110,
-                                        child: Text(
-                                          "Schedule No :",
-                                          style: TextStyle(
-                                            color: Colors.indigo,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                      flex: 4,
-                                    ),
-                                    Expanded(
-                                        child: Container(
-                                          height: 30,
-                                          child: Text(
-                                            jsonResult![index]['SCHDLNO'] != null
-                                                ? jsonResult![index]['SCHDLNO']
-                                                : "",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                        flex: 6),
-                                  ]),
-                                  Row(children: <Widget>[
-                                    Expanded(
-                                      child: Container(
-                                        height: 30,
-                                        child: Text(
-                                          'Auction Start',
-                                          style: TextStyle(
-                                              color: Colors.indigo,
-                                              fontSize: 16),
-                                        ),
-                                      ),
-                                      flex: 4,
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        height: 30,
-                                        child: Text(
-                                          jsonResult![index]['START_DATETIME'] !=
-                                                  null
-                                              ? jsonResult![index]
-                                                  ['START_DATETIME']
-                                              : "",
-                                          style: TextStyle(
-                                              color: Colors.green,
-                                              fontSize: 16),
-                                        ),
-                                      ),
-                                      flex: 6,
-                                    ),
-                                  ]),
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Container(
-                                          height: 30,
-                                          child: Text(
-                                            'Auction End',
-                                            style: TextStyle(
-                                                color: Colors.indigo,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                        flex: 4,
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 30,
-                                          child: Text(
-                                            (jsonResult![index]
-                                                        ['END_DATETIME'] !=
-                                                    null
-                                                ? jsonResult![index]
-                                                    ['END_DATETIME']
-                                                : ""),
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                        flex: 6,
-                                      ),
-                                    ],
-                                  ),
-                                ]),
-                          ),
-//
-                        ],
-                      )
+                        ),
+                      ),
                     ],
-                  )),
-              onTap: () {
-                if (jsonResult![index]['CORRI_DETAILS'] != 'NA') {
-                  showDialog(
-                      context: context,
-                      builder: (_) => Material(
-                            type: MaterialType.transparency,
-                            child: Center(
-                                child: Container(
-                                    margin: EdgeInsets.only(
-                                        top: 200,
-                                        bottom: 200,
-                                        left: 30,
-                                        right: 30),
-                                    padding: EdgeInsets.only(
-                                        top: 30,
-                                        bottom: 0,
-                                        left: 30,
-                                        right: 30),
-                                    color: Colors.white,
-                                    // Aligns the container to center
-                                    child: Column(children: <Widget>[
-                                      Container(
-                                        padding: EdgeInsets.only(bottom: 5),
-                                        child: Text(
-                                          'List of Categories',
-                                          style: TextStyle(
-                                            color: Colors.indigo,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          padding: EdgeInsets.only(
-                                            bottom: 0,
-                                          ),
-                                          child: Overlay(
-                                            context,
-                                            jsonResult![index]['DESCRIPTION']
-                                                .toString(),
-                                            jsonResult![index]['CATID']
-                                                .toString(),
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text('CLICK ON ANY CATEGORY',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.indigo)),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.of(context,
-                                                      rootNavigator: true)
-                                                  .pop('dialog');
-                                            },
-                                            child: Image(
-                                              image: AssetImage(
-                                                  'assets/close_overlay.png'),
-                                              color: Colors.black,
-                                              height: 50,
-                                            )),
-                                      )
-                                    ]))),
-                          ));
-                }
-              },
-            );
-          },
-          separatorBuilder: (context, index) {
-            return Container(
-              height: 10,
-            );
-          },
-          itemCount: jsonResult != null ? jsonResult!.length : 0);
+                  ),
+                ),
+                // Categories section with horizontal scrolling and lighter blue background
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlue[800]!.withOpacity(0.08),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, bottom: 8),
+                        child: Text(
+                          'Categories',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 38,
+                        child: scheduleListView(
+                          context,
+                          item['DESCRIPTION'].toString(),
+                          item['CATID'].toString(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
     }
     return Container();
   }
@@ -435,6 +419,55 @@ class _scheduleState extends State<schedule> {
           return Divider(
             color: Colors.grey,
             height: 20,
+          );
+        });
+  }
+
+  Widget scheduleListView(BuildContext context, String description, String catid) {
+    var sArray = description.split('#');
+    var scatid = catid;
+
+    return ListView.builder(
+        itemCount: sArray.isNotEmpty || sArray.length>0 ? sArray.length : 0,
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: (){
+              debugPrint("live url===" + sArray[index]);
+              var route = MaterialPageRoute(
+                builder: (BuildContext context) => schedule2(
+                    value1: Users(
+                      sid: scatid,
+                      category: sArray[index],
+                    )),
+              );
+              Navigator.of(context).push(route);
+              debugPrint("catid===" + scatid);
+              debugPrint("category===" + sArray[index]);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                margin: const EdgeInsets.only(bottom: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.lightBlue[800]!.withOpacity(0.2)),
+                ),
+                child: Center(
+                  child: Text(
+                    sArray[index].toString(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           );
         });
   }

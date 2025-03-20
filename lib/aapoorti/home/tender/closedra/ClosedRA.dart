@@ -680,7 +680,7 @@ class TenderCard extends StatelessWidget {
               children: [
                 _buildActionButton(Icons.description, 'NIT', Colors.red, nitlinks, context),
                 _buildActionButton(Icons.article, 'Docs', Colors.green, docslinks, context),
-                _buildActionButton(Icons.edit_note, 'Corrigenda', Colors.brown, corrigendalinks, context),
+                _buildActionButton(Icons.edit_note, 'Corrigenda', corrigendalinks == "NA" || corrigendalinks == "NULL" ? Colors.brown : Colors.green, corrigendalinks, context),
               ],
             ),
           ],
@@ -907,7 +907,7 @@ class TenderCard extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              label == 'NIT' ? Image.asset('images/pdf_home.png', height: 30, width: 20) : label == 'Docs' ? Icon(icon, color: Colors.green) : Icon(icon, color: Colors.brown),
+              label == 'NIT' ? Image.asset('images/pdf_home.png', height: 30, width: 20) : Icon(icon, color: color),
               const SizedBox(height: 4),
               Text(
                 label,

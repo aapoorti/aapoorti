@@ -139,7 +139,7 @@ class _StockItemHistorySheetScreenState
                       decoration: InputDecoration(
                           prefixIcon: Icon(Icons.search, color: AapoortiConstants.primary),
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.clear, color: Colors.red[300]),
+                            icon: Icon(Icons.clear, color: AapoortiConstants.primary),
                             onPressed: () {
                               updatechangeprovider.updateScreen(false);
                               _textsearchController.text = "";
@@ -339,7 +339,7 @@ class _StockItemHistorySheetScreenState
                           width: size.width * 0.30,
                           height: 40,
                           alignment: Alignment.center,
-                          decoration: BoxDecoration(color: Colors.red[300], borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                          decoration: BoxDecoration(color: AapoortiConstants.primary, borderRadius: BorderRadius.all(Radius.circular(8.0))),
                           child: Text(language.text('find'), style: TextStyle(color: Colors.white, fontSize: 16)),
                         ),
                       )
@@ -516,7 +516,7 @@ class _StockItemHistorySheetScreenState
                                                               fontSize: 14)),
                                                       ReadMoreText(value.hislistData[0].descr.toString().trim(),
                                                           trimLines: 5,
-                                                          colorClickableText: Colors.red[300],
+                                                          colorClickableText: AapoortiConstants.primary,
                                                           trimMode: TrimMode.Line,
                                                           trimCollapsedText: '... More',
                                                           trimExpandedText: '...less',  style: TextStyle(color: Colors.black, fontSize: 14))

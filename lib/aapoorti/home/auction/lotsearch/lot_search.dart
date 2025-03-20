@@ -303,7 +303,7 @@ class _LotSearchState extends State<LotSearch> {
                                       items: dataDepot.map((item) {
                                         return DropdownMenuItem(
                                           value: item['DEPOT_ID'].toString(),
-                                          child: Text(item['DEPOT_NAME']),
+                                          child: Text(item['DEPOT_NAME'] ?? "NA"),
                                         );
                                       }).toList(),
                                       onChanged: (newVal2) {

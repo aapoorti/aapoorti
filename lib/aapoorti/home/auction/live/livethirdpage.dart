@@ -65,9 +65,9 @@ class _live3State extends State<live3> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 30,
-                color: Colors.cyan.shade600,
                 alignment: Alignment.center,
-                padding: const EdgeInsets.only(top: 10),
+                color: Colors.cyan.shade600,
+                //padding: const EdgeInsets.only(top: 10),
                 child: Text(
                   'Auction Catalogue>> Lot Details',
                   style: TextStyle(

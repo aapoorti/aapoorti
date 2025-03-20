@@ -793,6 +793,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       }
       else if(route == '/cris-mmis'){
         Get.toNamed(Routes.loginScreen);
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => StoryScreen()));
       }
   }
 

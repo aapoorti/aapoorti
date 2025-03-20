@@ -254,7 +254,8 @@ class _LoginScreenState extends State<LoginScreen> {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return WillPopScope(
       onWillPop: () async{
-        AapoortiUtilities.showAlertDailog(context, "UDM");
+        //AapoortiUtilities.showAlertDailog(context, "UDM");
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CommonScreen()));
         return true;
       },
       child: Scaffold(

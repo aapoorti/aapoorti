@@ -109,7 +109,6 @@ class _SummaryDropdownState extends State<SummaryDropdown> {
       'intcode': intcodevalue,
       'value': 'All',
     };
-    print("All data "+all.toString());
     return all;
   }
 

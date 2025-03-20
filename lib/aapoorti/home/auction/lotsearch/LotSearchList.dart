@@ -43,28 +43,24 @@ class _LotSearchListState extends State<LotSearchList> {
   List data = [];
   void fetchPost() async {
     var v = AapoortiConstants.webServiceUrl + 'Auction/Lotsearch?RLYID=${this.railUnit}&DEPOTID=${this.depotUnit}&DESC=${desc}&LOTTYPE=${lotType}';
+    debugPrint("req param $v");
     final response = await http.post(Uri.parse(v));
     jsonResult = json.decode(response.body);
+    debugPrint("response now $jsonResult");
     if(jsonResult![0]['ErrorCode'] == 3) {
       jsonResult = null;
       Navigator.pop(context);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => NoData()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => NoData()));
     }
     else if (jsonResult![0]['ErrorCode'] == 4) {
       jsonResult = null;
       Navigator.pop(context);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => NoResponse()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => NoResponse()));
     }
     setState(() {
-      lotType == 0
-          ? visibleYes = false
-          : visibleYes = true; // setting visibility
-      lotType == 0
-          ? heading = "List of Lots(Published)"
-          : heading = "List of Lots(Sold out)";
-      data = jsonResult!;
+      lotType == 0 ? visibleYes = false : visibleYes = true; // setting visibility
+      lotType == 0 ? heading = "List of Lots(Published)" : heading = "List of Lots(Sold out)";
+      data = jsonResult ?? [];
     });
   }
 

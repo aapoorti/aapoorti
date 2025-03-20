@@ -1,3 +1,4 @@
+import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/mmis/controllers/dashboard_controller.dart';
 import 'package:flutter_app/mmis/controllers/profile_controller.dart';
@@ -25,7 +26,7 @@ class _ProfileScreenState extends State<Profile> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.indigo,
+          backgroundColor: AapoortiConstants.primary,
           iconTheme: IconThemeData(color: Colors.white),
           title: Text("Profile", style: TextStyle(color: Colors.white)),
           elevation: 4,
@@ -42,14 +43,14 @@ class _ProfileScreenState extends State<Profile> {
                       children: [
                         CircleAvatar(
                           radius: 45,
-                          backgroundColor: Colors.indigo.shade400,
+                          backgroundColor:  AapoortiConstants.primary,
                           child: CircleAvatar(
                             radius: 40,
                             backgroundColor: Colors.white,
                             child: Icon(
                               Icons.person,
                               size: 45,
-                              color: Colors.indigo,
+                              color:  AapoortiConstants.primary,
                             ),
                           ),
                         ),

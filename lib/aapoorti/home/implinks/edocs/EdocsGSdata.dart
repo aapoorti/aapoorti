@@ -101,7 +101,7 @@ class EdocsGSdataState extends State<EdocsGSdata> {
                   style: TextStyle(fontSize: 15, color: Colors.white),
                   textAlign: TextAlign.start,
                 ),
-                color: Colors.cyan[700],
+                color: Colors.blueAccent,
               ),
               Expanded(child: jsonResult == null ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : _myListView(context))
             ],
