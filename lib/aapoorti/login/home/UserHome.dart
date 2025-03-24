@@ -77,7 +77,7 @@ class _UserHomeState extends State<UserHome> {
     var s = DateTime.now().toString();
     _dropDownFocus = FocusNode();
 
-    debugPrint("hdhebbehebbeh ${widget.userType} ${widget.email}");
+    debugPrint("typeemail ${widget.userType} ${widget.email}");
 
     if(AapoortiUtilities.user != null) {
       this.usertype = AapoortiUtilities.user!.USER_TYPE.toString();
@@ -99,6 +99,7 @@ class _UserHomeState extends State<UserHome> {
     }
     AapoortiUtilities.loginflag = true;
     moduleaccess = AapoortiUtilities.user!.MODULE_ACCESS.toString();
+    debugPrint("moduleaccess $moduleaccess");
     saveUserLoginDtls(email);
     Future.delayed(Duration.zero, () {
         if(((usertype == "4" && moduleaccess == "NA") || moduleaccess!.contains("4")) && AapoortiUtilities.loggedin == false){

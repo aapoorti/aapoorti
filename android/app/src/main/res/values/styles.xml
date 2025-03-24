@@ -8,4 +8,9 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+    <style name="AlertDialogCustom" parent="android:Theme.DeviceDefault.Dialog.MinWidth">
+        <item name="android:headerDividersEnabled">true</item>
+        <item name="android:background">#00FFFFFF</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

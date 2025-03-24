@@ -1,9 +1,10 @@
-//plugins {
-//    id 'com.android.application'
-//    id 'kotlin-android'
-//    //id 'com.google.gms.google-services' // If using Firebase
-//    id 'dev.flutter.flutter-gradle-plugin' // Add this line
-//}
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'dev.flutter.flutter-gradle-plugin'
+    //id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
+}
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
@@ -31,9 +32,9 @@ if (flutterVersionName == null) {
 
 
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+//apply plugin: 'com.android.application'
+//apply plugin: 'kotlin-android'
+//apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 
@@ -99,6 +100,23 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
+            debuggable false
+            minifyEnabled true
+            shrinkResources false
+            // useProguard true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            dependencies {
+                implementation 'com.android.support:support-fragment:28.0.0'
+            }
+
+        }
+        debug {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.release
+            debuggable true
             minifyEnabled false
             shrinkResources false
             // useProguard true
@@ -118,6 +136,9 @@ android {
             }
         }
     }
+    buildFeatures{
+        buildConfig true
+    }
 }
 
 flutter {
@@ -125,7 +146,8 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.50"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.0"
     implementation 'androidx.multidex:multidex:2.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -139,30 +161,30 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.50"
     //sdk - other dependencies
-//    implementation files('libs/app-security-onlineDev-release.aar') //for UAT
-//    implementation files('libs/app-security-onlineProd-release.aar') // for Prod
-//    implementation "com.google.code.gson:gson:2.8.6"
-//    implementation "com.android.volley:volley:1.2.1"
-//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.6"
-//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.6"
-//
-//    implementation("androidx.room:room-runtime:2.4.2")
-//    annotationProcessor("androidx.room:room-compiler:2.4.2")
-//    kapt("androidx.room:room-compiler:2.4.2")
-//    //for mock location
-//    implementation 'com.google.android.gms:play-services-location:21.0.1'
-//    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
-//    implementation 'com.google.guava:guava:31.0.1-android'
-//    implementation 'com.google.android.material:material:1.6.1'
-//    implementation 'androidx.cardview:cardview:1.0.0'
-//    implementation("androidx.recyclerview:recyclerview:1.2.1")
-//    implementation("androidx.security:security-crypto:1.1.0-alpha06")
-//
-//     implementation 'com.android.support:appcompat-v7:32.0.0'
-//     implementation 'com.android.support:support-v4:32.0.0'
-//     implementation 'com.android.support:design:28.0.0'
-//     implementation "androidx.arch.core:core-common:2.0.0"
-//     implementation "androidx.lifecycle:lifecycle-common:2.0.0"
+    //implementation files('libs/app-security-onlineDev-release.aar') //for UAT
+    implementation files('libs/app-security-onlineProd-release.aar') // for Prod
+    implementation "com.google.code.gson:gson:2.8.6"
+    implementation "com.android.volley:volley:1.2.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.6"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.6"
+
+    implementation("androidx.room:room-runtime:2.4.2")
+    annotationProcessor("androidx.room:room-compiler:2.4.2")
+    ksp("androidx.room:room-compiler:2.4.2")
+    //for mock location
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+    implementation 'com.google.guava:guava:31.0.1-android'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    //implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+    implementation 'com.android.support:appcompat-v7:32.0.0'
+    implementation 'com.android.support:support-v4:32.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation "androidx.arch.core:core-common:2.0.0"
+    implementation "androidx.lifecycle:lifecycle-common:2.0.0"
 
 }
 

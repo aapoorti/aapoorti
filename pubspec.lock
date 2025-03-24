@@ -377,12 +377,11 @@ packages:
   feature_discovery:
     dependency: "direct main"
     description:
-      path: "."
-      ref: master
-      resolved-ref: "7f8a0c93711771a9067b3feb1d41bd9128f70d42"
-      url: "https://github.com/maheshj01/feature_discovery.git"
-    source: git
-    version: "0.14.1"
+      name: feature_discovery
+      sha256: "54c2e0c7cc229c4a7149ef21d933fa7115cf034b985926477488aa2d0619321b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.2"
   ffi:
     dependency: transitive
     description:

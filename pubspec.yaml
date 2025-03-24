@@ -85,10 +85,7 @@ dependencies:
   dropdown_search: ^6.0.1
   html: ^0.15.1
   #ssl_pinning_plugin: ^2.0.0
-  feature_discovery:
-    git:
-      url: https://github.com/maheshj01/feature_discovery.git
-      ref: master
+  feature_discovery: ^0.14.2
   awesome_dialog: ^3.2.1
   font_awesome_flutter: ^9.1.0
   #share_plus: ^7.2.2

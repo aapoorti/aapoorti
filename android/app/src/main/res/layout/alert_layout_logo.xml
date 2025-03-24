@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:minHeight="300dp"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/img_danger"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:elevation="10dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:elevation="@dimen/cardview_compat_inset_shadow"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+
+            <LinearLayout
+                android:id="@+id/ll_app_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#074bab"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/logo_alert_screen"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- <ImageView
+                     android:src="@drawable/ic_mb"
+                     android:layout_width="25dp"
+                     android:layout_height="25dp"
+                     android:gravity="center"
+                     android:layout_marginEnd="10dp"
+                     android:layout_marginTop="25dp"
+                     android:layout_marginBottom="10dp"
+                     app:layout_constraintTop_toTopOf="parent"
+                     app:layout_constraintStart_toStartOf="parent"
+                     app:layout_constraintEnd_toEndOf="parent"
+                     app:layout_constraintBottom_toTopOf="@id/logo_alert_screen"
+                     android:textSize="22sp"/>-->
+                <TextView
+                    android:id="@+id/app_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="IREPS"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/logo_alert_screen"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/logo_alert_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/tv_sdk_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_app_name">
+
+                <!-- <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="Bank"
+                     android:layout_marginTop="25dp"
+                     android:layout_marginBottom="8dp"
+                     android:layout_marginEnd="8dp"
+                     android:textColor="#FF3D00"
+                     android:textStyle="bold"
+                     android:textSize="24sp"/>-->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Security Alert !"
+                    android:textColor="#CD0000"
+                    android:textSize="27sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_faq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="FAQ"
+                    android:textColor="#CD0000"
+                    android:textSize="27sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_sdk_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:text="Title"
+                android:textAlignment="center"
+                android:textColor="#FF000000"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@id/tv_sdk_description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/logo_alert_screen"
+                tools:text="Accessibility Service usage" />
+
+            <TextView
+                android:id="@+id/tv_sdk_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="SDK Description"
+                android:textAlignment="center"
+                android:textColor="#FF000000"
+                app:layout_constraintBottom_toTopOf="@id/tv_sdk_nav"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_sdk_title"
+                tools:text="This app identified one of the installed app in your device is using active accessibility service permission." />
+
+            <TextView
+                android:id="@+id/tv_sdk_nav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Click here to disable it"
+                android:textAlignment="center"
+                android:textColor="#14b481"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@id/RecyclerViewAppG"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sdk_description" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/RecyclerViewAppG"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/info_ll"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sdk_nav" />
+
+            <LinearLayout
+                android:id="@+id/info_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/force_accept"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/RecyclerViewAppG">
+
+                <TextView
+                    android:id="@+id/warning_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="Plesae uninstall the apps to proceed further or accept the potential risk by clicking skip"
+                    android:textColor="#A9A9A9"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/force_accept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="I understand and accept the risks"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/cl_buttons"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/info_ll" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/top_cl"
+                app:layout_constraintEnd_toEndOf="@id/top_cl"
+                app:layout_constraintStart_toStartOf="@id/top_cl"
+                app:layout_constraintTop_toBottomOf="@id/force_accept">
+
+                <Button
+                    android:id="@+id/btn_sdk_btn_ignore"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="11dp"
+                    android:backgroundTint="#074cab"
+                    android:text="Skip"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_sdk_btn_block"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/btn_sdk_btn_block"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="11dp"
+                    android:backgroundTint="#ff5155"
+                    android:shadowColor="@color/black"
+                    android:text="Close App"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btn_sdk_btn_ignore"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

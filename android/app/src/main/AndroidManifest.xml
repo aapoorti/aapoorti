@@ -19,6 +19,8 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
+        android:name="com.app.flutter_app.MyApplication"
+        android:taskAffinity="com.app.flutter_app.MyApplication"
         android:allowBackup="false"
         android:label="IREPS"
         android:icon="@mipmap/ic_launcher">
