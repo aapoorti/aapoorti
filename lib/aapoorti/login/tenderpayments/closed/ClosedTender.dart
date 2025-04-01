@@ -133,7 +133,7 @@ class _ClosedTenderState extends State<ClosedTender> {
         resizeToAvoidBottomInset: false,
         //resizeToAvoidBottomPadding: true,
         appBar: AppBar(
-          backgroundColor: Colors.teal,
+          backgroundColor: Colors.blue.shade800,
           iconTheme: IconThemeData(color: Colors.white),
           title:
               Text('My Closed Tenders', style: TextStyle(color: Colors.white)),
@@ -171,7 +171,7 @@ class _ClosedTenderState extends State<ClosedTender> {
   }
 
   String workarea() {
-    if (AapoortiUtilities.user!.CUSTOM_WK_AREA == 'PT') {
+    if(AapoortiUtilities.user!.CUSTOM_WK_AREA == 'PT') {
       worka = "Goods and Services";
     } else if (AapoortiUtilities.user!.CUSTOM_WK_AREA == 'WT') {
       worka = "Works";

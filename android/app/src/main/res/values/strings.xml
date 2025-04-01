@@ -1,0 +1,17 @@
+<resources>
+<!--AppProtectt - sdk -strings -->
+    <string name="ap_item_view_fix_issue_btn_text">Fix Issue</string>
+    <string name="ap_item_view_short_description_text">An unsecured network issue may lead to data leakage</string>
+    <string name="ap_item_view_title_text">Application Installation Source Validation!!</string>
+    <string name="ap_bs_title_text">Issues Found</string>
+    <string name="ap_bs_description_text">Your Device is found to have security issues. \n You are recommended to review and fix</string>
+    <string name="ap_bs_skip_all_check_box_text">I accept the risk, I wish to skip all alerts for now</string>
+    <string name="ap_bs_btn_skip_all_text">Continue</string>
+    <string name="ap_btn_skip_text">Skip</string>
+    <string name="ap_navigate_settings_text">"Go to Settings"</string>
+    <string name="ap_navigate_playstore_text">"Go to Playstore"</string>
+    <string name="ap_iv_fix_issue_back_button_description">Go Back</string>
+
+    <!--AppProtectt - sdk -strings -->
+
+</resources>

@@ -78,7 +78,7 @@ class _PurchaseOrdersState extends State<PurchaseOrders> {
     jsonResult = await AapoortiUtilities.fetchPostPostLogin(
         'Contra/PoFilterPr', 'PoFilterPr', inputParam1, inputParam2, context);
 
-    setState(() {});
+    // setState(() {});
   }
 
   @override

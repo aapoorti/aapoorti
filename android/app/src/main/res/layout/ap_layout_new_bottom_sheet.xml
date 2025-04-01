@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#606060"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ap_cl_issues_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#F6F6F6"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+        <!--below for top red content-->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ap_cv_fix_issues"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#656465"
+            app:cardElevation="0dp"
+            app:layout_constraintTop_toTopOf="@+id/ap_cl_issues_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ap_cl_top_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ap_card_background"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <ImageView
+                    android:id="@+id/ap_tv_security_alert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ap_iv_issue_found_exclamation"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/ap_tv_issues_found_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="@string/ap_bs_title_text"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/ap_bs_title_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ap_tv_security_alert"
+                    app:layout_constraintBottom_toTopOf="@id/ap_tv_description_issues_found"/>
+
+                <TextView
+                    android:id="@+id/ap_tv_description_issues_found"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintWidth_percent="0.8"
+                    android:text="@string/ap_bs_description_text"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ap_tv_issues_found_count" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <!--below for list of alerts-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ap_constraint_layout_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ap_cv_fix_issues">
+
+            <ScrollView
+                android:id="@+id/ap_sv_items_list"
+                android:background="#F8F5F5"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHeight_max="400dp"
+                android:layout_height="0dp">
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ap_rv_fixable_issues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:itemCount="5"
+                tools:listitem="@layout/ap_itemview_fixable_issues_for_rv" />
+
+            </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <CheckBox
+            android:id="@+id/ap_cb_skip_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/ap_darkred"
+            android:checked="false"
+            android:textSize="16sp"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/ap_open_sans"
+            android:text="@string/ap_bs_skip_all_check_box_text"
+            android:textColor="#6F6F6F"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ap_constraint_layout_recycler_view" />
+
+        <Button
+            android:id="@+id/ap_btn_skip_all"
+            android:layout_width="88dp"
+            android:layout_height="38dp"
+            android:text="@string/ap_bs_btn_skip_all_text"
+            style="@style/btn_style"
+            android:textColor="@color/ap_darkred"
+            android:textSize="12sp"
+            android:visibility="gone"
+            android:background="@drawable/ap_skip_all_border"
+            android:fontFamily="@font/ap_open_sans"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ap_cb_skip_all"/>
+        <TextView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.1"
+            app:layout_constraintHeight_percent="0.01"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ap_btn_skip_all"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--below for tittle and msg UI-->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ap_cl_fix_issue"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="24dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="ExtraText">
+
+            New Title
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ap_cv_learmore_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!--below for alert tittle content-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/ap_cl_back_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/ap_ll_iv_back_button"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/ap_iv_back_arrow_circular"
+                        android:contentDescription="@string/ap_iv_fix_issue_back_button_description"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/ap_tv_threat_title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ap_tv_threat_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:autoSizeMaxTextSize="@dimen/medium"
+                        android:fontFamily="@font/ap_open_sans_bold"
+                        android:singleLine="false"
+                        android:text="Developer Option Enabled"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/ap_ll_iv_back_button"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_percent="0.75" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ap_cl_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ap_cv_learmore_title">
+
+                <!--below for dialog message content-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/ap_cv_navigation_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:backgroundTint="#e9f7ff"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp"
+                    app:layout_constraintBottom_toTopOf="@id/ap_cv_hint"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/ap_cl_card_view">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ap_cl_desc_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="20dp">
+
+                        <TextView
+                            android:id="@+id/ap_tv_description_navigation_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/ap_open_sans"
+                            android:text="Don't use any payment or financial app when Developer option is turned on"
+                            android:textColor="@color/black"
+                            android:textSize="17sp"
+                            app:layout_constraintEnd_toEndOf="@+id/ap_cl_desc_card"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--below for we recommend to disable or enable msg content-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/ap_cv_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:backgroundTint="#fcf4e5"
+                    android:visibility="visible"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp"
+                    app:layout_constraintEnd_toEndOf="@+id/ap_cv_navigation_description"
+                    app:layout_constraintStart_toStartOf="@+id/ap_cv_navigation_description"
+                    app:layout_constraintTop_toBottomOf="@+id/ap_cv_navigation_description"
+                    app:layout_constraintBottom_toTopOf="@id/ap_cv_black_listed_apps">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ap_cl_navigation"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="20dp">
+
+                        <ImageView
+                            android:id="@+id/ap_iv_star"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ap_iv_star_image"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/ap_tv_recommendation_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10sp"
+                            android:fontFamily="@font/ap_open_sans"
+                            android:text="We recommend you to disable this from Settings."
+                            android:textColor="@color/ap_gray"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/ap_cl_navigation"
+                            app:layout_constraintStart_toEndOf="@+id/ap_iv_star"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                Black Listed Apps CardView
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/ap_cv_black_listed_apps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:backgroundTint="#FFEAF1"
+                    android:visibility="gone"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/ap_cv_hint"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/ap_rv_black_listed_apps"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
+                        android:layout_margin="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <CheckBox
+                android:id="@+id/ap_cb_accept_risk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/ap_open_sans_semibold"
+                android:padding="8dp"
+                android:buttonTint="@color/ap_darkred"
+                android:text="I accept risk and I want to keep it enabled"
+                android:textColor="#6F6F6F"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ap_cl_card_view" />
+
+            <!--below for skip and settings content-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ap_cl_btns"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/ap_cb_accept_risk"
+                app:layout_constraintTop_toBottomOf="@id/ap_cb_accept_risk">
+
+                <Button
+                    android:id="@+id/ap_btn_skip_issue"
+                    android:background="@drawable/ap_skip_all_border"
+                    android:text="@string/ap_btn_skip_text"
+                    style="@style/btn_style"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/ap_darkred"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/ap_close_app"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <Button
+                    android:id="@+id/ap_close_app"
+                    android:background="@drawable/ap_skip_all_border"
+                    android:text="Close App"
+                    style="@style/btn_style"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/ap_darkred"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/ap_btn_fix_issue"
+                    app:layout_constraintStart_toEndOf="@id/ap_btn_skip_issue"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+                <Button
+                    android:id="@+id/ap_btn_fix_issue"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:visibility="visible"
+                    style="@style/btn_style"
+                    android:background="@drawable/ap_button_border"
+                    android:fontFamily="@font/ap_open_sans_semibold"
+                    android:text="Go to Settings"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ap_close_app"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--below for block btn content-->
+            <!--<androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_ap_close_app"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/ap_cl_btns"
+                app:layout_constraintTop_toBottomOf="@id/ap_cb_accept_risk">
+
+                <Button
+                    android:id="@+id/ap_close_app"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/skip_all_border"
+                    android:text="Close App"
+                    android:textColor="@color/darkred"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!--below for app black listing Ui-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ap_cl_block_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ap_cl_block_list_learmore_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#656465"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints">
+
+            <!--below for alert tittle content-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ap_cl_block_list_back_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ap_card_background_white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/ap_cl_block_list_ly_back_button"
+                    android:layout_width="50sp"
+                    android:layout_height="50sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/ap_cl_block_list_back_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ap_ic_iv_back_arrow" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/ap_cl_block_list_threat_title"
+                    android:layout_width="292dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="40dp"
+                    android:autoSizeMaxTextSize="@dimen/medium"
+                    android:fontFamily="@font/ap_open_sans_bold"
+                    android:singleLine="false"
+                    android:text="Developer Option Enabled"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ap_cl_block_list_ly_back_button"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ap_cl_block_list_card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="22dp"
+            app:layout_constraintTop_toBottomOf="@id/ap_cl_block_list_learmore_title">
+
+            <!--below for dialog message content-->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ap_cl_block_list_navigation_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#e9f7ff"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ap_cl_back_button"
+                tools:ignore="NotSibling">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/ap_cl_block_list_desc_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="20dp">
+                    <TextView
+                        android:id="@+id/ap_cl_block_list_description_navigation_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/ap_open_sans"
+                        android:text="Don't use any payment or financial app when Developer option is turned on"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        app:layout_constraintEnd_toEndOf="@+id/ap_cl_desc_card"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!--below for we recommend to disable or enable msg content-->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ap_cl_block_list_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="#fcf4e5"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="@+id/ap_cl_block_list_navigation_description"
+                app:layout_constraintStart_toStartOf="@+id/ap_cl_block_list_navigation_description"
+                app:layout_constraintTop_toBottomOf="@+id/ap_cl_block_list_navigation_description">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ap_RecyclerViewAppyellow"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/almsg"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteX="-16dp" />
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+       <!-- <CheckBox
+            android:id="@+id/cl_block_list_accept_risk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:padding="8dp"
+            android:text="I accept risk and I want to keep it enabled"
+            android:textColor="#6F6F6F"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ap_cl_block_list_card_view" />-->
+
+        <!--below for skip and settings content-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ap_cl_block_list_btns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/ap_cl_block_list_card_view"
+            app:layout_constraintTop_toBottomOf="@id/ap_cl_block_list_card_view">
+
+            <Button
+                android:id="@+id/ap_cl_block_list_ignore"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#c0cfce"
+                android:text="Skip"
+                style="@style/btn_style"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toStartOf="@id/ap_cl_block_list_fix_issue"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints" />
+
+            <Button
+                android:id="@+id/ap_cl_block_list_fix_issue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#135d90"
+                style="@style/btn_style"
+                android:fontFamily="@font/ap_open_sans_semibold"
+                android:text="Go to Settings"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ap_cl_block_list_ignore"
+                app:layout_constraintTop_toTopOf="@id/ap_cl_block_list_ignore" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--below for block btn content-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ap_cl_block_list_close_lay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/ap_cl_block_list_btns"
+            app:layout_constraintTop_toBottomOf="@id/ap_cl_block_list_card_view">
+
+            <Button
+                android:id="@+id/ap_cl_block_list_ap_close_app"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#AE0F13"
+                android:text="Close App"
+                style="@style/btn_style"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

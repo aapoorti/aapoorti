@@ -239,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       //     ],
                       //   ),
                       // ),
-                      const SizedBox(height: 10),
+                      //const SizedBox(height: 10),
                       // Email Field
                       TextFormField(
                         controller: _usernameController,
@@ -272,47 +272,48 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 16),
                       // PIN Field with numeric keyboard
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelText: 'Enter PIN',
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+                      Obx((){
+                        return TextFormField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(
+                            labelText: 'Enter PIN',
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                controller.isVisible ? Icons.visibility : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                controller.isVisible = !controller.isVisible;
+                                // setState(() {
+                                //   _obscureText = !_obscureText;
+                                // });
+                              },
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                        obscureText: _obscureText,
-                        keyboardType: TextInputType.number,
-                        initialValue: null,
-                        validator: (pin) {
-                          if (pin!.isEmpty) {
-                            return ('Please enter 6-12 digit PIN');
-                          } else if (pin.length < 6 || pin.length > 12) {
-                            return ('Please enter 6-12 digit PIN');
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          pin = value;
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                      ),
+                          obscureText: controller.isVisible,
+                          keyboardType: TextInputType.number,
+                          initialValue: null,
+                          validator: (pin) {
+                            if (pin!.isEmpty) {
+                              return ('Please enter 6-12 digit PIN');
+                            } else if (pin.length < 6 || pin.length > 12) {
+                              return ('Please enter 6-12 digit PIN');
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            pin = value;
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                        );
+                      }),
                       const SizedBox(height: 16),
                       // Remember Me Section with Days Selection
                       _buildRememberMeSection(),
@@ -321,12 +322,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       Obx(() {
                         if (controller.loginState.value == LoginState.idle) {
                           Future.delayed(Duration.zero, () async {
-                            SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                            _usernameController.text =
-                            (prefs.containsKey('mmisemail')
-                                ? prefs.getString('mmisemail')
-                                : "")!;
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            _usernameController.text = (prefs.containsKey('mmisemail') ? prefs.getString('mmisemail') : "")!;
                             _passwordController.text = '';
                           });
                           return ElevatedButton(

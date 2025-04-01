@@ -1,6 +1,8 @@
 package com.app.flutter_app
 
+import ai.protectt.app.security.common.helper.SDKConstants
 import ai.protectt.app.security.common.helper.SDKConstants.ALERT_DIALOG
+import ai.protectt.app.security.common.helper.SDKConstants.BOTTOMSHEET_DIALOG
 import ai.protectt.app.security.main.AppProtecttInteractor
 import ai.protectt.app.security.main.AppProtecttInteractor.Companion.registerCallbackActivities
 import ai.protectt.app.security.main.AppProtecttInteractor.Companion.updateCustRefIdAPI
@@ -14,31 +16,40 @@ import java.lang.String
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        appProtect()
+        System.loadLibrary("ireps")
+        //appProtect()
+        AppProtecttInteractor.Companion.triggerCheck = true
     }
 
     private fun appProtect(){
         Log.i("TrustID", "${AppProtecttInteractor.Companion.getTrust(this)}")
         registerCallbackActivities(this)
         val clientInfo = ClientInfo()
-        clientInfo.packageName = "in.gov.ireps" //package name
-        clientInfo.appName = "IREPS" //application name
-        clientInfo.channelLicenseKey = "00210f7e-ace4-4468-8f41-dd5dc69bae2s" //license key
-        clientInfo.clientId = 64
-        clientInfo.channelId =  6406
-        clientInfo.password = "5ef1d0e97b7c47009d747e88cd2ddc98" //password id
+        clientInfo.packageName = appPackagename().toString()
+        clientInfo.appName = appName().toString() //application name
+        clientInfo.channelLicenseKey = channelLicenseKey().toString() //license key
+        clientInfo.clientId = clientId().toString().toInt()
+        clientInfo.channelId =  channelId().toString().toInt()
+        clientInfo.password = password().toString()//password id
         clientInfo.mainAppVersionCode = String.valueOf(BuildConfig.VERSION_CODE)
         clientInfo.appVersionName = BuildConfig.VERSION_NAME
         AppProtecttInteractor.clientInfo = clientInfo
 
 //SDK Initialization
         AppProtecttInteractor(this).initAppProtectt(
-            "SplashScreen",
-            R.layout.alert_layout_logo, R.drawable.launch_background, R.style.AlertDialogCustom,
-            BuildConfig.BUILD_TYPE, ALERT_DIALOG
+            "MainActivity",
+            0, R.drawable.launch_background, 0,
+            BuildConfig.BUILD_TYPE, BOTTOMSHEET_DIALOG
         )
         val deviceId = Secure.getString(contentResolver, Secure.ANDROID_ID)
         updateCustRefIdAPI(deviceId)
 
     }
+
+    private external fun password(): String
+    private external fun channelId(): String
+    private external fun clientId(): String
+    private external fun channelLicenseKey(): String
+    private external fun appName(): String
+    private external fun appPackagename(): String
 }

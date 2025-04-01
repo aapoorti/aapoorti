@@ -1191,7 +1191,7 @@ class AapoortiUtilities {
                   alignment: Alignment.bottomLeft,
                   padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
                   decoration: BoxDecoration(
-                    color: Colors.teal,
+                    color: Colors.blue.shade800,
                     //image: DecorationImage(image: AssetImage('assets/welcome.jpg'), fit: BoxFit.cover),
                   ),
                   child: Row(
@@ -1207,7 +1207,7 @@ class AapoortiUtilities {
                             child: Icon(
                               Icons.person,
                               size: 40,
-                              color: Colors.teal,
+                              color: Colors.blue.shade800,
                             ),
                           ),
                           SizedBox(height: 4.0),

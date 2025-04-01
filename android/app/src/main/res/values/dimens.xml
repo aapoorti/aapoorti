@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="small">4dp</dimen>
+    <dimen name="medium">8dp</dimen>
+    <dimen name="large">12dp</dimen>
+    <dimen name="xlarge">16dp</dimen>
+    <dimen name="xxlarge">20dp</dimen>
+
+    <!--    <dimen name="text_small">12sp</dimen>
+        <dimen name="text_xsmall">8sp</dimen>
+        <dimen name="dimen150dp">150dp</dimen>
+        <dimen name="olie_size">80dp</dimen>
+        <dimen name="sim_layout_max_height">300dp</dimen>
+        <dimen name="sim_icon_height">39dp</dimen>
+        <dimen name="sim_icon_width">28dp</dimen>-->
+
+
+
+    <!--sdk-->
+    <!--*AppProtect - Dimension values for itemView*-->
+    <dimen name="ap_item_view_title">18sp</dimen>
+    <dimen name="ap_item_view_short_description">12sp</dimen>
+    <dimen name="ap_item_view_button_text">8sp</dimen>
+    <dimen name="ap_bs_title_text_size">20sp</dimen>
+    <!--*AppProtect - Dimension values for itemView*-->
+
+
+    <!--    <dimen name="text_small">12sp</dimen>
+        <dimen name="text_xsmall">8sp</dimen>
+        <dimen name="dimen150dp">150dp</dimen>
+        <dimen name="olie_size">80dp</dimen>
+        <dimen name="sim_layout_max_height">300dp</dimen>
+        <dimen name="sim_icon_height">39dp</dimen>
+        <dimen name="sim_icon_width">28dp</dimen>-->
+
+
+   <!-- <dimen name="_35sdp">35dp</dimen>
+    <dimen name="_35sdp">35dp</dimen>-->
+    <!--sdk-->
+
+</resources>

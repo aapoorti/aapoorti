@@ -258,16 +258,14 @@
 // }
 
 
-import 'dart:convert';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
+
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/aapoorti/common/DatabaseHelper.dart';
 import 'package:flutter_app/aapoorti/common/NoData.dart';
-import 'package:flutter_app/aapoorti/login/home/UserHome.dart';
+
 import 'package:flutter_app/aapoorti/common/NoResponse.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'PendingBillsDetails.dart';
@@ -360,7 +358,7 @@ class _PendingBillState extends State<PendingBill> {
         resizeToAvoidBottomInset: false,
         key: _scaffoldKey,
         appBar: AppBar(
-          backgroundColor: darkTealColor,
+          backgroundColor: Colors.blue.shade800,
           foregroundColor: Colors.white,
           iconTheme: const IconThemeData(color: Colors.white),
           title: isSearching

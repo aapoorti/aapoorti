@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/mmis/controllers/crismmis_controller.dart';
 import 'package:flutter_app/mmis/models/newCrisMmisData.dart';
+import 'package:flutter_app/mmis/routes/routes.dart';
 import 'package:flutter_app/mmis/utils/my_color.dart';
 import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:get/get.dart';
@@ -748,108 +749,113 @@ class _DemandCardState extends State<DemandCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF0073CF), Color(0xFF1E88E5)],
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '${widget.demandNumber}. ${widget.demandDetails.key11}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            widget.demandDetails.key12!,
-                            style: TextStyle(color: Colors.grey[800], fontSize: 14),
-                            //overflow: TextOverflow.ellipsis,
-                          ),
+    return InkWell(
+      onTap: (){
+        Get.toNamed(Routes.searchdmdpreviewScreen, arguments: [widget.demandDetails.key2]);
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF0073CF), Color(0xFF1E88E5)],
                         ),
-                      ],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '${widget.demandNumber}. ${widget.demandDetails.key11}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            _buildDetailItem(
-              context,
-              Icons.info_outline,
-              'Status',
-              '${widget.demandDetails.key17!}',
-              subtitle: widget.demandDetails.key22 == "NULL" || widget.demandDetails.key22 == null ? "NA" :'${removeLeadingDashes(widget.demandDetails.key22!)}',
-              showStatusInfo: true,
-            ),
-            if(_showStatusReference) _buildStatusCodeReference(widget.demandDetails.key22!),
-            _buildDetailItem(
-              context,
-              Icons.person,
-              'Indentor',
-              '${widget.demandDetails.key13!.split('<br/>')[0]}',
-              subtitle:'${ widget.demandDetails.key13!.split('<br/>')[1]}',
-              isBold: true,
-              isBlueText: true,
-            ),
-            _buildDetailItem(
-              context,
-              Icons.person,
-              'Currently With',
-              widget.demandDetails.key15!,
-              subtitle: '${widget.demandDetails.key21!}',
-              isBold: true,
-              isBlueText: true,
-            ),
-            _buildDetailItem(
-              context,
-              Icons.description,
-              'Purpose',
-              "${widget.demandDetails.key4!}",
-            ),
-            _buildDetailItem(
-              context,
-              Icons.currency_rupee,
-              'Value / Approval Level',
-              '${widget.demandDetails.key18!} / ${widget.demandDetails.key19!}',
-              isLast: true,
-            ),
-          ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              widget.demandDetails.key12!,
+                              style: TextStyle(color: Colors.grey[800], fontSize: 14),
+                              //overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              _buildDetailItem(
+                context,
+                Icons.info_outline,
+                'Status',
+                '${widget.demandDetails.key17!}',
+                subtitle: widget.demandDetails.key22 == "NULL" || widget.demandDetails.key22 == null ? "NA" :'${removeLeadingDashes(widget.demandDetails.key22!)}',
+                showStatusInfo: true,
+              ),
+              if(_showStatusReference) _buildStatusCodeReference(widget.demandDetails.key22!),
+              _buildDetailItem(
+                context,
+                Icons.person,
+                'Indentor',
+                '${widget.demandDetails.key13!.split('<br/>')[0]}',
+                subtitle:'${ widget.demandDetails.key13!.split('<br/>')[1]}',
+                isBold: true,
+                isBlueText: true,
+              ),
+              _buildDetailItem(
+                context,
+                Icons.person,
+                'Currently With',
+                widget.demandDetails.key15!,
+                subtitle: '${widget.demandDetails.key21!}',
+                isBold: true,
+                isBlueText: true,
+              ),
+              _buildDetailItem(
+                context,
+                Icons.description,
+                'Purpose',
+                "${widget.demandDetails.key4!}",
+              ),
+              _buildDetailItem(
+                context,
+                Icons.currency_rupee,
+                'Value / Approval Level',
+                '${widget.demandDetails.key18!} / ${widget.demandDetails.key19!}',
+                isLast: true,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -903,7 +909,7 @@ class _DemandCardState extends State<DemandCard> {
                   ),
                   overflow: TextOverflow.visible,
                 ),
-                if (subtitle != null) ...[
+                if(subtitle != null) ...[
                   const SizedBox(height: 2),
                   Row(
                     children: [
@@ -918,7 +924,7 @@ class _DemandCardState extends State<DemandCard> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      if (showStatusInfo) ...[
+                      if(showStatusInfo) ...[
                         const SizedBox(width: 4),
                         InkWell(
                           onTap: () {

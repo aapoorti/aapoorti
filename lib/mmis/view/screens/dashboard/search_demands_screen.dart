@@ -131,7 +131,6 @@ class _SearchDemandsScreenState extends State<SearchDemandsScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     debugPrint("search dmd screen initState called");
     _animationController = AnimationController(
@@ -608,7 +607,7 @@ class _SearchDemandsScreenState extends State<SearchDemandsScreen>
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons()  {
     return Column(
       children: [
         _buildActionButton(
