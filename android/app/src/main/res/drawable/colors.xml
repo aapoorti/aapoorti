@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--AppProtectt - sdk-->
+    <color name="ap_orange">#E99B00</color>
+    <color name="ap_darkred">#97144D</color>
+    <color name="ap_bgblue">#FFFFFF</color>
+    <color name="ap_gray">#808080</color>
+    <!--AppProtectt - sdk-->
+</resources>
