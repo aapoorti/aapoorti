@@ -5,11 +5,12 @@ import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/CommonScreen.dart';
+import 'package:flutter_app/aapoorti/provider/aapoorti_language_provider.dart';
 import 'package:flutter_app/aapoorti/widgets/confirm_dialog.dart';
 import 'package:flutter_app/aapoorti/widgets/logout.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
 
-import 'package:flutter_app/udm/widgets/delete_dialog.dart';
+import 'package:flutter_app/udm/widgets/warningalert_dialog.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import 'package:flutter/foundation.dart';
@@ -40,6 +41,7 @@ import 'package:flutter_app/aapoorti/login/home/UserHome.dart';
 import 'package:flutter_app/aapoorti/login/loginReports/StockPosition/stock_posiion.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AapoortiConstants.dart';
 import 'package:flutter/services.dart';
@@ -380,6 +382,7 @@ class AapoortiUtilities {
   }
 
   static Widget navigationdrawerbeforLOgin(GlobalKey<ScaffoldState> _scaffoldKey, BuildContext context) {
+    AapoortiLanguageProvider language = Provider.of<AapoortiLanguageProvider>(context);
     return Drawer(
       child: Column(
         children: [
@@ -392,9 +395,15 @@ class AapoortiUtilities {
                     constraints: BoxConstraints.expand(height: 180.0),
                     alignment: Alignment.bottomLeft,
                     padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
-                    decoration: BoxDecoration(
-                      color: AapoortiConstants.primary
-                      //image: DecorationImage(image: AssetImage('assets/welcome.jpg'), fit: BoxFit.cover),
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFF0D47A1), // Dark Blue
+                            Color(0xFF1976D2), // Lighter Blue
+                          ],
+                        ),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -411,7 +420,7 @@ class AapoortiUtilities {
                         ),
                         SizedBox(height: 2.0),
                         Text(
-                          'Welcome',
+                          language.text('welcome'),
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -426,11 +435,11 @@ class AapoortiUtilities {
                       Navigator.pushNamed(context, "/about");
                     },
                     leading: Icon(Icons.info_outline),
-                    title: Text('About Us'),
+                    title: Text(language.text('aboutus')),
                   ),
                   ListTile(
                       leading: Icon(Icons.star_border),
-                      title: Text('Rate Us'),
+                      title: Text(language.text('rateus')),
                       onTap: () {
                         _scaffoldKey.currentState!.closeDrawer();
                         AapoortiUtilities.openStore(context);
@@ -466,7 +475,7 @@ class AapoortiUtilities {
                   Padding(
                     padding: const EdgeInsets.only(left: 5.0),
                     child: Text(
-                      "Version: $version",
+                      "${language.text('version')}: $version",
                       style: TextStyle(
                         color: Colors.grey,
                       ),
@@ -475,7 +484,7 @@ class AapoortiUtilities {
                   Padding(
                     padding: const EdgeInsets.only(right: 5.0),
                     child: Text(
-                      "Developed by CRIS",
+                      language.text('dbc'),
                       style: TextStyle(
                         color: Colors.grey,
                       ),
@@ -495,13 +504,22 @@ class AapoortiUtilities {
                 },
                 child: Container(
                   height: 45,
-                  color: AapoortiConstants.primary,
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF0D47A1), // Dark Blue
+                          Color(0xFF1976D2), // Lighter Blue
+                        ],
+                      ),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.logout, color: Colors.white),
                       SizedBox(width: 10),
-                      Text("Exit", style: TextStyle(fontSize: 16, color: Colors.white))
+                      Text(language.text('exit'), style: TextStyle(fontSize: 16, color: Colors.white))
                     ],
                   ),
                 ),
@@ -852,6 +870,7 @@ class AapoortiUtilities {
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
+                              fixedSize: Size(85, 40),
                               backgroundColor: Colors.lightBlue[700],
                               foregroundColor: Colors.white,
                             ),

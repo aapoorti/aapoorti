@@ -6,7 +6,6 @@ Map<String, String> englishText = {
  "tryagainbtn" : "TRY AGAIN",
 
   //Login Screen
-  'railname':'Railway',
   'unitname':'Unit Details',
   'department':'Department',
   'department1':'Select Department',
@@ -31,10 +30,12 @@ Map<String, String> englishText = {
   'enableAccessLabel2': 'enable login ',
   'enableAccessLabel3': 'access for UDM App',
   'resetPinInstructionsLabel1': 'How to ',
-  'resetPinInstructionsLabel2': 'Reset PIN',
+
   'loginScreenInstructions1': 'Login to www.ireps.gov.in',
   'loginScreenInstructions2': 'Click on switch icon on right side upper corner',
   'enableAccessInstructionsTitle': 'To enable login access for UDM',
+  'ela' : 'Enable Login Aceess',
+ 'resetPinInstructionsLabel2': 'Reset PIN',
   'enableAccessInstructionsText':
   'Click on ‘Enable Mobile Access’ and complete the process',
   'resetPinInstructionsTitle': 'To reset PIN for UDM',
@@ -47,7 +48,6 @@ Map<String, String> englishText = {
   'udmlabel' : 'UDM',
   'welcome': 'Welcome',
   'home' : 'Home',
-  'profile' : 'Profile',
   'settings' : 'Settings',
   //Change PIN
   'changePin': 'Change PIN',
@@ -61,8 +61,6 @@ Map<String, String> englishText = {
   'changeLogin':'Change Login',
   'rateUs': 'Rate Us',
   'version': 'Version',
-  //Profile
-  'profile': 'Profile',
   'userDetails': 'User Details',
   'orgDetails': 'Organisation Details',
   'lastLogin': 'Last Login Time',
@@ -83,7 +81,6 @@ Map<String, String> englishText = {
   'selectdepartment': 'Select Department',
   'userDepot': 'User Depot',
   'selectuserdepot': 'Select User Depot',
-  'payauth': 'Paying Authority',
   'payauth1': 'All',
   'checkconnection' : 'Please check your internet connection!!',
 
@@ -888,7 +885,6 @@ Map<String, String> englishText = {
   'podate' : 'PO Date' ,
   'venname' : 'Vendor Name' ,
   'povalue' : 'PO Value' ,
-  'payauth' : 'Paying Authority' ,
 
   'matrecaccdtls' : 'Material / Accountal Details' ,
   'cons' : 'Consignee' ,
@@ -1308,5 +1304,10 @@ Map<String, String> englishText = {
  'phone' : 'Phone',
  'email' : 'Email',
  'enow' : 'Email Now',
- 'cnow' : 'Call Now'
+ 'cnow' : 'Call Now',
+ 'conftitle' : 'Confirmation!!',
+ 'confdesc' : 'Do you want to logout from application??',
+ 'nostay' : 'No, stay',
+ 'yesexit' : 'Yes, exit',
+ 'slcf' : 'Save Login Credentials for'
 };

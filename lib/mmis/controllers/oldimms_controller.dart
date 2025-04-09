@@ -48,6 +48,7 @@ class OldiMMsController extends GetxController{
         var listdata = json.decode(response.body);
         if(listdata['status'] == 'Success'){
           var listJson = listdata['data'];
+          debugPrint("hfhhfhfhfhhfhfh $listJson");
           if(listJson != null) {
             oldimmsData = listJson.map<OldImmsData>((val) => OldImmsData.fromJson(val)).toList();
             duplicateoldimmsData = listJson.map<OldImmsData>((val) => OldImmsData.fromJson(val)).toList();

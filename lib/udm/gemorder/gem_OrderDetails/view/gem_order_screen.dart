@@ -93,7 +93,14 @@ class _GemOrderScreenState extends State<GemOrderScreen> {
                       ],
                     );
                   }
-                })
+                }),
+            IconButton(
+              icon: const Icon(Icons.home, color: Colors.white, size: 22),
+              onPressed: () {
+                Navigator.of(context).pop();
+                //Feedback.forTap(context);
+              },
+            ),
           ],
           title: Consumer<GemOrderupdateChangesScreenProvider>(
               builder: (context, value, child) {

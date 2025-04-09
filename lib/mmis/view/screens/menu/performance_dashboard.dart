@@ -59,11 +59,109 @@ class _PerformanceDashBoardState extends State<PerformanceDashBoard> with Single
       },
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-            backgroundColor: AapoortiConstants.primary,
-            iconTheme: IconThemeData(color: Colors.white),
-            centerTitle: true,
-            title: Text("CRIS MMIS", style : TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontStyle: FontStyle.italic,fontSize: 18.0))),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF0D47A1), // Dark Blue
+                  Color(0xFF1976D2), // Lighter Blue
+                ],
+              ),
+            ),
+            child: AppBar(
+              elevation: 0,
+              centerTitle: true,
+              backgroundColor: Colors.transparent, // Make AppBar background transparent
+              iconTheme: const IconThemeData(color: Colors.white),
+              // actions: [
+              //   Padding(
+              //     padding: const EdgeInsets.only(right: 8.0),
+              //     child: GestureDetector(
+              //       onTap: _toggleLanguage,
+              //       child: Container(
+              //         width: 60,
+              //         height: 40,
+              //         decoration: BoxDecoration(
+              //           color: const Color(0xFF4285F4),
+              //           borderRadius: BorderRadius.circular(20),
+              //           boxShadow: [
+              //             BoxShadow(
+              //               color: Colors.black.withOpacity(0.2),
+              //               blurRadius: 4,
+              //               offset: const Offset(0, 2),
+              //             ),
+              //           ],
+              //         ),
+              //         child: Stack(
+              //           alignment: Alignment.center,
+              //           children: [
+              //             AnimatedPositioned(
+              //               duration: const Duration(milliseconds: 300),
+              //               curve: Curves.easeInOut,
+              //               left: _isEnglish ? 5 : null,
+              //               right: _isEnglish ? null : 5,
+              //               child: Container(
+              //                 width: 30,
+              //                 height: 30,
+              //                 decoration: BoxDecoration(
+              //                   color: Colors.white,
+              //                   shape: BoxShape.circle,
+              //                   boxShadow: [
+              //                     BoxShadow(
+              //                       color: Colors.black.withOpacity(0.1),
+              //                       blurRadius: 4,
+              //                       offset: const Offset(0, 2),
+              //                     ),
+              //                   ],
+              //                 ),
+              //                 child: Center(
+              //                   child: Text(
+              //                     _isEnglish ? 'A' : 'अ',
+              //                     style: TextStyle(
+              //                       color: const Color(0xFF1A73E8),
+              //                       fontSize: 18,
+              //                       fontWeight: FontWeight.bold,
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   )
+              // ],
+              leading: InkWell(
+                onTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
+                child: Container(
+                  margin: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.grid_view_rounded, color: Colors.white),
+                ),
+              ),
+              title: Text(
+                "CRIS MMIS",
+                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+        ),
+        // appBar: AppBar(
+        //     backgroundColor: AapoortiConstants.primary,
+        //     iconTheme: IconThemeData(color: Colors.white),
+        //     centerTitle: true,
+        //     title: Text("CRIS MMIS", style : TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontStyle: FontStyle.italic,fontSize: 18.0))),
         drawer: navDrawer(context, _scaffoldKey, controller, themeController),
         bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
         body: Container(

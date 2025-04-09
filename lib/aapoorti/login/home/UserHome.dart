@@ -5,7 +5,7 @@ import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/aapoorti/common/DatabaseHelper.dart';
 import 'package:flutter_app/aapoorti/common/NoConnection.dart';
-import 'package:flutter_app/udm/widgets/delete_dialog.dart';
+import 'package:flutter_app/udm/widgets/warningalert_dialog.dart';
 import '../auctionReports/SoldLots/SoldLots.dart';
 import '../auctionReports/catalogRpt/CatalogueSum.dart';
 import '../auctionReports/consolidatedRpt/Consolidated.dart';
@@ -483,17 +483,58 @@ class _UserHomeState extends State<UserHome> {
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.white,
             key: _scaffoldKey,
-            appBar: AppBar(
-              iconTheme: IconThemeData(color: Colors.white),
-              backgroundColor: Colors.blue.shade800,
-              title: Text(
-                'IREPS',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight),
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF0D47A1), // Dark Blue
+                      Color(0xFF1976D2), // Lighter Blue
+                    ],
+                  ),
+                ),
+                child: AppBar(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent, // Make AppBar background transparent
+                  iconTheme: const IconThemeData(color: Colors.white),
+                  leading: InkWell(
+                    onTap: () {
+                      _scaffoldKey.currentState!.openDrawer();
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.grid_view_rounded, color: Colors.white),
+                    ),
+                  ),
+                  title: const Text(
+                    'IREPS',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ),
+            // appBar: AppBar(
+            //   iconTheme: IconThemeData(color: Colors.white),
+            //   backgroundColor: Colors.blue.shade800,
+            //   title: Text(
+            //     'IREPS',
+            //     style: TextStyle(
+            //       color: Colors.white,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            // ),
             drawer: AapoortiUtilities.navigationdrawer(_scaffoldKey, context),
             body: (usertype == "4" && moduleaccess == "NA") || moduleaccess!.contains("4") ? Container(color: Colors.grey.shade100, child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

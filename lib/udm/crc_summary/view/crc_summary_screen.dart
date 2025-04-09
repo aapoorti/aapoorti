@@ -70,6 +70,15 @@ class _CrcSummaryScreenState extends State<CrcSummaryScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AapoortiConstants.primary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home, color: Colors.white, size: 22),
+            onPressed: () {
+              Navigator.of(context).pop();
+              //Feedback.forTap(context);
+            },
+          ),
+        ],
         title: Text(language.text('crcsum'), style: TextStyle(color: Colors.white)),
           iconTheme: IconThemeData(color: Colors.white)
       ),

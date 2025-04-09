@@ -210,7 +210,14 @@ class _CrnScreenState extends State<CrnScreen>
                   },
                   icon: Icon(Icons.search, color: Colors.white));
             }
-          })
+          }),
+          IconButton(
+            icon: const Icon(Icons.home, color: Colors.white, size: 22),
+            onPressed: () {
+              Navigator.of(context).pop();
+              //Feedback.forTap(context);
+            },
+          ),
         ],
         // bottom: TabBar(
         //   onTap: (tabindex) {

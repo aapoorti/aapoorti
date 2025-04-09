@@ -604,6 +604,12 @@ class _SearchZonalState extends State<SearchPoZonal> {
         ),
         style: const TextStyle(fontSize: 12, color: Colors.black),
         validator: (value) {
+          if(controller == _supplierController || controller == _plNoController){
+            if (!_validateFields()) {
+              return "At least one field is required";
+            }
+            return null;
+          }
           if (value == null || value.length < 3) {
             return 'Minimum 3 characters required';
           }
@@ -850,6 +856,10 @@ class _SearchZonalState extends State<SearchPoZonal> {
   //     pv2 = "99999";
   //   }
   // }
+
+  bool _validateFields() {
+    return _supplierController.text.isNotEmpty || _plNoController.text.isNotEmpty;
+  }
 
   void checkvalue() {
     if(_formKey.currentState!.validate()) {

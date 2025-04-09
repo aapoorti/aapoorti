@@ -764,6 +764,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
           },
         ),
         title: Text(Provider.of<LanguageProvider>(context).text('transaction'), style: TextStyle(color: Colors.white)),
+         actions: [
+           IconButton(
+             icon: const Icon(Icons.home, color: Colors.white, size: 22),
+             onPressed: () {
+               Navigator.of(context).pop();
+               //Feedback.forTap(context);
+             },
+           ),
+         ],
       ),
        body: Container(
          height: size.height,

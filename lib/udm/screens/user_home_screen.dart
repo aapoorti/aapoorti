@@ -34,7 +34,7 @@
 // import 'package:flutter_app/udm/widgets/consuptionAnalysisFilter.dart';
 // import 'package:flutter_app/udm/widgets/consuptionSummaryFilter.dart';
 // import 'package:flutter_app/udm/widgets/custom_rightside_drawer.dart';
-// import 'package:flutter_app/udm/widgets/delete_dialog.dart';
+// import 'package:flutter_app/udm/widgets/warningalert_dialog.dart';
 // import 'package:flutter_app/udm/widgets/highValueFilter.dart';
 // import 'package:flutter_app/udm/widgets/nonMovingFilter.dart';
 // import 'package:flutter_app/udm/widgets/poSearch_rightside_drawer.dart';
@@ -937,6 +937,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/udm/helpers/wso2token.dart';
+import 'package:flutter_app/udm/localization/languageHelper.dart';
 import 'package:flutter_app/udm/transaction/transaction_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_app/udm/crc_digitally_signed/view/crc_screen.dart';
@@ -957,24 +958,21 @@ import 'package:flutter_app/udm/rejection_warranty/views/warranty_rejection_scre
 import 'package:flutter_app/udm/screens/UdmChangePin.dart';
 import 'package:flutter_app/udm/stock_item_history_sheet/views/stock_items_history_sheet_screen.dart';
 import 'package:flutter_app/udm/stocking_proposal_summary/view/stocking_proposal_summary_screen.dart';
-import 'package:flutter_app/udm/transaction/transaction_search_dropdown.dart';
 import 'package:flutter_app/udm/warranty_complaint_summary/view/Warranty_dropdownScreen.dart';
 import 'package:flutter_app/udm/warranty_crn_summary/view/warranty_crn_summary_screen.dart';
 import 'package:flutter_app/udm/widgets/bottom_Nav/bottom_nav.dart';
 import 'package:flutter_app/udm/widgets/consuptionAnalysisFilter.dart';
 import 'package:flutter_app/udm/widgets/consuptionSummaryFilter.dart';
 import 'package:flutter_app/udm/widgets/custom_rightside_drawer.dart';
-import 'package:flutter_app/udm/widgets/delete_dialog.dart';
+import 'package:flutter_app/udm/widgets/warningalert_dialog.dart';
 import 'package:flutter_app/udm/widgets/highValueFilter.dart';
 import 'package:flutter_app/udm/widgets/nonMovingFilter.dart';
 import 'package:flutter_app/udm/widgets/poSearch_rightside_drawer.dart';
 import 'package:flutter_app/udm/widgets/stock_rightside_drawer.dart';
 import 'package:flutter_app/udm/widgets/stock_summary_drawer.dart';
 import 'package:flutter_app/udm/widgets/storeDepot_rightside_drawer.dart';
-import 'package:flutter_app/udm/widgets/switch_language_button.dart';
 import 'package:flutter_app/udm/widgets/valueWiseStockFilter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-//import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../gemorder/gem_OrderDetails/view/gem_order_screen.dart';
@@ -983,7 +981,6 @@ import '../onlineBillStatus/statusDropdown.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../warranty_rejection_register/view/warranty_rejection_register_screen.dart';
-import '../widgets/expandablegrid.dart';
 import 'Profile.dart';
 import 'login_screen.dart';
 
@@ -1000,10 +997,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
 
 
   List<Map<String, dynamic>> gridOneItems = [
-    {
-      'icon': 'assets/item1.png',
-      'label': 'आइटम ढूँढें\nSearch Item'
-    },
+    {'icon': 'assets/item1.png', 'label': 'आइटम खोजें\nSearch Item'},
     {
       'icon': 'assets/item_search.png',
       'label': 'स्टॉक उपलब्धता\nStock Availability'
@@ -1100,6 +1094,35 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
       'icon': 'assets/images/crc.png',
       'label': 'सीआरसी सारांश \nCRC Summary'
     },
+    {
+      'icon': 'assets/images/warranty.png',
+      'label': 'अस्वीकृति/वारंटी \nRejection/Warranty'
+    },
+    {
+      'icon': 'assets/images/demand.jpg',
+      'label': 'एनएस मांग सारांश \nNS Demand Summary'
+    },
+    {
+      'icon': 'assets/report_icon.png',
+      'label': 'वारंटी शिकायत सारांश \nWarranty Complaint Summary'
+    },
+    {
+      'icon': 'assets/images/summary.jpg',
+      'label': 'सीआरएन सारांश \nCRN Summary'
+    },
+    {
+      'icon': 'assets/images/stock_sm.jpg',
+      'label': 'स्टॉकिंग प्रस्ताव सारांश \nStocking Proposal Summary'
+    },
+    {
+      'icon': 'assets/images/rejection.png',
+      'label': 'वारंटी अस्वीकृति रजिस्टर \nWarranty Rejection Register'
+    },
+    {
+      'icon': 'assets/images/crc.png',
+      'label': 'सीआरसी सारांश \nCRC Summary'
+    },
+
     // {
     //   'icon': 'assets/images/end_user.png',
     //   'label': 'अंतिम उपयोगकर्ता के लिए \nTo End User'
@@ -1133,15 +1156,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
   String _searchQuery = '';
 
   final Map<String, String> _translations = {
-    'User Depot Module': 'उपयोगकर्ता डिपो मॉड्यूल',
-    'Search Item': 'आइटम ढूँढें',
+    'User Depot Module': 'यूजर डिपो मॉड्यूल',
+    'Search Item': 'आइटम खोजें',
     'Stock Availability': 'स्टॉक उपलब्धता',
-    'Stores Depot Stock': 'भण्डार डिपो स्टॉक',
+    'Stores Depot': 'भण्डार डिपो स्टॉक',
     'Summary of Stock': 'स्टॉक का संक्षिप्त विवरण',
     'Non-Moving Items': 'नॉन-मूविंग आइटम',
     'Value-Wise Stock': 'वैल्यू अनुसार स्टॉक',
     'High Value Items': 'उच्च वैल्यू आइटम',
-    'Stk. Item History Sheet': 'स्टॉक आइटम इतिहास पत्रक',
+    'Stk. Item History Sheet' : 'स्टॉक आइटम इतिहास पत्रक',
     'Search PO': 'क्रयादेश ढूँढें',
     'Consumption Analysis': 'खपत का विश्लेषण',
     'Consumption Summary': 'खपत का संक्षिप्त विवरण',
@@ -1159,6 +1182,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
     'Search for items, stocks, orders...': 'आइटम, स्टॉक, ऑर्डर खोजें...',
     'No results found for': 'के लिए कोई परिणाम नहीं मिला',
     'Search Results': 'खोज परिणाम',
+    'Rejection/Warranty':'अस्वीकृति/वारंटी',
+    'NS Demand Summary' : 'एनएस मांग सारांश',
+    'Warranty Complaint' : 'वारंटी शिकायत सारांश',
+    'CRN Summary' : 'सीआरएन सारांश',
+    'Stocking Proposal Summary' : 'स्टॉकिंग प्रस्ताव सारांश',
+    'Warranty Rejection Register' : 'वारंटी अस्वीकृति रजिस्टर',
+    'CRC Summary' : 'सीआरसी सारांश',
   };
 
   void initState() {
@@ -1182,6 +1212,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
     requestWritePermission();
     getVersion();
     fetchUserData();
+    _checkLanguage();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Timer(Duration(milliseconds: 500), () {
@@ -1512,7 +1543,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
       bgColor: const Color(0xFFF3E5F5),
     ),
     MenuItemData(
-      title: 'Stock Summary',
+      title: 'Summary of Stock',
       icon: Icons.bar_chart,
       color: const Color(0xFF009688),
       bgColor: const Color(0xFFE0F2F1),
@@ -1536,7 +1567,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
       bgColor: const Color(0xFFFFF8E1),
     ),
     MenuItemData(
-      title: 'Stock Item History',
+      title: 'Stk. Item History Sheet',
       icon: Icons.history,
       color: const Color(0xFF43A047),
       bgColor: const Color(0xFFE8F5E9),
@@ -1604,21 +1635,79 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
       color: const Color(0xFF212121),
       bgColor: const Color(0xFFF5F5F5),
     ),
+    // New items added below
+    MenuItemData(
+      title: 'Rejection/Warranty',
+      icon: Icons.warning_amber,
+      color: const Color(0xFFF44336),
+      bgColor: const Color(0xFFFFEBEE),
+    ),
+    MenuItemData(
+      title: 'NS Demand Summary',
+      icon: Icons.summarize,
+      color: const Color(0xFF795548),
+      bgColor: const Color(0xFFEFEBE9),
+    ),
+    MenuItemData(
+      title: 'Warranty Complaint',
+      icon: Icons.report_problem,
+      color: const Color(0xFFFF9800),
+      bgColor: const Color(0xFFFFF3E0),
+    ),
+    MenuItemData(
+      title: 'CRN Summary',
+      icon: Icons.list_alt,
+      color: const Color(0xFF9C27B0),
+      bgColor: const Color(0xFFF3E5F5),
+    ),
+    MenuItemData(
+      title: 'Stocking Proposal',
+      icon: Icons.inventory,
+      color: const Color(0xFF3F51B5),
+      bgColor: const Color(0xFFE8EAF6),
+    ),
+    MenuItemData(
+      title: 'Warranty Rejection',
+      icon: Icons.do_not_disturb,
+      color: const Color(0xFFD32F2F),
+      bgColor: const Color(0xFFFFEBEE),
+    ),
+    MenuItemData(
+      title: 'CRC Summary',
+      icon: Icons.checklist,
+      color: const Color(0xFF0097A7),
+      bgColor: const Color(0xFFE0F7FA),
+    ),
   ];
 
   List<MenuItemData> get _allItems => [..._inventoryItems, ..._reportsItems];
 
   List<MenuItemData> get _filteredItems {
-    if (_searchQuery.isEmpty) {
+    if(_searchQuery.isEmpty) {
       return [];
     }
 
     final query = _searchQuery.toLowerCase();
-    return _allItems.where((item) =>
-    item.title.toLowerCase().contains(query) ||
-        _translations[item.title]!.toLowerCase().contains(query)
-    ).toList();
+    return _allItems.where((item) {
+      final title = item.title.toLowerCase();
+      final translatedTitle = _translations[item.title]?.toLowerCase() ?? ""; // Ensure it’s not null
+
+      return title.contains(query) || translatedTitle.contains(query);
+    }).toList();
   }
+
+  // List<MenuItemData> get _filteredItems {
+  //   debugPrint("filter1 $_searchQuery");
+  //   if(_searchQuery.isEmpty) {
+  //     return [];
+  //   }
+  //
+  //   debugPrint("filter2 $_searchQuery");
+  //   final query = _searchQuery.toLowerCase();
+  //   return _allItems.where((item) =>
+  //   item.title.toLowerCase().contains(query) || _translations[item.title]!.toLowerCase().contains(query)
+  //   ).toList();
+  // }
 
   @override
   void dispose() {
@@ -1647,23 +1736,119 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
         //     backgroundColor: AapoortiConstants.primary,
         //     leading: IconButton(icon: SvgPicture.asset('assets/images/dashboard.svg', color: Colors.white, height: 22, width: 22), onPressed: () => _scaffoldKey.currentState!.openDrawer()),
         //     actions: <Widget>[
-        //       SwitchLanguageButton(),
+        //      SwitchLanguageButton(),
         //     ]
         // ),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF0D47A1), // Dark Blue
+                  Color(0xFF1976D2), // Lighter Blue
+                ],
+              ),
+            ),
+            child: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent, // Make AppBar background transparent
+              iconTheme: const IconThemeData(color: Colors.white),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: GestureDetector(
+                    onTap: _toggleLanguage,
+                    child: Container(
+                      width: 60,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF4285F4),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AnimatedPositioned(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            left: _isEnglish ? 5 : null,
+                            right: _isEnglish ? null : 5,
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _isEnglish ? 'A' : 'अ',
+                                  style: TextStyle(
+                                    color: const Color(0xFF1A73E8),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+              leading: InkWell(
+                onTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
+                child: Container(
+                  margin: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.grid_view_rounded, color: Colors.white),
+                ),
+              ),
+              title: Text(
+                language.text('udmFull'),
+                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+        ),
         drawer: navigationdrawer(context, size),
         backgroundColor: Colors.grey.shade100,
-        bottomNavigationBar: _buildBottomNavigationBar(),
-        //bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
-        body: SafeArea(
-            child: Column(
-              children: [
-                _buildHeader(),
-                _buildSearchBar(),
-                Expanded(
-                  child: _showSearchResults ? _buildSearchResults() : _buildMainContent(),
-                ),
-              ],
-            )),
+        //bottomNavigationBar: _buildBottomNavigationBar(),
+        bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
+        body: Column(
+          children: [
+            //_buildHeader(),
+            _buildSearchBar(),
+            Expanded(
+              child: _showSearchResults ? _buildSearchResults() : _buildMainContent(),
+            ),
+          ],
+        ),
         // body: Padding(
         //   padding: EdgeInsets.all(5),
         //   child: ExpandableGrid(
@@ -1784,12 +1969,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
                 ),
                 onTap: () {
                   _clearSearch();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${_translate(item.title)} ${_isEnglish ? 'selected' : 'चुना गया'}'),
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
+                  _navigate(_translate(item.title));
+                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  //     content: Text('${_translate(item.title)} ${_isEnglish ? 'selected' : 'चुना गया'}'),
+                  //     duration: const Duration(seconds: 1),
+                  //   ));
                 },
               );
             },
@@ -1979,6 +2163,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
             ],
           ),
           const SizedBox(height: 16),
+
+
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -2016,31 +2202,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            debugPrint("selected now ${_translate(item.title)}");
-            if(item.title == "Search Item" || item.title == "आइटम खोजें"){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CustomRightSideDrawer()));
-            }
-            else if(item.title == 'Stock Availability' || item.title == 'स्टॉक उपलब्धता'){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => StockRightSideDrawer()));
-            }
-            else if(item.title == 'Stock Availability' || item.title == 'स्टॉक उपलब्धता'){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => StoreStkDepotRightSideDrawer()));
-            }
-            else if(item.title == 'Stock Summary' || item.title == 'स्टॉक सारांश'){
+            // Handle navigation for each item
+            _navigate(_translate(item.title));
 
-            }
-            else if(item.title == 'Non-Moving Items' || item.title == 'गैर-चलने वाली वस्तुएं'){
-
-            }
-            else if(item.title == 'Value-Wise Stock' || item.title == 'मूल्य-वार स्टॉक'){
-
-            }
-            else if(item.title == 'High Value Items' || item.title == 'उच्च मूल्य वाली वस्तुएं'){
-
-            }
-            else if(item.title == 'High Value Items' || item.title == 'उच्च मूल्य वाली वस्तुएं'){
-
-            }
           },
           borderRadius: BorderRadius.circular(16),
           child: Padding(
@@ -2061,16 +2225,18 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
                   ),
                 ),
                 SizedBox(height: 8),
-                Expanded(child: Text(
-                  _translate(item.title),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
+                Expanded(
+                  child: Text(
+                    _translate(item.title),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ))
+                ),
               ],
             ),
           ),
@@ -2223,16 +2389,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
                 Container(
                     constraints: BoxConstraints.expand(height: size.height * 0.25),
                     padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
-                    decoration: BoxDecoration(
-                        color: AapoortiConstants.primary,
-                        // image: DecorationImage(
-                        //   colorFilter: ColorFilter.mode(
-                        //     Colors.black38,
-                        //     BlendMode.darken,
-                        //   ),
-                        //   image: AssetImage('assets/welcome.jpg'), fit: BoxFit.cover,
-                        // ),
-                        borderRadius: BorderRadius.only(topRight: Radius.circular(16.0))
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF0D47A1), // Dark Blue
+                          Color(0xFF1976D2), // Lighter Blue
+                        ],
+                      ),
+                      borderRadius: BorderRadius.only(topRight: Radius.circular(16.0))
                     ),
                     child: GestureDetector(
                       onTap: () {
@@ -2331,7 +2497,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
                     },
                     child: Container(
                       height: 45,
-                      color: AapoortiConstants.primary,
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xFF0D47A1), // Dark Blue
+                              Color(0xFF1976D2), // Lighter Blue
+                            ],
+                          ),
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -2444,12 +2619,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
   void _toggleLanguage() {
     setState(() {
       _isEnglish = !_isEnglish;
-      if (_isEnglish) {
+      if(_isEnglish) {
         _animationController.reverse();
       } else {
         _animationController.forward();
       }
     });
+    _isEnglish ? Provider.of<LanguageProvider>(context, listen: false).updateLanguage(Language.English) : Provider.of<LanguageProvider>(context, listen: false).updateLanguage(Language.Hindi);
   }
 
   void _clearSearch() {
@@ -2458,6 +2634,93 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
       _showSearchResults = false;
     });
     FocusScope.of(context).unfocus();
+  }
+
+  void _navigate(String title){
+    if(title == "Search Item" || title == "आइटम खोजें") {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CustomRightSideDrawer()));
+    }
+    else if (title == 'Stock Availability' || title == 'स्टॉक उपलब्धता') {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => StockRightSideDrawer()));
+    }
+    else if (title == 'Stores Depot' || title == 'भण्डार डिपो') {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => StoreStkDepotRightSideDrawer()));
+    }
+    else if (title == 'Summary of Stock' || title == 'स्टॉक का संक्षिप्त विवरण') {
+      Navigator.of(context).pushNamed(StockSummarySideDrawer.routeName);
+    }
+    else if(title == 'Non-Moving Items' || title == 'नॉन-मूविंग आइटम'){
+      Navigator.of(context).pushNamed(NonMovingFilter.routeName);
+    }
+    else if(title == 'Value-Wise Stock' || title == 'वैल्यू अनुसार स्टॉक'){
+      Navigator.of(context).pushNamed(ValueWiseStockFilter.routeName);
+    }
+    else if(title == 'High Value Items' || title == 'उच्च वैल्यू आइटम'){
+      Navigator.of(context).pushNamed(HighValueFilter.routeName);
+
+    }
+    else if(title == 'Stk. Item History Sheet' || title ==  'स्टॉक आइटम इतिहास पत्रक'){
+      Navigator.of(context).pushNamed(StockItemHistorySheetScreen.routeName);
+    }
+    else if(title == 'Search PO' || title == 'क्रयादेश ढूँढें'){
+      Navigator.of(context).pushNamed(POSearchRightSideDrawer.routeName);
+
+    }
+    else if(title == 'Consumption Analysis' || title == 'खपत का विश्लेषण'){
+      Navigator.of(context).pushNamed(ConsumtionAnalysisFilter.routeName);
+    }
+    else if(title == 'Consumption Summary' || title == 'खपत का संक्षिप्त विवरण'){
+      Navigator.of(context).pushNamed(ConsumtionSummaryFilter.routeName);
+    }
+    else if(title == 'Transactions' || title == 'लेनदेन'){
+      Navigator.of(context).pushNamed(TransactionScreen.routeName);
+    }
+    else if(title == 'On-Line Bill Status' || title == 'ऑनलाइन बिल की स्थितिं'){
+      Navigator.of(context).pushNamed(StatusDropDown.routeName);
+    }
+    else if(title == 'On-Line Bill Summary' || title == 'ऑनलाइन बिल सारांश'){
+      Navigator.of(context).pushNamed(SummaryDropdown.routeName);
+    }
+    else if(title == 'CRN' || title == 'सीआरएन'){
+      Navigator.of(context).pushNamed(CrnScreen.routeName);
+    }
+    else if(title == 'CRC' || title == 'सीआरसी'){
+      Navigator.of(context).pushNamed(CrcScreen.routeName);
+    }
+    else if(title == 'NS Demands' || title == 'गैर-स्टॉक मांगें'){
+      Navigator.of(context).pushNamed(NonStockDemandsScreen.routeName);
+    }
+    else if(title == 'GeM Order Details' || title == 'जीईएम ऑर्डर विवरण'){
+      Navigator.of(context).pushNamed(GemOrderScreen.routeName);
+    }
+    else if (title == 'Rejection/Warranty' || title == 'अस्वीकृति/वारंटी') {
+      Navigator.of(context).pushNamed(WarrantyRejectionScreen.routeName);
+    }
+    else if (title == 'NS Demand Summary' || title == 'एनएस डिमांड सारांश') {
+      Navigator.of(context).pushNamed(NSDemandSummaryScreen.routeName);
+    }
+    else if (title == 'Warranty Complaint' || title == 'वारंटी शिकायत सारांश') {
+      Navigator.of(context).pushNamed(WarrantyComplaintDropdown.routeName);
+    }
+    else if (title == 'CRN Summary' || title == 'सीआरएन सारांश') {
+      Navigator.of(context).pushNamed(CrnSummaryScreen.routeName);
+    }
+    else if (title == 'Stocking Proposal' || title == 'स्टॉकिंग प्रस्ताव सारांश') {
+      Navigator.of(context).pushNamed(StockingProposalSummaryScreen.routeName);
+    }
+    else if (title == 'Warranty Rejection' || title == 'वारंटी अस्वीकृति रजिस्टर') {
+      Navigator.of(context).pushNamed(WarrantyRejectionRegisterScreen.routeName);
+    }
+    else if (title == 'CRC Summary' || title == 'सीआरसी सारांश') {
+      Navigator.of(context).pushNamed(CrcSummaryScreen.routeName);
+    }
+  }
+
+  void _checkLanguage() {
+    Language lan = Provider.of<LanguageProvider>(context, listen: false).language;
+    setState(() {
+      Language.Hindi == lan ?  _isEnglish = false : true;
+    });
   }
 
 // Future getVersion() async {

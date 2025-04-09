@@ -125,6 +125,8 @@ class _SearchDemandsScreenState extends State<SearchDemandsScreen>
 
   final _formKey = GlobalKey<FormState>();
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   String formatDate(DateTime date) {
     return '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}';
   }
@@ -162,7 +164,7 @@ class _SearchDemandsScreenState extends State<SearchDemandsScreen>
         selectedStatus = 'All';
         statusCode = "-1";
         //_demandnumController.text = '';
-        isNewCRIS = true;
+        isNewCRIS = false;
       });
   }
 
@@ -178,6 +180,7 @@ class _SearchDemandsScreenState extends State<SearchDemandsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text(
           'Search Demands',
@@ -343,20 +346,20 @@ class _SearchDemandsScreenState extends State<SearchDemandsScreen>
   Widget _buildDemandTypeSelector() {
     return Row(
       children: [
-        Expanded(
-          child: _buildDemandTypeButton(
-            label: 'Old CRIS MMIS',
-            isSelected: !isNewCRIS,
-            onTap: () {
-              setState(() {
-                isNewCRIS = false;
-              });
-              ToastMessage.showSnackBar("Message", "Comming Soon!!", Colors.teal);
-              Feedback.forTap(context);
-            },
-          ),
-        ),
-        const SizedBox(width: 12),
+        // Expanded(
+        //   child: _buildDemandTypeButton(
+        //     label: 'Old CRIS MMIS',
+        //     isSelected: !isNewCRIS,
+        //     onTap: () {
+        //       setState(() {
+        //         isNewCRIS = false;
+        //       });
+        //       ToastMessage.showSnackBar("Message", "Comming Soon!!", Colors.teal);
+        //       Feedback.forTap(context);
+        //     },
+        //   ),
+        // ),
+        // const SizedBox(width: 12),
         Expanded(
           child: _buildDemandTypeButton(
             label: 'New CRIS MMIS',

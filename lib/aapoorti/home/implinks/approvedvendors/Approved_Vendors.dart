@@ -617,8 +617,8 @@ class _ApprovedvendorsState extends State<Approvedvendors> {
       ],
     ),
     VendorData(
-      name: 'Diesel Locomotive Works(DLW), Varanasi',
-      url: 'http://www.dlw.indianrailways.gov.in/view_section.jsp?lang=0&id=0,298,714,743',
+      name: 'Banaras Locomotive Works (BLW), Varanasi',
+      url: 'http://www.blw.indianrailways.gov.in/view_section.jsp?lang=0&id=0,298,714,743',
       departments: [],
       departmentRows: [],
     ),

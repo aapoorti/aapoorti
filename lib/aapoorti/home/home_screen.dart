@@ -9,7 +9,7 @@ import 'package:flutter_app/aapoorti/helpdesk/problemreport/ReportOpt.dart';
 import 'package:flutter_app/aapoorti/home/auction/lease_payment_status/lease_payment_status_screen.dart';
 import 'package:flutter_app/aapoorti/home/generate_otp.dart';
 import 'package:flutter_app/aapoorti/home/tender/closedra/ClosedRA.dart';
-import 'package:flutter_app/aapoorti/models/CountryCode.dart';
+import 'package:flutter_app/aapoorti/provider/aapoorti_language_provider.dart';
 import 'package:flutter_app/aapoorti/views/search_po_oz_screen.dart';
 import 'package:flutter_app/mmis/routes/routes.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
@@ -24,6 +24,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_app/aapoorti/common/DatabaseHelper.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_app/mmis/helpers/di_services.dart' as di_service;
 
@@ -439,16 +440,30 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     'assets/image40.png',
   ];
 
-  final List<Map<String, String>> etenderitems = [
-    {"image": "assets/search.png", "text": "Custom\nSearch"},
-    {"image": "assets/closingtoday.png", "text": "Closing\nToday"},
-    {"image": "assets/pohome.jpeg", "text": "Tender\nStatus"},
-    {"image": "assets/highvaluetender.png", "text": "High Value\nTender"},
-    {"image": "assets/live.png", "text": "Live &\nUpcoming-RA"},
-    {"image": "assets/closed_tender_login.png", "text": "Closed-RA"},
-    {"image": "assets/search_po_z.png", "text": "Search PO"},
-    {"image": "assets/images/phoneotp.png", "text": "Generate\nOTP"},
-  ];
+  List<Map<String, String>> etenderitems(BuildContext context) {
+    AapoortiLanguageProvider language = Provider.of<AapoortiLanguageProvider>(context);
+    return [
+      {"image": "assets/search.png", "text": language.text('customsearch')},
+      {"image": "assets/closingtoday.png", "text": language.text('closingtoday')},
+      {"image": "assets/pohome.jpeg", "text": language.text('tenderstatus')},
+      {"image": "assets/highvaluetender.png", "text": language.text('highvaluetender')},
+      {"image": "assets/live.png", "text": language.text('rlu')},
+      {"image": "assets/closed_tender_login.png", "text": language.text('raclosed')},
+      {"image": "assets/search_po_z.png", "text": language.text('searchpo')},
+      {"image": "assets/images/phoneotp.png", "text": language.text('generateotp')},
+    ];
+  }
+
+  // final List<Map<String, String>> etenderitems = [
+  //   {"image": "assets/search.png", "text": "Custom\nSearch"},
+  //   {"image": "assets/closingtoday.png", "text": "Closing\nToday"},
+  //   {"image": "assets/pohome.jpeg", "text": "Tender\nStatus"},
+  //   {"image": "assets/highvaluetender.png", "text": "High Value\nTender"},
+  //   {"image": "assets/live.png", "text": "Live &\nUpcoming-RA"},
+  //   {"image": "assets/closed_tender_login.png", "text": "Closed-RA"},
+  //   {"image": "assets/search_po_z.png", "text": "Search PO"},
+  //   {"image": "assets/images/phoneotp.png", "text": "Generate\nOTP"},
+  // ];
 
   final List<Map<String, String>> eauctionitems = [
     {"image": "assets/bill.png", "text": "Parcel Payment"},
@@ -656,6 +671,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                fixedSize: Size(85, 40),
                                 backgroundColor: Colors.lightBlue[700],
                                 foregroundColor: Colors.white,
                               ),
@@ -857,6 +873,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    AapoortiLanguageProvider language = Provider.of<AapoortiLanguageProvider>(context);
     return Container(
       height: size.height,
       width: size.width,
@@ -869,17 +886,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle('E-Tender'),
+                  _buildSectionTitle(language.text('etender')),
                   const SizedBox(height: 8),
                   _buildGridSection([
-                    GridItem('Custom\nSearch', Icons.tune, AapoortiConstants.cardColor1, '/e-tender/custom-search', true),
-                    GridItem('Closing\nToday', Icons.event_available, AapoortiConstants.cardColor2, '/e-tender/closing-today', true),
-                    GridItem('Tender\nStatus', Icons.pending_actions, AapoortiConstants.cardColor3, '/e-tender/tender-status', true),
-                    GridItem('High Value\nTender', Icons.bar_chart, AapoortiConstants.cardColor1, '/e-tender/high-value', true),
-                    GridItem('RA - Live &\nUpcoming', Icons.stream, AapoortiConstants.cardColor2, '/e-tender/ra-live', true),
-                    GridItem('RA\nClosed', Icons.lock_clock, AapoortiConstants.cardColor3, '/e-tender/ra-closed', true),
-                    GridItem('Search\nPO', Icons.find_in_page, AapoortiConstants.cardColor1, '/e-tender/search-po', true),
-                    GridItem('Generate\nOTP', 'OTP', AapoortiConstants.cardColor2, '/e-tender/generate-otp', true, isText: true),
+                    GridItem(language.text('customsearch'), Icons.tune, AapoortiConstants.cardColor1, '/e-tender/custom-search', true),
+                    GridItem(language.text('closingtoday'), Icons.event_available, AapoortiConstants.cardColor2, '/e-tender/closing-today', true),
+                    GridItem(language.text('tenderstatus'), Icons.pending_actions, AapoortiConstants.cardColor3, '/e-tender/tender-status', true),
+                    GridItem(language.text('highvaluetender'), Icons.bar_chart, AapoortiConstants.cardColor1, '/e-tender/high-value', true),
+                    GridItem(language.text('rlu'), Icons.stream, AapoortiConstants.cardColor2, '/e-tender/ra-live', true),
+                    GridItem(language.text('raclosed'), Icons.lock_clock, AapoortiConstants.cardColor3, '/e-tender/ra-closed', true),
+                    GridItem(language.text('searchpo'), Icons.find_in_page, AapoortiConstants.cardColor1, '/e-tender/search-po', true),
+                    GridItem(language.text('generateotp'), 'OTP', AapoortiConstants.cardColor2, '/e-tender/generate-otp', true, isText: true),
                   ], 0, scale: 0.9),
 
                   const Padding(
@@ -887,17 +904,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     child: Divider(color: AapoortiConstants.dividerColor, height: 3.0, thickness: 5.0),
                   ),
 
-                  _buildSectionTitle('E-Auction (Leasing & Sale)'),
+                  _buildSectionTitle(language.text('els')),
                   const SizedBox(height: 8),
                   _buildGridSection([
-                    GridItem('Parcel\nPayment', Icons.inventory_2, AapoortiConstants.cardColor2, '/e-auction-1/parcel-payment', true),
-                    GridItem('Live\nAuction', Icons.sensors, AapoortiConstants.cardColor3, '/e-auction-1/live', true),
-                    GridItem('Upcoming\nAuction', Icons.upcoming, AapoortiConstants.cardColor1, '/e-auction-1/upcoming', true),
-                    GridItem('Published\nAuction', Icons.preview, AapoortiConstants.cardColor2, '/e-auction-1/published-lot', true),
-                    GridItem('Schedule\nAuction', Icons.event_note, AapoortiConstants.cardColor3, '/e-auction-1/schedules', true),
-                    GridItem('Lot\nSearch', Icons.grid_view, AapoortiConstants.cardColor1, '/e-auction-1/lot-search', true),
-                    GridItem('E-Sale\nCondition', Icons.document_scanner, AapoortiConstants.cardColor2, '/e-auction-1/e-sale', true),
-                    GridItem('Auctioning\nUnits', Icons.device_hub, AapoortiConstants.cardColor3, '/e-auction-1/auction-units', true),
+                    GridItem(language.text('parcelpymt'), Icons.inventory_2, AapoortiConstants.cardColor2, '/e-auction-1/parcel-payment', true),
+                    GridItem(language.text('liveauc'), Icons.sensors, AapoortiConstants.cardColor3, '/e-auction-1/live', true),
+                    GridItem(language.text('upcomingauction'), Icons.upcoming, AapoortiConstants.cardColor1, '/e-auction-1/upcoming', true),
+                    GridItem(language.text('publishedauc'), Icons.preview, AapoortiConstants.cardColor2, '/e-auction-1/published-lot', true),
+                    GridItem(language.text('secheduleauc'), Icons.event_note, AapoortiConstants.cardColor3, '/e-auction-1/schedules', true),
+                    GridItem(language.text('lotsearch'), Icons.grid_view, AapoortiConstants.cardColor1, '/e-auction-1/lot-search', true),
+                    GridItem(language.text('esalecon'), Icons.document_scanner, AapoortiConstants.cardColor2, '/e-auction-1/e-sale', true),
+                    GridItem(language.text('aucunits'), Icons.device_hub, AapoortiConstants.cardColor3, '/e-auction-1/auction-units', true),
                   ], 1, scale: 0.86),
 
                   const SizedBox(height: 60),
@@ -924,13 +941,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               children: [
                 Expanded(
                   child: _buildModuleButton(
-                    'UDM', () => _navigateToPage(context, '/udm'),
+                    language.text('udmtitle'), () => _navigateToPage(context, '/udm'),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildModuleButton(
-                    'CRIS MMIS', () => _navigateToPage(context, '/cris-mmis'),
+                    language.text('crismmistitle'), () => _navigateToPage(context, '/cris-mmis'),
                   ),
                 ),
               ],

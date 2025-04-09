@@ -1,4 +1,5 @@
 import 'package:flutter_app/mmis/view/screens/dashboard/choose.depart_screen.dart';
+import 'package:flutter_app/mmis/view/screens/dashboard/demand_action_screen.dart';
 import 'package:flutter_app/mmis/view/screens/dashboard/pendingdmds/crismmispendingcase.dart';
 import 'package:flutter_app/mmis/view/screens/dashboard/pendingdmds/oldimmspendingcase.dart';
 import 'package:flutter_app/mmis/view/screens/dashboard/searchdm_data_screen.dart';
@@ -90,6 +91,10 @@ class Pages {
     GetPage(
         name: Routes.oldimmspendingcaseScreen,
         page: () => Oldimmspendingcase()
+    ),
+    GetPage(
+        name: Routes.demandactionScreen,
+        page: () => DemandActionScreen()
     ),
     GetPage(name: Routes.searchdmdpreviewScreen, page: () => SearchdmdpreviewScreen())
   ];

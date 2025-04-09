@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/udm/localization/english.dart';
-import 'package:flutter_app/udm/localization/hindi.dart';
+import 'package:flutter_app/aapoorti/localization/english.dart';
+import 'package:flutter_app/aapoorti/localization/languageHelper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../localization/languageHelper.dart';
 
-class LanguageProvider extends ChangeNotifier {
+class AapoortiLanguageProvider extends ChangeNotifier {
+
   Language language = Language.English;
   late SharedPreferences? prefs;
 
@@ -20,6 +20,7 @@ class LanguageProvider extends ChangeNotifier {
   }
 
   Future<void> updateLanguage(Language language) async {
+    prefs = await SharedPreferences.getInstance();
     this.language = language;
     notifyListeners();
     if(prefs == null) {

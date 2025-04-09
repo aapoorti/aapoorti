@@ -16,7 +16,7 @@ import 'package:flutter_app/udm/screens/Profile.dart';
 import 'package:flutter_app/udm/screens/login_screen.dart';
 import 'package:flutter_app/udm/utils/extensions/Extensions.dart';
 import 'package:flutter_app/udm/widgets/bottom_Nav/bottom_nav.dart';
-import 'package:flutter_app/udm/widgets/delete_dialog.dart';
+import 'package:flutter_app/udm/widgets/warningalert_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

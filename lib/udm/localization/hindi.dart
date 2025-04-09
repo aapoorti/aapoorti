@@ -31,7 +31,6 @@ Map<String, String> hindiText = {
   'irepslabel' : 'आईआरईपीएस',
   'udmlabel' : 'यूडीएम',
   'home' : 'होम',
-  'profile' : 'प्रोफ़ाइल',
   'settings' : 'सेटिंग',
   //Change PIN
   'changePin': 'पिन बदलें',
@@ -1229,7 +1228,6 @@ Map<String, String> hindiText = {
 
   //------ Settings Screen------
   "settingritle" : "सेटिंग",
-  'profile' : 'प्रोफ़ाइल',
   'changepin' : 'पिन बदलें',
   'changelogin' : 'लॉगिन बदलें',
   'changelan' : 'भाषा बदलें',
@@ -1261,5 +1259,11 @@ Map<String, String> hindiText = {
   'phone' : 'फ़ोन',
   'email' : 'ईमेल',
   'enow' : 'अभी ईमेल करें',
-  'cnow' : 'अब कॉल करें'
+  'cnow' : 'अब कॉल करें',
+  'conftitle' : 'पुष्टि!!',
+  'confdesc' : 'क्या आप एप्लीकेशन से लॉगआउट करना चाहते हैं??',
+  'nostay' : 'नहीं, रहो',
+  'yesexit' : 'हाँ, लॉगआउट करें',
+  'ela' : 'लॉगिन एक्सेस सक्षम करें',
+  'slcf' : 'लॉगिन क्रेडेंशियल सहेजें'
 };

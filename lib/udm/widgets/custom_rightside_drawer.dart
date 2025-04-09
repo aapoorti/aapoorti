@@ -76,6 +76,15 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home, color: Colors.white, size: 22),
+            onPressed: () {
+              Navigator.of(context).pop();
+              //Feedback.forTap(context);
+            },
+          ),
+        ],
         title: Text(language.text('searchItem'), style: TextStyle(color: Colors.white)),
       ),
       body: Form(

@@ -94,6 +94,15 @@ class _SummaryDropdownState extends State<SummaryDropdown> {
           },
         ),
         title: Text(language.text('on-lineBillSummary'),style: TextStyle(color: Colors.white)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home, color: Colors.white, size: 22),
+            onPressed: () {
+              Navigator.of(context).pop();
+              //Feedback.forTap(context);
+            },
+          ),
+        ],
       ),
       body: Form(
         key: _key,

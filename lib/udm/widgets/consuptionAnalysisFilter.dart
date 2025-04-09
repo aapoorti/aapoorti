@@ -77,6 +77,15 @@ class _ConsumtionAnalysisFilterState extends State<ConsumtionAnalysisFilter> {
           },
         ),
         title: Text(language.text('consAnalysis'),style: TextStyle(color: Colors.white)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home, color: Colors.white, size: 22),
+            onPressed: () {
+              Navigator.of(context).pop();
+              //Feedback.forTap(context);
+            },
+          ),
+        ],
       ),
       body: searchDrawer(),
     );

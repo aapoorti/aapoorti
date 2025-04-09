@@ -63,6 +63,15 @@ class _StoreStkDepotRightSideDrawerState
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home, color: Colors.white, size: 22),
+            onPressed: () {
+              Navigator.of(context).pop();
+              //Feedback.forTap(context);
+            },
+          ),
+        ],
         title: Text(
           Provider.of<LanguageProvider>(context).text('storesDepotStock'),
           style: TextStyle(color: Colors.white),

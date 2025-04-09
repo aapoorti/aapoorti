@@ -47,6 +47,7 @@ class LoginRepo {
         debugPrint("loginresp $listdata");
         if(listdata['status'] == "OK") {
           var listJson = listdata['data'];
+          debugPrint("mmis login resp $listJson");
           if(isLoginSaved) {
             if(listJson != null) {
               loginresp = listJson.map<LoginrespData>((val) => LoginrespData.fromJson(val)).toList();

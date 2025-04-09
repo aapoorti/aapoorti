@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/aapoorti/provider/aapoorti_language_provider.dart';
+import 'package:provider/provider.dart';
 
 class ConfirmDialog extends StatefulWidget {
   const ConfirmDialog({super.key});
@@ -46,6 +48,7 @@ class _ConfirmDialogState extends State<ConfirmDialog> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    AapoortiLanguageProvider language = Provider.of<AapoortiLanguageProvider>(context);
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -107,8 +110,8 @@ class _ConfirmDialogState extends State<ConfirmDialog> with SingleTickerProvider
                     shaderCallback: (bounds) => const LinearGradient(
                       colors: [Color(0xFF1E40AF), Color(0xFF2563EB)],
                     ).createShader(bounds),
-                    child: const Text(
-                      'Exit Application',
+                    child: Text(
+                      language.text('exitapp'),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -118,8 +121,8 @@ class _ConfirmDialogState extends State<ConfirmDialog> with SingleTickerProvider
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Are you sure you want to leave?',
+                  Text(
+                    language.text('exitcnf'),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
@@ -132,13 +135,13 @@ class _ConfirmDialogState extends State<ConfirmDialog> with SingleTickerProvider
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _buildButton(
-                        'No, stay',
+                        language.text('nostay'),
                         Icons.close_rounded, () => Navigator.pop(context, true),
                         isOutlined: true,
                       ),
                       SizedBox(width: 5.0),
                       _buildButton(
-                        'Yes, exit',
+                        language.text('yesexit'),
                         Icons.exit_to_app_rounded, () => Navigator.pop(context,false),
                         isOutlined: false,
                       ),

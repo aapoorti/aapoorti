@@ -23,7 +23,7 @@ class SwitchLanguageButton extends StatelessWidget {
         ),
         underline: const SizedBox(),
         onChanged: (value) {
-          print("value $value");
+          debugPrint("value $value");
           if(value == null) return;
           Provider.of<LanguageProvider>(context, listen: false).updateLanguage(value);
         },

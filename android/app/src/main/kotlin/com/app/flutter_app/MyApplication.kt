@@ -17,8 +17,8 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         System.loadLibrary("ireps")
-        //appProtect()
-        AppProtecttInteractor.Companion.triggerCheck = true
+        appProtect()
+        //AppProtecttInteractor.Companion.triggerCheck = true
     }
 
     private fun appProtect(){
@@ -36,14 +36,9 @@ class MyApplication : Application() {
         AppProtecttInteractor.clientInfo = clientInfo
 
 //SDK Initialization
-        AppProtecttInteractor(this).initAppProtectt(
-            "MainActivity",
-            0, R.drawable.launch_background, 0,
-            BuildConfig.BUILD_TYPE, BOTTOMSHEET_DIALOG
-        )
+        AppProtecttInteractor(this).initAppProtectt("MainActivity", 0, R.drawable.launch_background, 0, BuildConfig.BUILD_TYPE, BOTTOMSHEET_DIALOG)
         val deviceId = Secure.getString(contentResolver, Secure.ANDROID_ID)
         updateCustRefIdAPI(deviceId)
-
     }
 
     private external fun password(): String

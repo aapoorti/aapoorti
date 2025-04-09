@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/mmis/controllers/oldimms_controller.dart';
 import 'package:flutter_app/mmis/models/oldimmsData.dart';
+import 'package:flutter_app/mmis/routes/routes.dart';
 import 'package:flutter_app/mmis/utils/my_color.dart';
 import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:get/get.dart';
@@ -284,70 +285,75 @@ class DemandCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('Demand No. & Date', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
-                SizedBox(height: 4.0),
-                RichText(
-                  text: TextSpan(
-                    text: '${demandDetails.key7}\n',
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: 'Dt.${demandDetails.key2}',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
-                      ),
-                      // TextSpan(
-                      //   text: 'testing',
-                      //   style: TextStyle(color: Colors.blue, fontSize: 16),
-                      // ),
-                    ],
+    return InkWell(
+      onTap: (){
+        Get.toNamed(Routes.searchdmdpreviewScreen, arguments: [demandDetails.key8]);
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('Demand No. & Date', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 4.0),
+                  RichText(
+                    text: TextSpan(
+                      text: '${demandDetails.key7}\n',
+                      style: TextStyle(color: Colors.black, fontSize: 16),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: 'Dt.${demandDetails.key2}',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
+                        ),
+                        // TextSpan(
+                        //   text: 'testing',
+                        //   style: TextStyle(color: Colors.blue, fontSize: 16),
+                        // ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            _buildDetailItem(
-              Icons.info,
-              'Status',
-              '${demandDetails.key4!}',
-              subtitle: '',
-              isBold: true,
-              isBlueText: true,
-            ),
-            _buildDetailItem(
-              Icons.person,
-              'Received From',
-              '${demandDetails.key6!}',
-              subtitle: '',
-              isBold: true,
-              isBlueText: true,
-            ),
-            _buildDetailItem(
-              Icons.description,
-              'Consignee',
-              "${demandDetails.key9!}",
-            ),
-            _buildDetailItem(
-              Icons.currency_rupee,
-              'Demand Value',
-              'Rs.${demandDetails.key10!}/-',
-              subtitle: '',
-              isLast: true,
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(height: 20),
+              _buildDetailItem(
+                Icons.info,
+                'Status',
+                '${demandDetails.key4!}',
+                subtitle: '',
+                isBold: true,
+                isBlueText: true,
+              ),
+              _buildDetailItem(
+                Icons.person,
+                'Received From',
+                '${demandDetails.key6!}',
+                subtitle: '',
+                isBold: true,
+                isBlueText: true,
+              ),
+              _buildDetailItem(
+                Icons.description,
+                'Consignee',
+                "${demandDetails.key9!}",
+              ),
+              _buildDetailItem(
+                Icons.currency_rupee,
+                'Demand Value',
+                'Rs.${demandDetails.key10!}/-',
+                subtitle: '',
+                isLast: true,
+              ),
+            ],
+          ),
         ),
       ),
     );

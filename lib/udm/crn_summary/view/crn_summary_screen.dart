@@ -87,6 +87,15 @@ class _CrnSummaryScreenState extends State<CrnSummaryScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AapoortiConstants.primary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home, color: Colors.white, size: 22),
+            onPressed: () {
+              Navigator.of(context).pop();
+              //Feedback.forTap(context);
+            },
+          ),
+        ],
         title: Text(language.text('crnsum'), style: TextStyle(color: Colors.white)), iconTheme: IconThemeData(color: Colors.white)
       ),
       body: Container(

@@ -538,8 +538,10 @@ class _ReverseAuctionState extends State<ReverseAuction> {
                     if (jsonResult![index]['SUMM_REPORT_LINK'] != 'NA') {
                       String name = "NIT";
                       var fileUrl = jsonResult![index]['SUMM_REPORT_LINK'].toString();
-                      var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
-                      AapoortiUtilities.ackAlertLogin(context, fileUrl, fileName, name);
+                      //var fileName = fileUrl.substring(fileUrl.lastIndexOf("/"));
+                      //AapoortiUtilities.ackAlertLogin(context, fileUrl, fileName, name);
+                      var fileName = fileUrl.split('/').last;
+                      AapoortiUtilities.pdfDialog(context, fileUrl.toString(), fileName);
                     } else {
                       AapoortiUtilities.showInSnackBar(context, "No PDF attached with this Tender!!");
                     }

@@ -17,4 +17,5 @@ class Routes {
   static const String crismmispendingcaseScreen = "/crismmispendingcase";
   static const String oldimmspendingcaseScreen = "/oldimmspendingcase";
   static const String searchdmdpreviewScreen = "/searchdmdpreviewScreen";
+  static const String demandactionScreen = "/demandactionScreen";
 }

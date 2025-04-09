@@ -79,7 +79,16 @@ class _StockingProposalSummaryScreenState extends State<StockingProposalSummaryS
       appBar: AppBar(
           backgroundColor: AapoortiConstants.primary,
           title: Text(language.text('stkprptitle'),style: TextStyle(color: Colors.white)),
-          iconTheme: IconThemeData(color: Colors.white)
+          iconTheme: IconThemeData(color: Colors.white),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.home, color: Colors.white, size: 22),
+              onPressed: () {
+                Navigator.of(context).pop();
+                //Feedback.forTap(context);
+              },
+            ),
+          ],
       ),
       body: Container(
         height: size.height,

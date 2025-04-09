@@ -124,7 +124,14 @@ class _StockItemHistorySheetScreenState
                       ],
                     );
                   }
-                })
+                }),
+            IconButton(
+              icon: const Icon(Icons.home, color: Colors.white, size: 22),
+              onPressed: () {
+                Navigator.of(context).pop();
+                //Feedback.forTap(context);
+              },
+            ),
           ],
           title: Consumer<StockHistoryupdateChangesScreenProvider>(
               builder: (context, value, child) {

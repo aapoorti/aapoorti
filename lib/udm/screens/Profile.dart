@@ -3,7 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/helpers/database_helper.dart';
+import 'package:flutter_app/udm/providers/languageProvider.dart';
+import 'package:flutter_app/udm/screens/user_home_screen.dart';
 import 'package:flutter_app/udm/widgets/bottom_Nav/bottom_nav.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
@@ -16,6 +19,8 @@ class _ProfileScreenState extends State<Profile> {
 
   String? username = "", emailid = '', phoneno = '', usertype = '', workarea = '', firmname = '', lastlogintime = '';
   List<Map<String, dynamic>>? dbResult;
+
+  int _selectedIndex = 0;
 
   void initState() {
     UserData();
@@ -59,8 +64,9 @@ class _ProfileScreenState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
+    LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
       //floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
       //resizeToAvoidBottomInset: true,
       // floatingActionButton: FloatingActionButton(
@@ -84,7 +90,7 @@ class _ProfileScreenState extends State<Profile> {
       appBar: AppBar(
         backgroundColor: AapoortiConstants.primary,
         iconTheme: IconThemeData(color: Colors.white),
-        title: Text("Profile", style: TextStyle(color: Colors.white)),
+        title: Text(language.text('profile'), style: TextStyle(color: Colors.white)),
         elevation: 4,
       ),
       bottomNavigationBar: CustomBottomNav(currentIndex: 1),
@@ -479,4 +485,46 @@ class _ProfileScreenState extends State<Profile> {
     );
   }
 
+  // Widget _buildBottomNavigationBar() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withOpacity(0.1),
+  //           blurRadius: 10,
+  //           offset: const Offset(0, -5),
+  //         ),
+  //       ],
+  //     ),
+  //     child: BottomNavigationBar(
+  //       currentIndex: _selectedIndex,
+  //       onTap: (index) {
+  //         setState(() {
+  //           _selectedIndex = index;
+  //         });
+  //         index == 0 ? Navigator.of(context).pushReplacementNamed(UserHomeScreen.routeName) : Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+  //       },
+  //       backgroundColor: Colors.white,
+  //       selectedItemColor: const Color(0xFF0D47A1),
+  //       unselectedItemColor: Colors.grey,
+  //       type: BottomNavigationBarType.fixed,
+  //       showSelectedLabels: true,
+  //       showUnselectedLabels: true,
+  //       elevation: 0,
+  //       items: [
+  //         BottomNavigationBarItem(
+  //           icon: const Icon(Icons.home_outlined),
+  //           activeIcon: const Icon(Icons.home),
+  //           label: _translate('Home'),
+  //         ),
+  //         BottomNavigationBarItem(
+  //           icon: const Icon(Icons.person_outline),
+  //           activeIcon: const Icon(Icons.person),
+  //           label: _translate('Profile'),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

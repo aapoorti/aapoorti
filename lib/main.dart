@@ -166,6 +166,7 @@ import 'package:flutter_app/udm/rejection_warranty/providers/change_rwscroll_vis
 import 'package:flutter_app/udm/rejection_warranty/providers/search_rwadscreen_provider.dart';
 import 'package:flutter_app/udm/rejection_warranty/providers/search_rwfcscreen_provider.dart';
 import 'package:flutter_app/udm/rejection_warranty/providers/search_rwscreen_provider.dart';
+import 'aapoorti/provider/aapoorti_language_provider.dart';
 import 'mmis/db/adapters/login_resp_adapter.dart';
 import 'mmis/db/db_models/userloginrespdb.dart';
 import 'package:flutter_app/mmis/helpers/di_services.dart' as di_service;
@@ -421,6 +422,9 @@ class MyApp extends StatelessWidget {
 
           //Warranry CRN Summary Screen
           ChangeNotifierProvider(create: (_) => WarrantyCrnSummaryViewModel()),
+
+          //Aapoorti Language Provider
+          ChangeNotifierProvider(create: (_) => AapoortiLanguageProvider()),
         ],
         child: FeatureDiscovery(
           recordStepsInSharedPreferences: true,
@@ -428,18 +432,51 @@ class MyApp extends StatelessWidget {
           child: GetMaterialApp(
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
-                primarySwatch: Colors.lightBlue,
-                primaryColor: AapoortiConstants.primary,
-                fontFamily: 'Roboto',
-                useMaterial3: true,
-                textTheme: TextTheme(
-                  bodySmall: TextStyle(
-                      fontSize: 14.0,
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.normal,
-                      color: Colors.blueGrey),
+                primarySwatch: Colors.blue,
+                visualDensity: VisualDensity.adaptivePlatformDensity,
+                appBarTheme: AppBarTheme(
+                  backgroundColor: Colors.blue[800],
+                  foregroundColor: Colors.white, // Changed to white
+                  elevation: 1,
+                ),
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white, // Changed to white
+                    elevation: 1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                ),
+                cardTheme: CardTheme(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                ),
+                inputDecorationTheme: InputDecorationTheme(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 ),
               ),
+              // theme: ThemeData(
+              //   primarySwatch: Colors.lightBlue,
+              //   primaryColor: AapoortiConstants.primary,
+              //   fontFamily: 'Roboto',
+              //   useMaterial3: true,
+              //   textTheme: TextTheme(
+              //     bodySmall: TextStyle(
+              //         fontSize: 14.0,
+              //         fontFamily: 'Roboto',
+              //         fontWeight: FontWeight.normal,
+              //         color: Colors.blueGrey),
+              //   ),
+              // ),
               translations: Languages(), // Set up translations
               locale: Locale('en', 'US'), // Default language (English)
               fallbackLocale: Locale('en', 'US'), // Fallback to English if language is not supported

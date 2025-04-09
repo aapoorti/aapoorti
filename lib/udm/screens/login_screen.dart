@@ -9,6 +9,7 @@ import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/aapoorti/common/CommonScreen.dart';
 import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_app/udm/localization/languageHelper.dart';
 import 'package:flutter_app/udm/providers/change_visibility_provider.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/widgets/switch_language_button.dart';
@@ -28,7 +29,7 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin{
 
   TextStyle style = TextStyle(fontFamily: 'Roboto', fontSize: 15.0);
   var email= '11', pin;
@@ -52,8 +53,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool visibilty = false;
 
+  bool _isEnglish = true;
+  late AnimationController _animationController;
+
   // Build Remember Me Section
-  Container _buildRememberMeSection() {
+  Container _buildRememberMeSection(LanguageProvider language) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Row(
@@ -68,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
             }
           ),
-          Text('Save Login Credentials for'),
+          Text(language.text('slcf')),
           const SizedBox(width: 8),
           Consumer<LoginProvider>(
             builder: (context, provider, child){
@@ -112,6 +116,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailFieldController = TextEditingController();
   final TextEditingController _passwdFieldController = TextEditingController();
 
+  final ScrollController _scrollController = ScrollController();
+
   Error? _error;
 
   var appStoreUrl = 'https://apps.apple.com/in/app/ireps/id1462024189';
@@ -123,6 +129,25 @@ class _LoginScreenState extends State<LoginScreen> {
     Future.delayed(Duration.zero, (){
       Provider.of<LoginProvider>(context, listen: false).setState(LoginState.Idle);
       checkVersion();
+
+      _checkLanguage();
+    });
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    // Add listener to check input length
+    _passwdFieldController.addListener(() {
+      if (_passwdFieldController.text.length >= 6) {
+        // Scroll up when input has 6 or more digits
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 
@@ -242,9 +267,18 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _checkLanguage() {
+    Language lan = Provider.of<LanguageProvider>(context, listen: false).language;
+    setState(() {
+      Language.Hindi == lan ?  _isEnglish = false : true;
+    });
+  }
+
   @override
   void dispose() {
     FocusManager.instance.primaryFocus?.unfocus();
+    _animationController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -259,21 +293,111 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       child: Scaffold(
         backgroundColor: Colors.grey[50],
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CommonScreen()));
-              //Navigator.of(context).pop();
-            },
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF0D47A1), // Dark Blue
+                  Color(0xFF1976D2), // Lighter Blue
+                ],
+              ),
+            ),
+            child: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent, // Make AppBar background transparent
+              iconTheme: const IconThemeData(color: Colors.white),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CommonScreen()));
+                  //Navigator.of(context).pop();
+                },
+              ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: GestureDetector(
+                    onTap: _toggleLanguage,
+                    child: Container(
+                      width: 60,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF4285F4),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AnimatedPositioned(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            left: _isEnglish ? 5 : null,
+                            right: _isEnglish ? null : 5,
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _isEnglish ? 'A' : 'अ',
+                                  style: TextStyle(
+                                    color: const Color(0xFF1A73E8),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+              title: Text(
+                language.text('login'),
+                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700),
+              ),
+            ),
           ),
-          actions: [
-            SwitchLanguageButton(color: Colors.black)
-          ],
-          centerTitle: true,
-          title: Text(language.text('login'), style: TextStyle(color: Colors.white)), // You can customize the title
-          backgroundColor: AapoortiConstants.primary,
         ),
+        // appBar: AppBar(
+        //   leading: IconButton(
+        //     icon: const Icon(Icons.arrow_back, color: Colors.white),
+        //     onPressed: () {
+        //       Navigator.push(context, MaterialPageRoute(builder: (context) => CommonScreen()));
+        //       //Navigator.of(context).pop();
+        //     },
+        //   ),
+        //   actions: [
+        //     SwitchLanguageButton(color: Colors.black)
+        //   ],
+        //   centerTitle: true,
+        //   title: Text(language.text('login'), style: TextStyle(color: Colors.white)), // You can customize the title
+        //   backgroundColor: AapoortiConstants.primary,
+        // ),
         body: FutureBuilder(
           future: Provider.of<LanguageProvider>(context, listen: false).fetchLanguage(),
           builder: (context, snapshot) {
@@ -297,6 +421,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [_trialCheck(context),
                         Expanded(child: SafeArea(
                           child: SingleChildScrollView(
+                            controller: _scrollController,
                             child: Padding(
                               padding: const EdgeInsets.all(15.0),
                               child: Form(
@@ -359,7 +484,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         children: [
                                           Expanded(
                                             child: _LoginTypeButton(
-                                              title: 'IREPS',
+                                              title: language.text('irepslabel'),
                                               isSelected: _selectedLoginType == 'IREPS',
                                               onTap: () {
                                                 setState(() {
@@ -371,7 +496,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           Expanded(
                                             child: _LoginTypeButton(
-                                              title: 'UDM',
+                                              title: language.text('udmlabel'),
                                               isSelected: _selectedLoginType == 'UDM',
                                               onTap: () {
                                                 setState(() {
@@ -403,7 +528,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         email = value!.trim();
                                       },
                                       decoration: InputDecoration(
-                                        labelText: 'Email Address',
+                                        labelText: "${language.text('emailId')}/${language.text('userId')}",
                                         prefixIcon: const Icon(Icons.email_outlined),
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(12),
@@ -418,16 +543,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Consumer<ChangeVisibilityProvider>(builder: (context, provider, child){
                                        return TextFormField(
                                          decoration: InputDecoration(
-                                           labelText: 'Enter PIN',
+                                           labelText: language.text('enterPin'),
                                            prefixIcon: const Icon(Icons.lock_outline),
                                            suffixIcon: IconButton(
                                              icon: Icon(
-                                               _obscureText ? Icons.visibility_off : Icons.visibility,
+                                               provider.visibilityValue ? Icons.visibility : Icons.visibility_off,
                                              ),
                                              onPressed: () {
-                                               setState(() {
-                                                 _obscureText = !_obscureText;
-                                               });
+                                               provider.setVisibility(!provider.visibilityValue);
+                                               //provider.visibilityValue = !provider.visibilityValue;
+                                               // setState(() {
+                                               //   _obscureText = !_obscureText;
+                                               // });
                                              },
                                            ),
                                            border: OutlineInputBorder(
@@ -456,7 +583,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     }),
                                     const SizedBox(height: 16),
                                     // Remember Me Section with Days Selection
-                                    _buildRememberMeSection(),
+                                    _buildRememberMeSection(language),
                                     const SizedBox(height: 24),
                                     // Login Button
                                     Consumer<LoginProvider>(builder: (_, loginProvider, __) {
@@ -537,8 +664,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 borderRadius: BorderRadius.circular(12),
                                               ),
                                             ),
-                                            child: const Text(
-                                              'Enable Login Access',
+                                            child: Text(
+                                              language.text('ela'),
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.bold,
@@ -560,8 +687,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 borderRadius: BorderRadius.circular(12),
                                               ),
                                             ),
-                                            child: const Text(
-                                              'Reset PIN',
+                                            child: Text(
+                                              language.text('resetPinInstructionsLabel2'),
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.bold,
@@ -1054,6 +1181,18 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
         });
+  }
+
+  void _toggleLanguage() {
+    setState(() {
+      _isEnglish = !_isEnglish;
+      if(_isEnglish) {
+        _animationController.reverse();
+      } else {
+        _animationController.forward();
+      }
+    });
+    _isEnglish ? Provider.of<LanguageProvider>(context, listen: false).updateLanguage(Language.English) : Provider.of<LanguageProvider>(context, listen: false).updateLanguage(Language.Hindi);
   }
 }
 

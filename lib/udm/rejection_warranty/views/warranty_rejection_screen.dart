@@ -54,6 +54,15 @@ class _WarrantyRejectionScreenState extends State<WarrantyRejectionScreen> with 
           backgroundColor: AapoortiConstants.primary,
           automaticallyImplyLeading: false,
           elevation: 0,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.home, color: Colors.white, size: 22),
+              onPressed: () {
+                Navigator.of(context).pop();
+                //Feedback.forTap(context);
+              },
+            ),
+          ],
           title: Consumer<SearchRWScreenProvider>(
               builder: (context, value, child) {
                 if(value.getSearchValue == true){

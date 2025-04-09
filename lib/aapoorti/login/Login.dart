@@ -31,6 +31,8 @@ class _LoginActivityState extends State<LoginActivity> {
   bool _obscureText = true;
   bool _rememberMe = false;
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   String _selectedLoginType = 'IREPS';
   // Add selected days variable
   int _selectedDays = 5;
@@ -112,6 +114,18 @@ class _LoginActivityState extends State<LoginActivity> {
         debugPrint('logoutsucc' + widget.logoutsucc);
         debugPrint("init ==" + AapoortiConstants.loginUserEmailID);
       });
+    });
+
+    // Add listener to check input length
+    _passwordController.addListener(() {
+      if (_passwordController.text.length >= 6) {
+        // Scroll up when input has 6 or more digits
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 
@@ -595,250 +609,266 @@ class _LoginActivityState extends State<LoginActivity> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _emailController.dispose();
+    _passwordController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  //const SizedBox(height: 40),
-                  Center(
-                    child: Container(
-                      height: 80,
-                      width: 80,
+      body: InkWell(
+        onTap: (){
+          FocusScope.of(context).unfocus(); // Dismiss keyboard when tapping outside
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    //const SizedBox(height: 40),
+                    Center(
+                      child: Container(
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: ClipOval(
+                          child: Image.asset(
+                            'assets/nlogo.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: const Text(
+                        'Indian Railways E - Procurement System',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1565C0),
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    // Updated Login Type Selector
+                    Container(
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
                         color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withOpacity(0.05),
                             blurRadius: 10,
-                            offset: const Offset(0, 5),
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/nlogo.png',
-                          fit: BoxFit.cover,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _LoginTypeButton(
+                              title: 'IREPS',
+                              isSelected: _selectedLoginType == 'IREPS',
+                              onTap: () {
+                                setState(() {
+                                  _selectedLoginType = 'IREPS';
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: _LoginTypeButton(
+                              title: 'UDM',
+                              isSelected: _selectedLoginType == 'UDM',
+                              onTap: () {
+                                setState(() {
+                                  _selectedLoginType = 'UDM';
+                                });
+                                Navigator.pushNamed(context, LoginScreen.routeName);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    // Email Field
+                    TextFormField(
+                      //controller: _emailController,
+                      initialValue: AapoortiConstants.loginUserEmailID != "" ? AapoortiConstants.loginUserEmailID : '',
+                      validator: (value) {
+                        // bool emailValid = RegExp("^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
+                        bool emailValid = RegExp("^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})\$").hasMatch(value!.trim());
+                        if (value.isEmpty) {
+                          return ('Please enter valid Email-ID');
+                        } else if (!emailValid) {
+                          return ('Please enter valid Email-ID');
+                        }
+                        return null;
+                        },
+                      onSaved: (value) {
+                        email = value!.trim();
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Email Address',
+                        prefixIcon: const Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: 16),
+                    // PIN Field with numeric keyboard
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Enter PIN',
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText ? Icons.visibility_off : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      obscureText: _obscureText,
+                      keyboardType: TextInputType.number,
+                      initialValue: null,
+                      validator: (pin) {
+                        if (pin!.isEmpty) {
+                          return ('Please enter 6-12 digit PIN');
+                        } else if (pin.length < 6 || pin.length > 12) {
+                          return ('Please enter 6-12 digit PIN');
+                        }
+                        return null;
+                        },
+                      onSaved: (value) {
+                        pin = value;
+                      },
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    ),
+                    const SizedBox(height: 16),
+                    // Remember Me Section with Days Selection
+                    _buildRememberMeSection(),
+                    const SizedBox(height: 24),
+                    // Login Button
+                    ElevatedButton(
+                      onPressed: () async{
+                        FocusScope.of(context).unfocus();
+                        try {
+                          connectivityresult = await InternetAddress.lookup('google.com');
+                          if(connectivityresult != null) {
+                            validateAndLogin(_selectedDays);
+                          }
+                        } on SocketException catch (_) {
+                          AapoortiUtilities.showInSnackBar(context, "You are not connected to the internet!");
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1565C0),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: const Text(
-                      'Indian Railways E - Procurement System',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1565C0),
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  // Updated Login Type Selector
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
+                    const SizedBox(height: 24),
+                    // Help Links
+                    Row(
                       children: [
                         Expanded(
-                          child: _LoginTypeButton(
-                            title: 'IREPS',
-                            isSelected: _selectedLoginType == 'IREPS',
-                            onTap: () {
-                              setState(() {
-                                _selectedLoginType = 'IREPS';
-                              });
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _enableloginBottomSheet(context);
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[200],
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Enable Login Access',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
                           ),
                         ),
+                        const SizedBox(width: 16),
                         Expanded(
-                          child: _LoginTypeButton(
-                            title: 'UDM',
-                            isSelected: _selectedLoginType == 'UDM',
-                            onTap: () {
-                              setState(() {
-                                _selectedLoginType = 'UDM';
-                              });
-                              Navigator.pushNamed(context, LoginScreen.routeName);
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _resetpinBottomSheet(context);
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[200],
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Reset PIN',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  // Email Field
-                  TextFormField(
-                    //controller: _emailController,
-                    initialValue: AapoortiConstants.loginUserEmailID != "" ? AapoortiConstants.loginUserEmailID : null,
-                    validator: (value) {
-                      // bool emailValid = RegExp("^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
-                      bool emailValid = RegExp("^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})\$").hasMatch(value!.trim());
-                      if (value.isEmpty) {
-                        return ('Please enter valid Email-ID');
-                      } else if (!emailValid) {
-                        return ('Please enter valid Email-ID');
-                      }
-                      return null;
-                      },
-                    onSaved: (value) {
-                      email = value!.trim();
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Email Address',
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 16),
-                  // PIN Field with numeric keyboard
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Enter PIN',
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText ? Icons.visibility_off : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    obscureText: _obscureText,
-                    keyboardType: TextInputType.number,
-                    initialValue: null,
-                    validator: (pin) {
-                      if (pin!.isEmpty) {
-                        return ('Please enter 6-12 digit PIN');
-                      } else if (pin.length < 6 || pin.length > 12) {
-                        return ('Please enter 6-12 digit PIN');
-                      }
-                      return null;
-                      },
-                    onSaved: (value) {
-                      pin = value;
-                    },
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  ),
-                  const SizedBox(height: 16),
-                  // Remember Me Section with Days Selection
-                  _buildRememberMeSection(),
-                  const SizedBox(height: 24),
-                  // Login Button
-                  ElevatedButton(
-                    onPressed: () async{
-                      FocusScope.of(context).unfocus();
-                      try {
-                        connectivityresult = await InternetAddress.lookup('google.com');
-                        if(connectivityresult != null) {
-                          validateAndLogin(_selectedDays);
-                        }
-                      } on SocketException catch (_) {
-                        AapoortiUtilities.showInSnackBar(context, "You are not connected to the internet!");
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1565C0),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  // Help Links
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _enableloginBottomSheet(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey[200],
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Enable Login Access',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _resetpinBottomSheet(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey[200],
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Reset PIN',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

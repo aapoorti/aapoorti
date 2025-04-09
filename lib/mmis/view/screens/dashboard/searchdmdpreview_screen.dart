@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/mmis/controllers/searchdmdpreview_controller.dart';
+import 'package:flutter_app/mmis/routes/routes.dart';
 import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:get/get.dart';
+import 'package:html/parser.dart';
 import 'package:lottie/lottie.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -380,13 +382,34 @@ class _DemandHeaderState extends State<DemandHeader> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Basic Details',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Basic Details',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+                // InkWell(
+                //   onTap: (){
+                //     Get.toNamed(Routes.demandactionScreen);
+                //   },
+                //   child: Container(
+                //     height: 35,
+                //     width: 85,
+                //     alignment: Alignment.center,
+                //     child: Text("Action", style: TextStyle(color: Colors.white)),
+                //     decoration: BoxDecoration(
+                //       color: Colors.blue,
+                //       borderRadius: BorderRadius.circular(8.0),
+                //       border: Border.all(color: Colors.blue[300]!)
+                //     ),
+                //   ),
+                // ),
+              ],
             ),
             const SizedBox(height: 18),
             Row(
@@ -740,7 +763,7 @@ class ItemsConsigneesPanel extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildQuantityRow('Total Qty:', '${item.key4!} ${item.key5!}'),
+                  item.key4 == 'NULL' ? _buildQuantityRow('Total Qty:', '0 ${item.key5!}') : _buildQuantityRow('Total Qty:', '${item.key4 ?? "0"} ${item.key5!}'),
                   // Padding(
                   //   padding: EdgeInsets.only(left: 70),
                   //   child: Text(
@@ -755,7 +778,8 @@ class ItemsConsigneesPanel extends StatelessWidget {
                   const SizedBox(height: 8),
                   _buildQuantityRow('Rate:', 'Rs. ${item.key3!}/-'),
                   const SizedBox(height: 8),
-                  _buildQuantityRow('Value:', 'Rs. ${int.parse(item.key3.toString())*int.parse(item.key4.toString())}/-'),
+                  //Text("harsh ${item.key3} ${item.key4}"),
+                  item.key3 == 'NULL' && item.key4 == 'NULL' ? _buildQuantityRow('Value:', 'N/A') : item.key3 == 'NULL' && item.key4 != 'NULL' ? _buildQuantityRow('Value:', 'Rs. ${item.key4.toString()}/-') : item.key3 != 'NULL' && item.key4 == 'NULL' ? _buildQuantityRow('Value:', 'Rs. ${item.key3.toString()}/-') : _buildQuantityRow('Value:', 'Rs. ${int.parse(item.key3.toString())*int.parse(item.key4.toString())}/-'),
                 ],
               ),
             ),
@@ -1950,65 +1974,63 @@ class _AuthenticationPanelState extends State<AuthenticationPanel> {
               ),
             ),
           ),
-          // DataCell(
-          //   Padding(
-          //     padding: const EdgeInsets.symmetric(vertical: 8.0),
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         Container(
-          //           padding: const EdgeInsets.symmetric(
-          //             horizontal: 10,
-          //             vertical: 6,
-          //           ),
-          //           decoration: BoxDecoration(
-          //             color: Colors.green.shade50,
-          //             borderRadius: BorderRadius.circular(12),
-          //           ),
-          //           child: Row(
-          //             mainAxisSize: MainAxisSize.min,
-          //             children: [
-          //               Icon(
-          //                 Icons.verified_rounded,
-          //                 size: 16,
-          //                 color: Colors.green.shade700,
-          //               ),
-          //               const SizedBox(width: 6),
-          //               Text(
-          //                 'Verified',
-          //                 style: TextStyle(
-          //                   fontSize: 12,
-          //                   color: Colors.green.shade700,
-          //                   fontWeight: FontWeight.w500,
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //         const SizedBox(height: 8),
-          //         TextButton(
-          //           onPressed: () => _showRemarksDialog(
-          //             context,
-          //             data['remarks']!,
-          //           ),
-          //           style: TextButton.styleFrom(
-          //             padding: const EdgeInsets.symmetric(
-          //               horizontal: 12,
-          //               vertical: 6,
-          //             ),
-          //             minimumSize: Size.zero,
-          //             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          //           ),
-          //           child: const Text(
-          //             'View Remarks',
-          //             style: TextStyle(fontSize: 12),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
+          DataCell(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.verified_rounded,
+                          size: 16,
+                          color: Colors.green.shade700,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Verified',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.green.shade700,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () => _showRemarksDialog(context, item.key9!,
+                    ),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: const Text(
+                      'View Remarks',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       );
     }).toList();
@@ -2114,15 +2136,15 @@ class _AuthenticationPanelState extends State<AuthenticationPanel> {
                   ),
                 ),
               ),
-              // DataColumn(
-              //   label: Text(
-              //     'Status',
-              //     style: TextStyle(
-              //       fontWeight: FontWeight.bold,
-              //       fontSize: 14,
-              //     ),
-              //   ),
-              // ),
+              DataColumn(
+                label: Text(
+                  'Status',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
             ],
             rows: getDataRows(),
           ),

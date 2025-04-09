@@ -53,7 +53,48 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('CRIS MMIS',style: TextStyle(color: Colors.white)),backgroundColor: Colors.lightBlue[800]!, iconTheme: IconThemeData(color: Colors.white)),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF0D47A1), // Dark Blue
+                Color(0xFF1976D2), // Lighter Blue
+              ],
+            ),
+          ),
+          child: AppBar(
+            elevation: 0,
+            centerTitle: true,
+            backgroundColor: Colors.transparent, // Make AppBar background transparent
+            iconTheme: const IconThemeData(color: Colors.white),
+            leading: InkWell(
+              onTap: () {
+                _scaffoldKey.currentState!.openDrawer();
+              },
+              child: Container(
+                margin: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.grid_view_rounded, color: Colors.white),
+              ),
+            ),
+            title: Text(
+              "CRIS MMIS",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+      // appBar: AppBar(title: Text('CRIS MMIS',style: TextStyle(color: Colors.white)),backgroundColor: Colors.lightBlue[800]!, iconTheme: IconThemeData(color: Colors.white)),
       key: _scaffoldKey,
       drawer: navDrawer(context, _scaffoldKey, controller, themeController),
       body: Container(
@@ -299,12 +340,18 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                 children: <Widget>[
                   Container(
                     constraints: BoxConstraints.expand(height: 180.0),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF0D47A1), // Dark Blue
+                          Color(0xFF1976D2), // Lighter Blue
+                        ],
+                      ),
+                    ),
                     alignment: Alignment.bottomLeft,
                     padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
-                    decoration: BoxDecoration(
-                      color: AapoortiConstants.primary,
-                      //image: DecorationImage(image: AssetImage('assets/welcome.jpg'), fit: BoxFit.cover),
-                    ),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
@@ -322,7 +369,7 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                                 child: Icon(
                                   Icons.person,
                                   size: 40,
-                                  color: AapoortiConstants.primary,
+                                  color: Color(0xFF1976D2),
                                 ),
                               ),
                               Text(
@@ -406,7 +453,16 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                 },
                 child: Container(
                   height: 45,
-                  color: AapoortiConstants.primary,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFF0D47A1), // Dark Blue
+                        Color(0xFF1976D2), // Lighter Blue
+                      ],
+                    ),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

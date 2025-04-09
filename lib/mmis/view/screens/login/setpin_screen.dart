@@ -22,6 +22,8 @@ class _SetPinScreenState extends State<SetPinScreen> {
   final _pinController = TextEditingController();
   final _confirmpinController = TextEditingController();
 
+  final ScrollController _scrollController = ScrollController();
+
   final networkController = Get.find<NetworkController>();
   final controller = Get.find<LoginController>();
 
@@ -30,6 +32,33 @@ class _SetPinScreenState extends State<SetPinScreen> {
   String requestId = Get.arguments[2];
   String reqtype = Get.arguments[3];
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _confirmpinController.addListener(() {
+      if (_confirmpinController.text.length >= 6) {
+        // Scroll up when input has 6 or more digits
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _otpController.dispose();
+    _pinController.dispose();
+    _confirmpinController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,172 +78,274 @@ class _SetPinScreenState extends State<SetPinScreen> {
         title: Text("CRIS MMIS", style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.indigo,
       ),
-      body: Container(
-        height: Get.height,
-        width: Get.width,
-        decoration: BoxDecoration(
-            color : Colors.white
-          // image: DecorationImage(
-          //   image: AssetImage("assets/images/login_bg.jpg"),
-          //   fit: BoxFit.cover,
-          // ),
-        ),
-        child: Column(
-          children: [
-            Expanded(child: SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Stack(
-                      children: [
-                        Card(
-                            color: Colors.white.withOpacity(0.8),
-                            // shape: RoundedRectangleBorder(
-                            //   borderRadius: BorderRadius.circular(20),
-                            // ),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: const BorderSide(color: Colors.indigo, width: 1.5)),
-                            elevation: 5.0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Form(
-                                key: _formKey,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                child: Column(
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Text("Choose your PIN",
-                                        textAlign: TextAlign.center, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold, fontSize: 18)),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text('Request ID : ', style: TextStyle(color: Colors.black, fontSize: 16)),
-                                        Expanded(child: Text(requestId,style: TextStyle(color: Colors.black,fontSize: 16, fontWeight: FontWeight.bold)))
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text('Email Address : ', style: TextStyle(color: Colors.black, fontSize: 16)),
-                                        Expanded(child: Text(email, style: TextStyle(color: Colors.black,fontSize: 16, fontWeight: FontWeight.bold)),)
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text('Mobile No. : ', style: TextStyle(color: Colors.black, fontSize: 16)),
-                                        Expanded(child: Text(mobile, style: TextStyle(color: Colors.black,fontSize: 16, fontWeight: FontWeight.bold)),)
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    TextFormField(
-                                      keyboardType: TextInputType.number,
-                                      controller: _otpController,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-                                        labelText: "Enter Valid OTP",
-                                        prefixIcon: const Icon(Icons.mobile_friendly),
-                                        labelStyle: TextStyle(fontSize: 15),
-                                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.indigo, width: 1.0),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                        focusColor: AapoortiConstants.primary,
+      body: InkWell(
+        onTap: (){
+          FocusScope.of(context).unfocus(); // Dismiss keyboard when tapping outside
+        },
+        child: Container(
+          height: Get.height,
+          width: Get.width,
+          decoration: BoxDecoration(color : Colors.white
+            // image: DecorationImage(
+            //   image: AssetImage("assets/images/login_bg.jpg"),
+            //   fit: BoxFit.cover,
+            // ),
+          ),
+          child: Column(
+            children: [
+              Expanded(child: SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Stack(
+                        children: [
+                          Card(
+                              color: Colors.white.withOpacity(0.8),
+                              // shape: RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(20),
+                              // ),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0), side: const BorderSide(color: Colors.indigo, width: 1.5)),
+                              elevation: 5.0,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Form(
+                                  key: _formKey,
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Text("Choose your PIN",
+                                          textAlign: TextAlign.center, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold, fontSize: 18)),
+                                      const SizedBox(
+                                        height: 20,
                                       ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    TextFormField(
-                                      keyboardType: TextInputType.text,
-                                      controller: _pinController,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-                                        labelText: "Enter New PIN",
-                                        prefixIcon: Icon(Icons.pin),
-                                        labelStyle: TextStyle(fontSize: 15),
-                                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.indigo, width: 1.0),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                        focusColor: AapoortiConstants.primary,
+                                      Row(
+                                        children: [
+                                          Text('Request ID : ', style: TextStyle(color: Colors.black, fontSize: 16)),
+                                          Expanded(child: Text(requestId,style: TextStyle(color: Colors.black,fontSize: 16, fontWeight: FontWeight.bold)))
+                                        ],
                                       ),
-                                      validator: ValidationBuilder().minLength(6).maxLength(12).build(),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    TextFormField(
-                                      keyboardType: TextInputType.text,
-                                      controller: _confirmpinController,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-                                        labelText: "Enter Confirm PIN",
-                                        prefixIcon: Icon(Icons.pin),
-                                        labelStyle: TextStyle(fontSize: 15),
-                                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.indigo, width: 1.0),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                        focusColor: AapoortiConstants.primary,
+                                      const SizedBox(
+                                        height: 5,
                                       ),
-                                      validator: ValidationBuilder().minLength(6).maxLength(12).build(),
-                                    ),
-                                    const SizedBox(height: 30),
-                                    Obx(() {
-                                      if(controller.setpinState.value == SetPinState.idle) {
+                                      Row(
+                                        children: [
+                                          Text('Email Address : ', style: TextStyle(color: Colors.black, fontSize: 16)),
+                                          Expanded(child: Text(email, style: TextStyle(color: Colors.black,fontSize: 16, fontWeight: FontWeight.bold)),)
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text('Mobile No. : ', style: TextStyle(color: Colors.black, fontSize: 16)),
+                                          Expanded(child: Text(mobile, style: TextStyle(color: Colors.black,fontSize: 16, fontWeight: FontWeight.bold)),)
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        controller: _otpController,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                                          labelText: "Enter Valid OTP",
+                                          prefixIcon: const Icon(Icons.mobile_friendly),
+                                          labelStyle: TextStyle(fontSize: 15),
+                                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.indigo, width: 1.0),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          focusColor: AapoortiConstants.primary,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      TextFormField(
+                                        keyboardType: TextInputType.text,
+                                        controller: _pinController,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                                          labelText: "Enter New PIN",
+                                          prefixIcon: Icon(Icons.pin),
+                                          labelStyle: TextStyle(fontSize: 15),
+                                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.indigo, width: 1.0),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          focusColor: AapoortiConstants.primary,
+                                        ),
+                                        validator: ValidationBuilder().minLength(6).maxLength(12).build(),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      TextFormField(
+                                        keyboardType: TextInputType.text,
+                                        controller: _confirmpinController,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                                          labelText: "Enter Confirm PIN",
+                                          prefixIcon: Icon(Icons.pin),
+                                          labelStyle: TextStyle(fontSize: 15),
+                                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.indigo, width: 1.0),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          focusColor: AapoortiConstants.primary,
+                                        ),
+                                        validator: ValidationBuilder().minLength(6).maxLength(12).build(),
+                                      ),
+                                      const SizedBox(height: 30),
+                                      Obx(() {
+                                        if(controller.setpinState.value == SetPinState.idle) {
+                                          return ElevatedButton(
+                                              onPressed: () {
+                                                FocusManager.instance.primaryFocus?.unfocus();
+                                                if(networkController.connectionStatus.value != 0) {
+                                                  if(_formKey.currentState!.validate()){
+                                                    if(_pinController.text.trim() == _confirmpinController.text.trim()){
+                                                      controller.setPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
+                                                    }
+                                                    else{
+                                                      ToastMessage.error("Pin & Confirm pin not matched");
+                                                    }
+                                                    // debugPrint("requset Type $reqtype");
+                                                    // if(reqtype == "1"){
+                                                    //   if(_pinController.text.trim() == _confirmpinController.text.trim()){
+                                                    //     controller.foregetPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
+                                                    //   }
+                                                    //   else{
+                                                    //     ToastMessage.error("Pin & Confirm pin not matched");
+                                                    //   }
+                                                    // }
+                                                    // else{
+                                                    //   if(_pinController.text.trim() == _confirmpinController.text.trim()){
+                                                    //     controller.setPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
+                                                    //   }
+                                                    //   else{
+                                                    //     ToastMessage.error("Pin & Confirm pin not matched");
+                                                    //   }
+                                                    //
+                                                    // }
+                                                  }
+                                                }
+                                                else{
+                                                  ToastMessage.networkError('plcheckconn'.tr);
+                                                }
+                                              },
+                                              style: ElevatedButton.styleFrom(backgroundColor: Colors.indigo, minimumSize: Size.fromHeight(45),
+                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                                                  textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                                              child: Text("Submit", style: TextStyle(color: Colors.white, fontSize: 18.0)));
+                                        }
+                                        else if (controller.setpinState.value == SetPinState.loading) {
+                                          return Container(
+                                              height: 55,
+                                              width: 55,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.deepOrange,
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      27.5)),
+                                              alignment: Alignment.center,
+                                              child: SizedBox(
+                                                  height: 30,
+                                                  width: 30,
+                                                  child:
+                                                  CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                      strokeWidth: 2.0)));
+                                        }
+                                        else if(controller.setpinState.value == SetPinState.failed || controller.setpinState.value == SetPinState.failedWithError) {
+                                          return InkWell(
+                                              onTap: () {
+                                                 debugPrint("requset Type $reqtype");
+                                                 if(_pinController.text.trim() == _confirmpinController.text.trim()){
+                                                   controller.setPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
+                                                 }
+                                                 else{
+                                                   ToastMessage.error("Pin & Confirm pin not matched");
+                                                 }
+                                                // if(reqtype == "1"){
+                                                //   if(_pinController.text.trim() == _confirmpinController.text.trim()){
+                                                //     controller.foregetPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
+                                                //   }
+                                                //   else{
+                                                //     ToastMessage.error("Pin & Confirm pin not matched");
+                                                //   }
+                                                // }
+                                                // else{
+                                                //   if(_pinController.text.trim() == _confirmpinController.text.trim()){
+                                                //     controller.setPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
+                                                //   }
+                                                //   else{
+                                                //     ToastMessage.error("Pin & Confirm pin not matched");
+                                                //   }
+                                                // }
+
+                                              },
+                                              child: Container(
+                                                  height: 55,
+                                                  width: 55,
+                                                  child: Icon(Icons.clear,
+                                                      color: Colors.white,
+                                                      size: 30.0),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(
+                                                          27.5))));
+                                        }
                                         return ElevatedButton(
                                             onPressed: () {
                                               FocusManager.instance.primaryFocus?.unfocus();
                                               if(networkController.connectionStatus.value != 0) {
                                                 if(_formKey.currentState!.validate()){
+                                                  debugPrint("requset Type44444 $reqtype");
                                                   if(_pinController.text.trim() == _confirmpinController.text.trim()){
                                                     controller.setPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
                                                   }
                                                   else{
-                                                    ToastMessage.error("Pin & Confirm pin not matched");
+                                                    ToastMessage.error("Pin & confirm pin not matched");
                                                   }
-                                                  // debugPrint("requset Type $reqtype");
                                                   // if(reqtype == "1"){
                                                   //   if(_pinController.text.trim() == _confirmpinController.text.trim()){
                                                   //     controller.foregetPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
                                                   //   }
                                                   //   else{
-                                                  //     ToastMessage.error("Pin & Confirm pin not matched");
+                                                  //     ToastMessage.error("Pin & confirm pin not matched");
                                                   //   }
                                                   // }
                                                   // else{
@@ -222,9 +353,8 @@ class _SetPinScreenState extends State<SetPinScreen> {
                                                   //     controller.setPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
                                                   //   }
                                                   //   else{
-                                                  //     ToastMessage.error("Pin & Confirm pin not matched");
+                                                  //     ToastMessage.error("Pin & confirm pin not matched");
                                                   //   }
-                                                  //
                                                   // }
                                                 }
                                               }
@@ -236,118 +366,21 @@ class _SetPinScreenState extends State<SetPinScreen> {
                                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                                                 textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                                             child: Text("Submit", style: TextStyle(color: Colors.white, fontSize: 18.0)));
-                                      }
-                                      else if (controller.setpinState.value == SetPinState.loading) {
-                                        return Container(
-                                            height: 55,
-                                            width: 55,
-                                            decoration: BoxDecoration(
-                                                color: Colors.deepOrange,
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    27.5)),
-                                            alignment: Alignment.center,
-                                            child: SizedBox(
-                                                height: 30,
-                                                width: 30,
-                                                child:
-                                                CircularProgressIndicator(
-                                                    color: Colors.white,
-                                                    strokeWidth: 2.0)));
-                                      }
-                                      else if(controller.setpinState.value == SetPinState.failed || controller.setpinState.value == SetPinState.failedWithError) {
-                                        return InkWell(
-                                            onTap: () {
-                                               debugPrint("requset Type $reqtype");
-                                               if(_pinController.text.trim() == _confirmpinController.text.trim()){
-                                                 controller.setPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
-                                               }
-                                               else{
-                                                 ToastMessage.error("Pin & Confirm pin not matched");
-                                               }
-                                              // if(reqtype == "1"){
-                                              //   if(_pinController.text.trim() == _confirmpinController.text.trim()){
-                                              //     controller.foregetPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
-                                              //   }
-                                              //   else{
-                                              //     ToastMessage.error("Pin & Confirm pin not matched");
-                                              //   }
-                                              // }
-                                              // else{
-                                              //   if(_pinController.text.trim() == _confirmpinController.text.trim()){
-                                              //     controller.setPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
-                                              //   }
-                                              //   else{
-                                              //     ToastMessage.error("Pin & Confirm pin not matched");
-                                              //   }
-                                              // }
+                                      })
 
-                                            },
-                                            child: Container(
-                                                height: 55,
-                                                width: 55,
-                                                child: Icon(Icons.clear,
-                                                    color: Colors.white,
-                                                    size: 30.0),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.red,
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        27.5))));
-                                      }
-                                      return ElevatedButton(
-                                          onPressed: () {
-                                            FocusManager.instance.primaryFocus?.unfocus();
-                                            if(networkController.connectionStatus.value != 0) {
-                                              if(_formKey.currentState!.validate()){
-                                                debugPrint("requset Type44444 $reqtype");
-                                                if(_pinController.text.trim() == _confirmpinController.text.trim()){
-                                                  controller.setPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
-                                                }
-                                                else{
-                                                  ToastMessage.error("Pin & confirm pin not matched");
-                                                }
-                                                // if(reqtype == "1"){
-                                                //   if(_pinController.text.trim() == _confirmpinController.text.trim()){
-                                                //     controller.foregetPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
-                                                //   }
-                                                //   else{
-                                                //     ToastMessage.error("Pin & confirm pin not matched");
-                                                //   }
-                                                // }
-                                                // else{
-                                                //   if(_pinController.text.trim() == _confirmpinController.text.trim()){
-                                                //     controller.setPin(email.trim(), mobile.trim(), requestId.trim(), _otpController.text.trim(), _confirmpinController.text.trim(), context);
-                                                //   }
-                                                //   else{
-                                                //     ToastMessage.error("Pin & confirm pin not matched");
-                                                //   }
-                                                // }
-                                              }
-                                            }
-                                            else{
-                                              ToastMessage.networkError('plcheckconn'.tr);
-                                            }
-                                          },
-                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.indigo, minimumSize: Size.fromHeight(45),
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                                              textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                                          child: Text("Submit", style: TextStyle(color: Colors.white, fontSize: 18.0)));
-                                    })
-
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            )
-                        ),
-                      ],
+                              )
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ))
-          ],
+              ))
+            ],
+          ),
         ),
       ),
     );

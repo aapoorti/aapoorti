@@ -12,7 +12,7 @@ publish_to: none
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 #version: 7.10.4+159
-version: 8.04.01+1826
+version: 8.04.04+1829
 
 environment:
   #sdk: ">=2.12.0 <3.0.0"
@@ -66,7 +66,7 @@ dependencies:
   flutter_cache_manager: ^3.3.0
   #rive: ^0.13.18
 
-  #UDM----------
+  #--------UDM----------
   shared_preferences: ^2.5.2
   flutter_form_builder: ^9.2.1
   fluttericon: ^2.0.0
@@ -101,7 +101,7 @@ dependencies:
   #flutter_app_version_checker: ^0.3.2
   fluttertoast:
 
-  #-----cris mmis
+  #-----cris mmis-----
   get:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
@@ -112,7 +112,7 @@ dependencies:
   intl_phone_field: ^3.2.0
   flutter_otp_text_field:
   pinput:
-
+  image_picker: ^1.1.2
   path_provider: ^2.1.5
 
 
