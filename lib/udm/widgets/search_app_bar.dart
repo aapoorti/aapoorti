@@ -117,23 +117,38 @@ class _SearchAppbarState extends State<SearchAppbar>
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Stack(children: [
-      AppBar(
-        title: Text("${widget.title}", style: TextStyle(color: Colors.white)),
-        backgroundColor: AapoortiConstants.primary,
-        iconTheme: IconThemeData(color: Colors.white),
-        actions: <Widget>[
-          GestureDetector(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0).copyWith(right: 15),
-              child: Icon(Icons.search),
+      PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF0D47A1), // Dark Blue
+                Color(0xFF1976D2), // Lighter Blue
+              ],
             ),
-            onTapUp: onSearchTapUp,
           ),
-          // IconButton(
-          //   icon: Icon(Icons.more_vert),
-          //   onPressed: () {},
-          // ),
-        ],
+          child: AppBar(
+            title: Text("${widget.title}", style: TextStyle(color: Colors.white)),
+            backgroundColor: AapoortiConstants.primary,
+            iconTheme: IconThemeData(color: Colors.white),
+            actions: <Widget>[
+              GestureDetector(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0).copyWith(right: 15),
+                  child: Icon(Icons.search),
+                ),
+                onTapUp: onSearchTapUp,
+              ),
+              // IconButton(
+              //   icon: Icon(Icons.more_vert),
+              //   onPressed: () {},
+              // ),
+            ],
+          ),
+        ),
       ),
       AnimatedBuilder(
         animation: _animation,

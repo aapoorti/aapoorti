@@ -445,7 +445,7 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                 onTap: () {
                   if (_scaffoldKey.currentState!.isDrawerOpen) {
                     _scaffoldKey.currentState!.closeDrawer();
-                    AapoortiUtilities.showAlertDailog(context, "MMIS");
+                    AapoortiUtilities().showAlertDailog(context, "MMIS");
                     //_showConfirmationDialog(context);
                     //WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
                     //callWebServiceLogout();

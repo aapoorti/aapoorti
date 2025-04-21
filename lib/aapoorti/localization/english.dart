@@ -35,5 +35,57 @@ Map<String, String> englishText = {
   'exitcnf' : 'Are you sure you want to leave?',
   'nostay' : 'No, stay',
   'yesexit' : 'Yes, exit',
-  'version' : 'Version'
+  'version' : 'Version',
+  'cof' : 'Choose an option for file',
+  'dwnd' : 'Downlaod',
+  'open' : 'Open',
+  'esalecond':'E-Sale Condition',
+  'aucunitsd': 'Auctioning Units',
+
+  //--------- Login Screen ----------------
+  'irepsheading' : 'Indian Railways E - Procurement System',
+  'evalidemail' : 'Please enter valid Email-ID',
+  'enterpin' : 'Enter PIN',
+  'digitpin' : 'Please enter 6-12 digit PIN',
+  'connectionissue' : 'You are not connected to the internet!',
+  'ela' : 'Enable Login Access',
+  'resetpin' : 'Reset PIN',
+  'email' : 'Email Address',
+  'slcf' : 'Save Login Credentials for',
+  'dayskey' : 'days',
+  'toresetpin' : 'To reset PIN for IREPS',
+  'websitelink' : 'Login to www.ireps.gov.in',
+  'goto' : 'Go to link on the right navigation (Enable\n    MobileApp Access for IREPS)',
+  'selresetpin' : 'Select RESET PIN and complete the process',
+  'note' : 'Note',
+  'loginfeature' : 'Login feature is available to users already registered in IREPS',
+  'lfama' : 'Login feature is available on Mobile App for',
+  'vendor' : 'Vendor',
+  'rut' : 'Railway User(Tender)',
+  'ruu' : 'Railway User(UDM)',
+  'telafi' : 'To enable Login access for IREPS',
+  'lafi' : 'Please Locate "Enable Mobile App" Access for IREPS',
+  'ctp' : 'Complete the process',
+
+  //--------- HelpDesk Screen ----------------
+  'callus' : 'Call Us',
+  'callnow' : 'Call Now',
+  'submitq' : 'Submit Query',
+  'clickhere' : 'Click Here',
+
+  //--------- Links Screen ----------------
+  'implinks' : 'Important Links',
+  'edoc' : 'E-Documents',
+  'bannedfirm' : 'Banned Firms',
+  'aac' : 'AAC',
+  'av' : 'Approved Vendors',
+
+  //--------AboutUs Screen ---------
+  'aboutusdesc' : 'This is the official mobile app of IREPS application (www.ireps.gov.in). IREPS mobile app provides information available on IREPS. IREPS application provides services related to procurement of Goods, Works and Services, Sale of Materials through the process of E-Tendering, E-Auction or Reverse Auction.',
+  'nameversion' : 'App Name & Version',
+  'pp' : 'Privacy Policy',
+  'developedby' : 'Developed and Published by',
+  'cfris' : 'Centre for Railway Information Systems',
+  'goi' : '(An Organization of the Ministry of Railways, Govt. of India)',
+  'website' : 'Website'
 };

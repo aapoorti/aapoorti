@@ -58,10 +58,10 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(iconList[index], height: 25, width: 25, color: isActive ? AapoortiConstants.primary : Colors.black),
+              Image.asset(iconList[index], height: 25, width: 25, color: isActive ?Color(0xFF0D47A1) : Colors.black),
               SizedBox(height: 5),
               Text((textList[index]).split('\n')[isEnglish ? 1 : 0],
-                style: TextStyle(color: isActive ? AapoortiConstants.primary : Colors.black),
+                style: TextStyle(color: isActive ? Color(0xFF0D47A1) : Colors.black),
               )
             ],
           );

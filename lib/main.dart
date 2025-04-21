@@ -439,6 +439,8 @@ class MyApp extends StatelessWidget {
                   foregroundColor: Colors.white, // Changed to white
                   elevation: 1,
                 ),
+                useMaterial3: true,
+                fontFamily: 'Roboto',
                 elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
@@ -464,19 +466,6 @@ class MyApp extends StatelessWidget {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 ),
               ),
-              // theme: ThemeData(
-              //   primarySwatch: Colors.lightBlue,
-              //   primaryColor: AapoortiConstants.primary,
-              //   fontFamily: 'Roboto',
-              //   useMaterial3: true,
-              //   textTheme: TextTheme(
-              //     bodySmall: TextStyle(
-              //         fontSize: 14.0,
-              //         fontFamily: 'Roboto',
-              //         fontWeight: FontWeight.normal,
-              //         color: Colors.blueGrey),
-              //   ),
-              // ),
               translations: Languages(), // Set up translations
               locale: Locale('en', 'US'), // Default language (English)
               fallbackLocale: Locale('en', 'US'), // Fallback to English if language is not supported

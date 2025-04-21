@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/aapoorti/common/NoConnection.dart';
+import 'package:flutter_app/aapoorti/provider/aapoorti_language_provider.dart';
+import 'package:provider/provider.dart';
 
 class ImplinkScreen extends StatefulWidget {
   @override
@@ -35,6 +37,7 @@ class _ImplinkScreenState extends State<ImplinkScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    AapoortiLanguageProvider language = Provider.of<AapoortiLanguageProvider>(context);
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,20 +48,20 @@ class _ImplinkScreenState extends State<ImplinkScreen> with SingleTickerProvider
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             alignment: Alignment.centerLeft,
             child: Text(
-              'Important Links',
+              language.text('implinks'),
               style: TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w400, fontFamily: 'Roboto'),
             ),
           ),
           Expanded(child: ListView(
             padding: EdgeInsets.all(20.0),
             children: [
-              _buildAnimatedTile(Icons.description, 'E-Documents'),
+              _buildAnimatedTile(Icons.description,  language.text('edoc')),
               SizedBox(height: 18),
-              _buildAnimatedTile(Icons.block, 'Banned Firms'),
+              _buildAnimatedTile(Icons.block,  language.text('bannedfirm')),
               SizedBox(height: 18),
-              _buildAnimatedTile(Icons.storage, 'AAC'),
+              _buildAnimatedTile(Icons.storage,  language.text('aac')),
               SizedBox(height: 18),
-              _buildAnimatedTile(Icons.check_box, 'Approved Vendors'),
+              _buildAnimatedTile(Icons.check_box,  language.text('av')),
             ],
           ))
           // Expanded(
@@ -121,21 +124,21 @@ class _ImplinkScreenState extends State<ImplinkScreen> with SingleTickerProvider
     return Container(
           child: InkWell(
             onTap: () async{
-              if(label == "E-Documents"){
+              if(label == "E-Documents" || label == 'ई-दस्तावेज़'){
                 bool check = await AapoortiUtilities.checkConnection();
                 if(check == true)
                   Navigator.pushNamed(context, "/edoc");
                 else
                   Navigator.push(context, MaterialPageRoute(builder: (context) => NoConnection()));
               }
-              else if(label == "Banned Firms"){
+              else if(label == "Banned Firms" || label == 'प्रतिबंधित फर्में'){
                 bool check = await AapoortiUtilities.checkConnection();
                 if(check == true)
                   Navigator.pushNamed(context, "/banned_Firms");
                 else
                   Navigator.push(context, MaterialPageRoute(builder: (context) => NoConnection()));
               }
-              else if(label == "AAC"){
+              else if(label == "AAC" || label == 'एएसी'){
                 bool check = await AapoortiUtilities.checkConnection();
                 if(check == true)
                   Navigator.pushNamed(context, "/aac");

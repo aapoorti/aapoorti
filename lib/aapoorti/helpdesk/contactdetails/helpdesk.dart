@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
+import 'package:flutter_app/aapoorti/provider/aapoorti_language_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -52,6 +54,7 @@ class Help extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AapoortiLanguageProvider language = Provider.of<AapoortiLanguageProvider>(context);
     return Scaffold(
       body: Container(
         child: Column(
@@ -75,7 +78,7 @@ class Help extends StatelessWidget {
                     // SizedBox(height: 10),
                     //Text('For Any Query/Suggestions/Support',style: TextStyle(fontSize: 16, color: Colors.black, decoration: TextDecoration.underline)),
                     //SizedBox(height: 10),
-                    Text('1. Call Us::',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, decoration: TextDecoration.none)),
+                    Text('1. ${language.text('callus')}::',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, decoration: TextDecoration.none)),
                     SizedBox(height: 10),
                     //Text("For Any Query/Suggestions/Supports"),
                     Row(
@@ -100,7 +103,7 @@ class Help extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Icon(Icons.phone, size: 25),
-                              Text('Call Now', style: TextStyle(fontSize: 15, fontWeight:  FontWeight.w600))
+                              Text(language.text('callnow'), style: TextStyle(fontSize: 15, fontWeight:  FontWeight.w600))
                             ],
                           ),
                         )
@@ -159,7 +162,7 @@ class Help extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('2. Submit Query::',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, decoration: TextDecoration.none)),
+                      Text('2. ${language.text('submitq')}::',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, decoration: TextDecoration.none)),
                       SizedBox(height: 10),
                       //Text("For Any Query/Suggestions/Supports"),
                       ElevatedButton(
@@ -167,7 +170,7 @@ class Help extends StatelessWidget {
                             _launchURL();
                             //Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewScreen()));
                           },
-                          child: Text("Click Here", style: TextStyle(color: Colors.white, fontSize: 16)),
+                          child: Text(language.text('clickhere'), style: TextStyle(color: Colors.white, fontSize: 16)),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.lightBlue[700]!,
                             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),

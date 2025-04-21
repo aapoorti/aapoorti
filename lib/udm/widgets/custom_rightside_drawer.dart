@@ -6,6 +6,7 @@ import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:flutter_app/udm/helpers/database_helper.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
+import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:flutter_app/udm/providers/itemsProvider.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/screens/itemlist_screen.dart';
@@ -64,28 +65,39 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: AapoortiConstants.primary,
-        leading: IconButton(
-          splashRadius: 30,
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF0D47A1), // Dark Blue
+                Color(0xFF1976D2), // Lighter Blue
+              ],
+            ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          child: AppBar(
+            elevation: 0,
+            centerTitle: true,
+            backgroundColor: Colors.transparent, // Make AppBar background transparent
+            iconTheme: const IconThemeData(color: Colors.white),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.home, color: Colors.white, size: 22),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  //Feedback.forTap(context);
+                },
+              ),
+            ],
+            title: Text(
+              language.text('searchItem'),
+              style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700),
+            ),
+          ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home, color: Colors.white, size: 22),
-            onPressed: () {
-              Navigator.of(context).pop();
-              //Feedback.forTap(context);
-            },
-          ),
-        ],
-        title: Text(language.text('searchItem'), style: TextStyle(color: Colors.white)),
       ),
       body: Form(
         key: _formKey,
@@ -109,7 +121,7 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       children: [
-        Text(language.text('railway'), style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400)),
+        Text(language.text('railway'), style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w400)),
         SizedBox(height: 10),
         Container(
           height: 45,
@@ -172,7 +184,7 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
           ),
         ),
         SizedBox(height: 10),
-        Text(language.text('unitType'), style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400)),
+        Text(language.text('unitType'), style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w400)),
         SizedBox(height: 10),
         Container(
           height: 45,
@@ -225,7 +237,7 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
           ),
         ),
         SizedBox(height: 10),
-        Text(language.text('unitName'), style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400)),
+        Text(language.text('unitName'), style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w400)),
         SizedBox(height: 10),
         Container(
           height: 45,
@@ -276,7 +288,7 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
           ),
         ),
         SizedBox(height: 10),
-        Text(language.text('departmentName'), style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400)),
+        Text(language.text('departmentName'), style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w400)),
         SizedBox(height: 10),
         Container(
           height: 45,
@@ -337,7 +349,7 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
           ),
         ),
         SizedBox(height: 10),
-        Text(language.text('userDepot'), style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400)),
+        Text(language.text('userDepot'), style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w400)),
         SizedBox(height: 10),
         Container(
           height: 45,
@@ -402,52 +414,8 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
             },
           ),
         ),
-        // DropdownButtonFormField(
-        //   isExpanded: true,
-        //   value: userDepot,
-        //   icon: Icon(Icons.keyboard_arrow_down),
-        //   decoration: InputDecoration(
-        //     labelText: language.text('userDepot'),
-        //     hintText: '${language.text('select')} ${language.text('userDepot')}',
-        //     floatingLabelBehavior: FloatingLabelBehavior.always,
-        //     alignLabelWithHint: true,
-        //     labelStyle: Theme.of(context).primaryTextTheme.caption!.copyWith(color: Colors.black),
-        //     border: const OutlineInputBorder(),
-        //     contentPadding: EdgeInsetsDirectional.all(10),
-        //   ),
-        //   disabledHint:
-        //   Text('${language.text('select')} ${language.text('userDepot')}'),
-        //   items: dropdowndata_UDMUserDepot.map((item) {
-        //     return DropdownMenuItem(
-        //         child: Text(() {
-        //           if (item['intcode'].toString() == '-1') {
-        //             return item['value'];
-        //           } else {
-        //             return item['intcode'].toString() + '-' + item['value'];
-        //           }
-        //         }()),
-        //         value: item['intcode'].toString());
-        //   }).toList(),
-        //   onChanged: (String? newValue) {
-        //     try {
-        //       setState(() {
-        //         userDepot = newValue;
-        //         description.clear();
-        //       });
-        //     } catch (e) {
-        //       print("execption" + e.toString());
-        //     }
-        //   },
-        //   validator: (dynamic val) {
-        //     if (val != null) {
-        //       return null;
-        //     } else {
-        //       return 'Please select Depot ';
-        //     }
-        //   },
-        // ),
         SizedBox(height: 10),
-        Text('${language.text('plNo')}/${language.text('description')}', style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400)),
+        Text('${language.text('plNo')}/${language.text('description')}', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w400)),
         SizedBox(height: 10),
         TextFormField(
           controller: description,
@@ -478,113 +446,114 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
 
         ),
         SizedBox(height: 20),
-        Container(
-            width: size.width,
-            padding: EdgeInsets.symmetric(horizontal: 5.0),
-            height: 45,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                MaterialButton (
-                    height: 45,
-                    minWidth: size.width * 0.40,
-                    child: Text(language.text('getDetails')),
-                    shape: BeveledRectangleBorder(side: BorderSide(width: 1.0, color: Colors.grey.shade300)),
-                    onPressed: () async {
-                      setState(() {
-                        itemListProvider = Provider.of<ItemListProvider>(context, listen: false);
-                        if(division == null || railway == null || unitName == null || department == null || userDepot == null) {
-                          _validateInputs();
-                        } else if(description.text.toString().trim().length < 3 || description.text.isEmpty) {
-                          _validateInputs();
-                          IRUDMConstants().showSnack(language.text('plNoErrorText'), context);
-                        } else {
-                          Navigator.of(context).pushNamed(ItemsListScreen.routeName);
-                          itemListProvider.fetchAndStoreItemsListwithdata(
-                              railway!,
-                              unitName!,
-                              division!,
-                              department!,
-                              userDepot!,
-                              description.text.trim(),
-                              context);
-                        }
-                      });
-                    }, color: Colors.blue, textColor: Colors.white),
-                MaterialButton (
-                    height: 45,
-                    minWidth: size.width * 0.40,
-                    child: Text(language.text('reset')),
-                    shape: BeveledRectangleBorder(side: BorderSide(width: 1.0, color: Colors.grey.shade300)),
-                    onPressed: () {
-                      setState(() {
-                        description.clear();
-                        default_data();
-                      });
-                      //Navigator.push(context, MaterialPageRoute(builder: (context) => NSDemandDataSummaryScreen(fromdate, todate, rlycode, unittypecode, unitnamecode, departmentcode, consigneecode, indentorcode)));
-                    }, color: Colors.red, textColor: Colors.white),
-              ],
-            )
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () async {
+              setState(() {
+                itemListProvider = Provider.of<ItemListProvider>(context, listen: false);
+                if(division == null || railway == null || unitName == null || department == null || userDepot == null) {
+                  _validateInputs();
+                } else if(description.text.toString().trim().length < 3 || description.text.isEmpty) {
+                  _validateInputs();
+                  IRUDMConstants().showSnack(language.text('plNoErrorText'), context);
+                } else {
+                  Navigator.of(context).pushNamed(ItemsListScreen.routeName);
+                  itemListProvider.fetchAndStoreItemsListwithdata(
+                      railway!,
+                      unitName!,
+                      division!,
+                      department!,
+                      userDepot!,
+                      description.text.trim(),
+                      context);
+                }
+              });
+            },
+            child: Text(language.text('getDetails'),
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue.shade700,
+              padding: EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+          ),
         ),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //   children: [
-        //     Container(
-        //       height: 50,
-        //       width: 160,
-        //       child: OutlinedButton(
-        //         style: IRUDMConstants.bStyle(),
-        //         onPressed: () {
-        //           setState(() {
-        //             itemListProvider = Provider.of<ItemListProvider>(context, listen: false);
-        //             if(division == null || railway == null || unitName == null || department == null || userDepot == null) {
-        //               _validateInputs();
-        //             } else if(description.text.toString().trim().length < 3 || description.text.isEmpty) {
-        //               _validateInputs();
-        //               IRUDMConstants().showSnack(language.text('plNoErrorText'), context);
-        //             } else {
-        //               Navigator.of(context).pushNamed(ItemsListScreen.routeName);
-        //               itemListProvider.fetchAndStoreItemsListwithdata(
-        //                   railway!,
-        //                   unitName!,
-        //                   division!,
-        //                   department!,
-        //                   userDepot!,
-        //                   description.text.trim(),
-        //                   context);
-        //             }
-        //           });
-        //         },
-        //         child: Text(language.text('getDetails'),
-        //             style: TextStyle(
-        //               fontSize: 18,
-        //               fontWeight: FontWeight.bold,
-        //               color: AapoortiConstants.primary,
-        //             )),
-        //       ),
-        //     ),
-        //     Container(
-        //       width: 160,
-        //       height: 50,
-        //       child: OutlinedButton(
-        //         style: IRUDMConstants.bStyle(),
-        //         onPressed: () {
-        //           setState(() {
-        //             description.clear();
-        //             default_data();
-        //           });
-        //         },
-        //         child: Text(
-        //           language.text('reset'),
-        //           style: TextStyle(
-        //             fontSize: 18,
-        //             fontWeight: FontWeight.bold,
-        //             color: AapoortiConstants.primary,
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ],
+        SizedBox(height: 10),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              setState(() {
+                description.clear();
+                customSearchData();
+              });
+            },
+            child: Text(
+              language.text('reset'),
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue.shade500,
+              padding: EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+          ),
+        ),
+        // Container(
+        //     width: size.width,
+        //     padding: EdgeInsets.symmetric(horizontal: 5.0),
+        //     height: 45,
+        //     child: Row(
+        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //       children: [
+        //         MaterialButton (
+        //             height: 45,
+        //             minWidth: size.width * 0.40,
+        //             child: Text(language.text('getDetails')),
+        //             shape: BeveledRectangleBorder(side: BorderSide(width: 1.0, color: Colors.grey.shade300)),
+        //             onPressed: () async {
+        //               setState(() {
+        //                 itemListProvider = Provider.of<ItemListProvider>(context, listen: false);
+        //                 if(division == null || railway == null || unitName == null || department == null || userDepot == null) {
+        //                   _validateInputs();
+        //                 } else if(description.text.toString().trim().length < 3 || description.text.isEmpty) {
+        //                   _validateInputs();
+        //                   IRUDMConstants().showSnack(language.text('plNoErrorText'), context);
+        //                 } else {
+        //                   Navigator.of(context).pushNamed(ItemsListScreen.routeName);
+        //                   itemListProvider.fetchAndStoreItemsListwithdata(
+        //                       railway!,
+        //                       unitName!,
+        //                       division!,
+        //                       department!,
+        //                       userDepot!,
+        //                       description.text.trim(),
+        //                       context);
+        //                 }
+        //               });
+        //             }, color: Colors.blue, textColor: Colors.white),
+        //         MaterialButton (
+        //             height: 45,
+        //             minWidth: size.width * 0.40,
+        //             child: Text(language.text('reset')),
+        //             shape: BeveledRectangleBorder(side: BorderSide(width: 1.0, color: Colors.grey.shade300)),
+        //             onPressed: () {
+        //               setState(() {
+        //                 description.clear();
+        //                 default_data();
+        //               });
+        //               //Navigator.push(context, MaterialPageRoute(builder: (context) => NSDemandDataSummaryScreen(fromdate, todate, rlycode, unittypecode, unitnamecode, departmentcode, consigneecode, indentorcode)));
+        //             }, color: Colors.red, textColor: Colors.white),
+        //       ],
+        //     )
         // ),
       ],
     );
@@ -616,10 +585,8 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
   }
 
   void initState() {
-    setState(() {
-      default_data();
-    });
     super.initState();
+    customSearchData();
   }
 
   Future<dynamic> fetchUnit(String? value, String unit_data) async {
@@ -792,6 +759,18 @@ class _CustomRightSideDrawerState extends State<CustomRightSideDrawer> {
       department = depart;
     });
     IRUDMConstants.removeProgressIndicator(context);
+  }
+
+  void customSearchData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+    if(providedTime.isBefore(DateTime.now())){
+      await fetchToken(context);
+      default_data();
+    }
+    else{
+      default_data();
+    }
   }
 
   Future<dynamic> default_data() async {

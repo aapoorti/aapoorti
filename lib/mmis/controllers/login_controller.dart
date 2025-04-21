@@ -58,7 +58,7 @@ class LoginController extends GetxController{
     super.onInit();
     loginState = LoginState.idle.obs;
     debugPrint("onInit Called");
-    autologin();
+    //autologin();
   }
 
   @override
@@ -66,7 +66,7 @@ class LoginController extends GetxController{
     //change([], status: RxStatus.empty());
     super.onReady();
     debugPrint("onReady Called");
-    autologin();
+    //autologin();
   }
 
   @override
@@ -88,10 +88,12 @@ class LoginController extends GetxController{
       if(loginResponse.isNotEmpty){
         //ToastMessage.success("Successfully login!!");
         loginState.value = LoginState.success;
+        await prefs.removePrefs();
         await prefs.setBoolValue('ismmisLoginSaved', isLoginSaved);
         await prefs.setStringValue("days", days.toString());
         await prefs.setStringValue('orgzone', loginResponse[0].orgZone!);
         await prefs.setStringValue('userid', loginResponse[0].userType!.split("~").last);
+        await prefs.setStringValue('mmisemail', loginResponse[0].emailId!);
         Timer(const Duration(milliseconds: 0), () {
           Get.offAndToNamed(Routes.chooseDepartScreen);
         });
@@ -327,21 +329,30 @@ class LoginController extends GetxController{
     catch(e){}
   }
 
-  Future<void> autologin() async {
+  Future<void> autologin(BuildContext context) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var box = await Hive.openBox<UserLoginrespDb>('user');
-      emailValue = box.get(0)!.emailId.toString();
+      //var box = await Hive.openBox<UserLoginrespDb>('user');
+      //emailValue = box.get(0)!.emailId.toString();
       if(prefs.containsKey('ismmisLoginSaved')) {
         if(prefs.get('ismmisLoginSaved') == true) {
-          debugPrint("last log time ${box.get(0)!.lastLogTime.toString()}");
-          if(getDaysDifference(box.get(0)!.lastLogTime.toString())<=10) {
+          //debugPrint("last log time ${box.get(0)!.lastLogTime.toString()}");
+          if(int.parse(prefs.getString("days")!) != "0") {
             loginUsers(prefs.getString('mmisemail')!, prefs.getString('mmismpin')!, true, int.parse(prefs.getString("days")!));
           }
         }
+        else{
+          AapoortiUtilities.showInSnackBar(context, "Please enter valid password");
+        }
       }
-    } catch (err) {
-      debugPrint("error $err");
+    } on SocketException catch (err) {
+      AapoortiUtilities.showInSnackBar(context, "Please check your internet connection!!");
+    }
+    on HttpException catch(httpExp){
+      AapoortiUtilities.showInSnackBar(context, "Something went wrong, please try later!!");
+    }
+    on Exception catch(ex){
+      AapoortiUtilities.showInSnackBar(context, "Something went wrong, please try later!!");
     }
   }
 

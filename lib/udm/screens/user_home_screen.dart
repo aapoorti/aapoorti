@@ -1724,7 +1724,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async{
-        AapoortiUtilities.showAlertDailog(context, "UDM");
+        AapoortiUtilities().showAlertDailog(context, "UDM");
         return true;
       },
       //onWillPop: _onButtonPressed,
@@ -1754,6 +1754,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
             ),
             child: AppBar(
               elevation: 0,
+              centerTitle: true,
               backgroundColor: Colors.transparent, // Make AppBar background transparent
               iconTheme: const IconThemeData(color: Colors.white),
               actions: [

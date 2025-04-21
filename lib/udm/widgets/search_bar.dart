@@ -44,10 +44,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-               /* IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: widget.onCancelSearch,
-                ),*/
                 Expanded(
                   child: TextField(
                     controller: _searchFieldController,

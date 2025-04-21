@@ -24,11 +24,9 @@ class _StoreStkDepotListScreenState extends State<StoreStkDepotListScreen> with 
   late StoreStkDepotStateProvider stkDepotStateProvider;
   @override
   void initState() {
-    stkDepotStateProvider =
-        Provider.of<StoreStkDepotStateProvider>(context, listen: false);
-    FeatureDiscovery.hasPreviouslyCompleted(context, 'JumpButton')
-        .then((value) {
-      if (value == true) {
+    stkDepotStateProvider = Provider.of<StoreStkDepotStateProvider>(context, listen: false);
+    FeatureDiscovery.hasPreviouslyCompleted(context, 'JumpButton').then((value) {
+      if(value == true) {
         setState(() {
           _isDiscovering = false;
         });
@@ -47,7 +45,6 @@ class _StoreStkDepotListScreenState extends State<StoreStkDepotListScreen> with 
     for(int i = 0; i < list.length; i++) {
       if(list[i].rate != 'NA') {
         totalValue = totalValue + double.parse(list[i].rate) * double.parse(list[i].stkqty);
-        assert(totalValue is double);
       }
     }
     return totalValue.toStringAsFixed(2);
@@ -63,19 +60,13 @@ class _StoreStkDepotListScreenState extends State<StoreStkDepotListScreen> with 
     LanguageProvider language = Provider.of<LanguageProvider>(context);
 
     return Scaffold(
-        floatingActionButton: _showFAB
-            ? IRUDMConstants().floatingAnimat(
-            _isScrolling, _isDiscovering, this, _scrollController, context)
-            : const SizedBox(width: 56, height: 120),
-        appBar: SearchAppbar(
-          title: language.text('storesDepotStockList'),
-          labelData: 'StoreDepotStk',
-        ),
+        floatingActionButton: _showFAB ? IRUDMConstants().floatingAnimat(_isScrolling, _isDiscovering, this, _scrollController, context) : const SizedBox(width: 56, height: 120),
+        appBar: SearchAppbar(title: language.text('storesDepotStockList'), labelData: 'StoreDepotStk'),
         body: Stack(children: [
           Consumer<StoreStkDepotStateProvider>(
               builder:(_, StoreStkDepotStateProvider, __) {
                 if(StoreStkDepotStateProvider.state == StoreStkDepotState.Busy) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: CircularProgressIndicator(color: Colors.blue.shade500));
                 } else if (StoreStkDepotStateProvider.state == StoreStkDepotState.FinishedWithError) {
                   Future.delayed(Duration.zero, () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         backgroundColor: Colors.redAccent,
@@ -195,9 +186,11 @@ class ProductBox extends StatelessWidget {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
 
     return Container(
-      padding: EdgeInsets.only(left: 6, top: 9, right: 6, bottom: 9),
+      padding: EdgeInsets.only(left: 6, top: 0, right: 6, bottom: 0),
       child: Card(
         elevation: 6,
+        surfaceTintColor: Colors.white,
+        color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -205,7 +198,7 @@ class ProductBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(top: 10, left: 8),
+              padding: EdgeInsets.only(top: 5, left: 8),
               child: Text((index! + 1).toString() + '.',
                 softWrap: false,
                 style: TextStyle(fontSize: 14, color: Colors.indigo[800]),
@@ -214,7 +207,7 @@ class ProductBox extends StatelessWidget {
             Expanded(
               child: Container(
                 padding:
-                EdgeInsets.only(left: 5, top: 5, right: 11, bottom: 10),
+                EdgeInsets.only(left: 5, top: 0, right: 11, bottom: 5),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[

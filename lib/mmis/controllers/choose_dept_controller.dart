@@ -26,6 +26,7 @@ class ChooseDeptController extends GetxController{
   }
 
   Future<void> fetchDepartmentCount(String userId) async{
+    debugPrint("üserId $userId");
     choosedeptState.value = ChooseDeptState.loading;
     try{
       SharedPreferences prefs = await SharedPreferences.getInstance();

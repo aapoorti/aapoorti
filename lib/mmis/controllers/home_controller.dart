@@ -25,6 +25,7 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
+    debugPrint("home init");
     getUserloginData();
     getPendingCases();
     super.onInit();
@@ -53,6 +54,7 @@ class HomeController extends GetxController {
     final box = await Hive.openBox<UserLoginrespDb>('user');
     for (var i = 0; i < box.length; i++) {
       var userLoginrespDb = box.getAt(i);
+      debugPrint("hfhfhhfh $userLoginrespDb");
       username.value = userLoginrespDb!.userName;
       mobile.value = userLoginrespDb.mobile!;
       email.value = userLoginrespDb.emailId;

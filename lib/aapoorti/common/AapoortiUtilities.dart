@@ -8,6 +8,7 @@ import 'package:flutter_app/aapoorti/common/CommonScreen.dart';
 import 'package:flutter_app/aapoorti/provider/aapoorti_language_provider.dart';
 import 'package:flutter_app/aapoorti/widgets/confirm_dialog.dart';
 import 'package:flutter_app/aapoorti/widgets/logout.dart';
+import 'package:flutter_app/mmis/db/db_models/userloginrespdb.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
 
 import 'package:flutter_app/udm/widgets/warningalert_dialog.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
@@ -496,7 +498,7 @@ class AapoortiUtilities {
                 onTap: () {
                   if(_scaffoldKey.currentState!.isDrawerOpen) {
                     _scaffoldKey.currentState!.closeDrawer();
-                    showAlertDailog(context, "IREPS");
+                    AapoortiUtilities().showAlertDailog(context, "IREPS");
                     //_showConfirmationDialog(context);
                     //WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
                     //callWebServiceLogout();
@@ -906,7 +908,7 @@ class AapoortiUtilities {
     }
   }
 
-  static showAlertDailog(BuildContext context, String? appName) {
+  showAlertDailog(BuildContext context, String? appName) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -915,10 +917,16 @@ class AapoortiUtilities {
     ).then((value) {
       if(value != null){
         if(value == false){
-          appName == "UDM"  || appName == "MMIS" ? Navigator.push(context, MaterialPageRoute(builder: (context) => CommonScreen())) : exit(0);
+          appName == "UDM" ? Navigator.push(context, MaterialPageRoute(builder: (context) => CommonScreen())) : appName == "MMIS" ? exitApp(context) : exit(0);
         }
       }
     });
+  }
+
+  Future<void> exitApp(BuildContext context) async{
+    final box = await Hive.openBox<UserLoginrespDb>('user');
+    await box.clear();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => CommonScreen()));
   }
 
   static showLogOutDialog(BuildContext context, VoidCallback press){

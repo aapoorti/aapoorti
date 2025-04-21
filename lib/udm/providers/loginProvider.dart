@@ -350,6 +350,7 @@ class LoginProvider with ChangeNotifier {
           prefs.setString('orgunittype', jsonResult['data'][0]['org_unit_type'].toString());
 
           debugPrint("User Records complete");
+          setRememberMe(true);
           Navigator.of(context).pushReplacementNamed(UserHomeScreen.routeName);
         }
         else if(jsonResult['status'] == "ERROR"){

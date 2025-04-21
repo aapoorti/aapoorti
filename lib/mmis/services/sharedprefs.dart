@@ -33,4 +33,11 @@ class SharePreferenceService {
   bool? getBoolValue(String key) {
     return _prefs.getBool(key);
   }
+
+  Future<void> removePrefs() async{
+    if(_prefs.containsKey('orgzone') && _prefs.containsKey('userid')){
+      _prefs.remove('orgzone');
+      _prefs.remove('userid');
+    }
+  }
 }

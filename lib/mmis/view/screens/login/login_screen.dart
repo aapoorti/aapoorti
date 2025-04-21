@@ -135,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     // TODO: implement dispose
     controller.loginState = LoginState.idle.obs;
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -317,24 +318,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold)),
                                 onPressed: () async {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  if (networkController
-                                      .connectionStatus.value !=
-                                      0) {
-                                    if (_formKey.currentState!.validate()) {
-                                      controller.loginUsers(
-                                          _usernameController.text.trim(),
-                                          _passwordController.text.trim(),
-                                          controller.checkValue,
-                                          _selectedDays);
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  if(_usernameController.text.trim().isNotEmpty && _passwordController.text.isEmpty && prefs.getString('days') != "0"){
+                                    controller.autologin(context);
+                                  }
+                                  else{
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                                    if (networkController.connectionStatus.value != 0) {
+                                      if(_formKey.currentState!.validate()) {
+                                        controller.loginUsers(_usernameController.text.trim(), _passwordController.text.trim(), controller.checkValue, _selectedDays);
+                                      }
+                                    } else {
+                                      ToastMessage.networkError('plcheckconn'.tr);
                                     }
-                                  } else {
-                                    ToastMessage.networkError('plcheckconn'.tr);
                                   }
                                 },
-                                child: Text('login'.tr,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18.0)));
+                                child: Text('login'.tr, style: TextStyle(color: Colors.white, fontSize: 18.0)));
                           } else if (controller.loginState.value ==
                               LoginState.loading) {
                             return Container(
@@ -383,14 +382,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                   textStyle: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)),
-                              onPressed: () {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                if(networkController.connectionStatus.value != 0) {
-                                  if(_formKey.currentState!.validate()) {
-                                    controller.loginUsers(_usernameController.text.trim(), _passwordController.text.trim(), controller.checkValue, _selectedDays);
+                              onPressed: () async{
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                if(_usernameController.text.trim().isNotEmpty && _passwordController.text.isEmpty && prefs.getString('days') != "0"){
+                                  controller.autologin(context);
+                                }
+                                else{
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                  if(networkController.connectionStatus.value != 0) {
+                                    if(_formKey.currentState!.validate()) {
+                                      controller.loginUsers(_usernameController.text.trim(), _passwordController.text.trim(), controller.checkValue, _selectedDays);
+                                    }
+                                  } else {
+                                    ToastMessage.networkError('plcheckconn'.tr);
                                   }
-                                } else {
-                                  ToastMessage.networkError('plcheckconn'.tr);
                                 }
                               },
                               child: Text('login'.tr,

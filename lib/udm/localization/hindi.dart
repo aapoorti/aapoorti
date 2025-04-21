@@ -28,7 +28,7 @@ Map<String, String> hindiText = {
   //Home Screen
   'udmFull': 'यूजर डिपो मॉड्यूल',
   'udmtitle' : 'यूजर डिपो मॉड्यूल(यूडीएम)',
-  'irepslabel' : 'आईआरईपीएस',
+  'irepslabel' : 'आई.आर.ई.पी.एस.',
   'udmlabel' : 'यूडीएम',
   'home' : 'होम',
   'settings' : 'सेटिंग',
@@ -43,6 +43,7 @@ Map<String, String> hindiText = {
   'logOut':'इस डिवाइस से लॉगआउट करें?',
   'changeLogin':'लॉगिन बदलें',
   'checkconnection' : 'कृपया अपने इंटरनेट कनेक्शन की जाँच करें!!',
+  'irepsheading' : 'भारतीय रेलवे ई-खरीद प्रणाली',
 
   'rateUs': 'हमें रेट करें',
   'version': 'संस्करण',
@@ -551,6 +552,7 @@ Map<String, String> hindiText = {
   'search' : 'खोजें',
   'plno' : 'पीएल नं.',
   'desc' : 'विवरण',
+  'selectbtn' : 'चयन',
 
   'historysheet' : 'इतिहास पत्रक',
 
@@ -709,6 +711,11 @@ Map<String, String> hindiText = {
 
   'pw' : 'कृपया प्रतीक्षा करें...',
   'refresh' : 'ताज़ा करना',
+  'raildiv' : 'रेल मंडल',
+  'plr' : 'भाग सूची संदर्भ',
+  'plcode' : 'पीएल नंबर या कोड दर्ज करें',
+  'sihr' : 'स्टॉक आइटम इतिहास परिणाम (0)',
+  'sihrdes' : 'कृपया रेलवे डिवीजन का चयन करें और सूची इतिहास देखने के लिए भाग सूची विवरण दर्ज करें।',
 
   // --- view details show ---
 
@@ -1265,5 +1272,6 @@ Map<String, String> hindiText = {
   'nostay' : 'नहीं, रहो',
   'yesexit' : 'हाँ, लॉगआउट करें',
   'ela' : 'लॉगिन एक्सेस सक्षम करें',
-  'slcf' : 'लॉगिन क्रेडेंशियल सहेजें'
+  'slcf' : 'लॉगिन क्रेडेंशियल सहेजें',
+  'userd' : 'उपयोगकर्ता विवरण'
 };

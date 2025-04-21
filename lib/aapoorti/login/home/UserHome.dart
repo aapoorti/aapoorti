@@ -498,6 +498,7 @@ class _UserHomeState extends State<UserHome> {
                 ),
                 child: AppBar(
                   elevation: 0,
+                  centerTitle: true,
                   backgroundColor: Colors.transparent, // Make AppBar background transparent
                   iconTheme: const IconThemeData(color: Colors.white),
                   leading: InkWell(

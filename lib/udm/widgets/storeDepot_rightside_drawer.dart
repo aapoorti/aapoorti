@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
+import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:flutter_app/udm/helpers/database_helper.dart';
@@ -42,39 +43,45 @@ class _StoreStkDepotRightSideDrawerState
   List dropdowndata_UDMStoreDepot = [];
 
   late List<Map<String, dynamic>> dbResult;
-
-  Error? _error;
-  bool _autoValidate = false;
+  
+  
 
   @override
   Widget build(BuildContext context) {
     Size mq = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AapoortiConstants.primary,
-        iconTheme: IconThemeData(color: Colors.white),
-        leading: IconButton(
-          splashRadius: 30,
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF0D47A1), // Dark Blue
+                Color(0xFF1976D2), // Lighter Blue
+              ],
+            ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home, color: Colors.white, size: 22),
-            onPressed: () {
-              Navigator.of(context).pop();
-              //Feedback.forTap(context);
-            },
+          child: AppBar(
+            elevation: 0,
+            centerTitle: true,
+            backgroundColor: Colors.transparent, // Make AppBar background transparent
+            iconTheme: const IconThemeData(color: Colors.white),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.home, color: Colors.white, size: 22),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  //Feedback.forTap(context);
+                },
+              ),
+            ],
+            title: Text(
+              Provider.of<LanguageProvider>(context).text('storesDepotStock'),
+              style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700),
+            ),
           ),
-        ],
-        title: Text(
-          Provider.of<LanguageProvider>(context).text('storesDepotStock'),
-          style: TextStyle(color: Colors.white),
         ),
       ),
       body: searchDrawer(mq),
@@ -92,17 +99,15 @@ class _StoreStkDepotRightSideDrawerState
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(language.text('railway'),
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400)),
+                _buildFieldLabel(language.text('railway')),
+                // Text(language.text('railway'),
+                //     style: TextStyle(
+                //         color: Colors.black,
+                //         fontSize: 17,
+                //         fontWeight: FontWeight.w400)),
                 SizedBox(height: 10),
                 Container(
                   height: 45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      border: Border.all(color: Colors.grey, width: 1)),
                   child: DropdownSearch<String>(
                     selectedItem: railwayname,
                     popupProps: PopupProps.menu(
@@ -116,8 +121,8 @@ class _StoreStkDepotRightSideDrawerState
                     decoratorProps: DropDownDecoratorProps(
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none),
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.blue[800]!)),
                           contentPadding: EdgeInsets.only(left: 10))
                     ),
                     items:(filter, loadProps) => dropdowndata_UDMRlyList.map((e) {
@@ -127,8 +132,7 @@ class _StoreStkDepotRightSideDrawerState
                       var rlyname;
                       var rlycode;
                       dropdowndata_UDMRlyList.forEach((element) {
-                        if (newValue.toString() ==
-                            element['value'].toString()) {
+                        if (newValue.toString() == element['value'].toString()) {
                           rlyname = element['value'].toString().trim();
                           rlycode = element['intcode'].toString();
                         }
@@ -142,24 +146,22 @@ class _StoreStkDepotRightSideDrawerState
                           def_fetchUnit(railway, "");
                         });
                       } catch (e) {
-                        print("execption" + e.toString());
+                        debugPrint("execption" + e.toString());
                       }
                     },
                   ),
                 ),
                 //stockDropdown('Railway', '${language.text('select')} ${language.text('railway')}', dropdowndata_UDMRlyList, railway),
                 SizedBox(height: 10),
-                Text(language.text('storesDepot'),
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400)),
+                _buildFieldLabel(language.text('storesDepot')),
+                // Text(language.text('storesDepot'),
+                //     style: TextStyle(
+                //         color: Colors.black,
+                //         fontSize: 17,
+                //         fontWeight: FontWeight.w400)),
                 SizedBox(height: 10),
                 Container(
                   height: 45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      border: Border.all(color: Colors.grey, width: 1)),
                   child: DropdownSearch<String>(
                     selectedItem: storeDepotName,
                     popupProps: PopupProps.menu(
@@ -173,8 +175,8 @@ class _StoreStkDepotRightSideDrawerState
                     decoratorProps: DropDownDecoratorProps(
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none),
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.blue[800]!)),
                           contentPadding: EdgeInsets.only(left: 10))
                     ),
                     items:(filter, loadProps) => dropdowndata_UDMStoreDepot.map((e) {
@@ -196,163 +198,141 @@ class _StoreStkDepotRightSideDrawerState
                     },
                   ),
                 ),
-                // FormBuilderDropdown(
-                //   name: 'Stores Depot',
-                //   focusColor: Colors.transparent,
-                //   decoration: InputDecoration(
-                //     labelText: language.text('storesDepot'),
-                //     floatingLabelBehavior: FloatingLabelBehavior.always,
-                //     contentPadding: EdgeInsetsDirectional.all(10),
-                //     alignLabelWithHint: true,
-                //     border: const OutlineInputBorder(),
-                //   ),
-                //   initialValue: storeDepot,
-                //   allowClear: false,
-                //   hint: Text('${language.text('select')} Stores Depot'),
-                //   validator: FormBuilderValidators.compose(
-                //       [FormBuilderValidators.required(context)]),
-                //   items: dropdowndata_UDMStoreDepot.map((item) {
-                //     return DropdownMenuItem(
-                //         child: Text(item['value']),
-                //         value: item['intcode'].toString());
-                //   }).toList(),
-                //   onChanged: (String? newValue) {
-                //     print("New value of store depot");
-                //     setState(() {
-                //       storeDepot = newValue;
-                //     });
-                //   },
-                // ),
                 SizedBox(height: 10),
-                Text('${language.text('plNo')}/${language.text('description')}', style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400)),
+                _buildFieldLabel('${language.text('plNo')}/${language.text('description')}'),
+                // Text('${language.text('plNo')}/${language.text('description')}', style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400)),
                 SizedBox(height: 10),
-                TextFormField(
-                  controller: description,
-                  validator: (val) {
-                    if (val == null || val.length < 3) {
-                      return language.text('plNoErrorText');
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 1.0),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.blue, width: 1.0),
-                      borderRadius: BorderRadius.circular(10.0),
+                Container(
+                  height: 45,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.blue[800]!),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: TextFormField(
+                    controller: description,
+                    validator: (val) {
+                      if (val == null || val.length < 3) {
+                        return language.text('plNoErrorText');
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter PL/ minimum 3 letters of description',
+                      hintStyle: TextStyle(color: Colors.grey[400]),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.search, color: Colors.blue[800]),
                     ),
-                    errorBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    hintText: language.text('plNoDisplayText'),
-                    errorText: _autoValidate ? language.text('plNoErrorText') : null,
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
                   ),
                 ),
-                SizedBox(height: 20),
-                Container(
-                    width: mq.width,
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    height: 45,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MaterialButton (
-                            height: 45,
-                            minWidth: mq.width * 0.40,
-                            child: Text(language.text('getDetails')),
-                            shape: BeveledRectangleBorder(side: BorderSide(width: 1.0, color: Colors.grey.shade300)),
-                            onPressed: () async {
-                              setState(() {
-                                if(description.text.toString().trim().length < 3 || description.text.isEmpty) {
-                                  IRUDMConstants().showSnack("PL no must be greater than three character", context);
-                                } else {
-                                  itemListProvider = Provider.of<StoreStkDepotStateProvider>(context, listen: false);
-                                  Navigator.of(context).pushNamed(StoreStkDepotListScreen.routeName);
-                                  itemListProvider.fetchAndStoreItemsListwithdata(
-                                      railway,
-                                      storeDepot,
-                                      description.text.trim(),
-                                      context);
-
-                                }
-                              });
-                            }, color: Colors.blue, textColor: Colors.white),
-                        MaterialButton (
-                            height: 45,
-                            minWidth: mq.width * 0.40,
-                            child: Text(language.text('reset')),
-                            shape: BeveledRectangleBorder(side: BorderSide(width: 1.0, color: Colors.grey.shade300)),
-                            onPressed: () {
-                              description.text = '';
-                              default_data();
-                              //Navigator.push(context, MaterialPageRoute(builder: (context) => NSDemandDataSummaryScreen(fromdate, todate, rlycode, unittypecode, unitnamecode, departmentcode, consigneecode, indentorcode)));
-                            }, color: Colors.red, textColor: Colors.white),
-                      ],
-                    )
-                ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //   children: [
-                //     Container(
-                //       height: 50,
-                //       width: 160,
-                //       child: OutlinedButton(
-                //         style: IRUDMConstants.bStyle(),
-                //         onPressed: () {
-                //           setState(() {
-                //             if(description.text.toString().trim().length < 3 || description.text.isEmpty) {
-                //               IRUDMConstants().showSnack("PL no must be greater than three character", context);
-                //             } else {
-                //               itemListProvider = Provider.of<StoreStkDepotStateProvider>(context, listen: false);
-                //               Navigator.of(context).pushNamed(StoreStkDepotListScreen.routeName);
-                //               itemListProvider.fetchAndStoreItemsListwithdata(
-                //                   railway,
-                //                   storeDepot,
-                //                   description.text.trim(),
-                //                   context);
-                //
-                //             }
-                //           });
-                //         },
-                //         child: Text(language.text('getDetails'),
-                //             style: TextStyle(
-                //               fontSize: 18,
-                //               fontWeight: FontWeight.bold,
-                //               color: AapoortiConstants.primary,
-                //             )),
-                //       ),
+                // TextFormField(
+                //   controller: description,
+                //   validator: (val) {
+                //     if (val == null || val.length < 3) {
+                //       return language.text('plNoErrorText');
+                //     }
+                //     return null;
+                //   },
+                //   decoration: InputDecoration(
+                //     contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 1.0),
+                //     focusedBorder: OutlineInputBorder(
+                //       borderSide: const BorderSide(color: Colors.blue, width: 1.0),
+                //       borderRadius: BorderRadius.circular(10.0),
                 //     ),
-                //     Container(
-                //       width: 160,
-                //       height: 50,
-                //       child: OutlinedButton(
-                //         style: IRUDMConstants.bStyle(),
-                //         onPressed: () {
-                //           setState(() {
-                //             //_formKey.currentState!.fields['plNo']!.didChange("");
-                //             setState(() {
-                //               default_data();
-                //             });
-                //           });
-                //         },
-                //         child: Text(language.text('reset'),
-                //             style: TextStyle(
-                //               fontSize: 18,
-                //               fontWeight: FontWeight.bold,
-                //               color: AapoortiConstants.primary,
-                //             )),
-                //       ),
+                //     errorBorder: OutlineInputBorder(
+                //       borderSide:
+                //           const BorderSide(color: Colors.grey, width: 1.0),
+                //       borderRadius: BorderRadius.circular(10.0),
                 //     ),
-                //   ],
+                //     enabledBorder: OutlineInputBorder(
+                //       borderSide:
+                //           const BorderSide(color: Colors.grey, width: 1.0),
+                //       borderRadius: BorderRadius.circular(10.0),
+                //     ),
+                //     hintText: language.text('plNoDisplayText'),
+                //     errorText: _autoValidate ? language.text('plNoErrorText') : null,
+                //     floatingLabelBehavior: FloatingLabelBehavior.auto,
+                //   ),
                 // ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async{
+                          setState(() {
+                            if(description.text.toString().trim().length < 3 || description.text.isEmpty) {
+                              IRUDMConstants().showSnack("PL no must be greater than three character", context);
+                            } else {
+                              itemListProvider = Provider.of<StoreStkDepotStateProvider>(context, listen: false);
+                              Navigator.of(context).pushNamed(StoreStkDepotListScreen.routeName);
+                              itemListProvider.fetchAndStoreItemsListwithdata(
+                                  railway,
+                                  storeDepot,
+                                  description.text.trim(),
+                                  context);
+
+                            }
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue[800],
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 5,
+                          shadowColor: Colors.blue.withOpacity(0.5),
+                        ),
+                        child: Text(
+                          language.text('getDetails'),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            description.text = '';
+                            storeDepotData();
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.blue[800],
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: BorderSide(color: Colors.blue[800]!),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          language.text('reset'),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ]),
         ),
       ],
@@ -394,13 +374,21 @@ class _StoreStkDepotRightSideDrawerState
     );
   }
 
-  void reseteValues() {}
-
   void initState() {
-    setState(() {
-      default_data();
-    });
     super.initState();
+    storeDepotData();
+  }
+
+  void storeDepotData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+    if(providedTime.isBefore(DateTime.now())){
+      await fetchToken(context);
+      default_data();
+    }
+    else{
+      default_data();
+    }
   }
 
   late SharedPreferences prefs;
@@ -457,7 +445,6 @@ class _StoreStkDepotRightSideDrawerState
   }
 
   Future<dynamic> def_fetchUnit(String? value, String unit_data) async {
-    print("Unit Data here $unit_data");
     IRUDMConstants.showProgressIndicator(context);
     dropdowndata_UDMStoreDepot.clear();
     var all = {
@@ -506,5 +493,27 @@ class _StoreStkDepotRightSideDrawerState
     } finally {
       IRUDMConstants.removeProgressIndicator(context);
     }
+  }
+
+  _buildFieldLabel(String label) {
+    return Container(
+      padding: EdgeInsets.only(left: 5),
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: Colors.blue[800]!,
+            width: 3,
+          ),
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.blue[800],
+        ),
+      ),
+    );
   }
 }

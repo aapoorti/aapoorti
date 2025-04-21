@@ -423,7 +423,7 @@ class _LotSearchState extends State<LotSearch> {
                             'Reset',
                             textAlign: TextAlign.center,
                             style: style.copyWith(
-                              color: Colors.lightBlue[800],
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Roboto',
                               fontSize: 18,

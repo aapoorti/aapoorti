@@ -513,23 +513,47 @@ import 'package:flutter_app/mmis/routes/routes.dart';
 import 'package:flutter_app/mmis/utils/toast_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final themeController = Get.find<ThemeController>();
+
   final networkController = Get.put(NetworkController());
+
   final controller = Get.put(HomeController());
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String? deptId = Get.arguments[0];
+
   String? postId = Get.arguments[1];
+
   String? crismmispendingcases = Get.arguments[2];
+
   String? oldimmspendingcases = Get.arguments[3];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.getUserloginData();
+    controller.getPendingCases();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.back();
+        AapoortiUtilities().showAlertDailog(context, "MMIS");
         return false;
       },
       child: Obx(() => networkController.connectionStatus.value == 0 ? const NoInternet() : Scaffold(
@@ -960,7 +984,7 @@ Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Ho
               onTap: () {
                 if (_scaffoldKey.currentState!.isDrawerOpen) {
                   _scaffoldKey.currentState!.closeDrawer();
-                  AapoortiUtilities.showAlertDailog(context, "MMIS");
+                  AapoortiUtilities().showAlertDailog(context, "MMIS");
                 }
               },
               child: Container(

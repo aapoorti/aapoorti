@@ -17,8 +17,8 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         System.loadLibrary("ireps")
-        appProtect()
-        //AppProtecttInteractor.Companion.triggerCheck = true
+        //appProtect()
+        AppProtecttInteractor.Companion.triggerCheck = true
     }
 
     private fun appProtect(){

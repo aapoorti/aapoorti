@@ -67,31 +67,30 @@ class _ProfileScreenState extends State<Profile> {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      //floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
-      //resizeToAvoidBottomInset: true,
-      // floatingActionButton: FloatingActionButton(
-      //   mini: true,
-      //   onPressed: () {
-      //     Navigator.of(context).pop();
-      //   },
-      //   backgroundColor: Colors.white,
-      //   elevation: 0,
-      //   child: Align(
-      //     alignment: Alignment.center,
-      //     child: Padding(
-      //       padding: const EdgeInsets.only(right: 4.0),
-      //       child: Icon(
-      //         Icons.arrow_back_ios_rounded,
-      //         color: Colors.black,
-      //       ),
-      //     ),
-      //   ),
-      // ),
-      appBar: AppBar(
-        backgroundColor: AapoortiConstants.primary,
-        iconTheme: IconThemeData(color: Colors.white),
-        title: Text(language.text('profile'), style: TextStyle(color: Colors.white)),
-        elevation: 4,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF0D47A1), // Dark Blue
+                Color(0xFF1976D2), // Lighter Blue
+              ],
+            ),
+          ),
+          child: AppBar(
+            elevation: 0,
+            centerTitle: true,
+            backgroundColor: Colors.transparent, // Make AppBar background transparent
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: Text(
+              language.text('profile'),
+              style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700),
+            ),
+          ),
+        ),
       ),
       bottomNavigationBar: CustomBottomNav(currentIndex: 1),
       body: Container(
@@ -108,14 +107,14 @@ class _ProfileScreenState extends State<Profile> {
                     children: [
                       CircleAvatar(
                         radius: 45,
-                        backgroundColor: AapoortiConstants.primary,
+                        backgroundColor: Color(0xFF0D47A1),
                         child: CircleAvatar(
                           radius: 40,
                           backgroundColor: Colors.white,
                           child: Icon(
                             Icons.person,
                             size: 45,
-                            color: AapoortiConstants.primary,
+                            color: Color(0xFF0D47A1),
                           ),
                         ),
                       ),
@@ -135,7 +134,7 @@ class _ProfileScreenState extends State<Profile> {
                 ),
                 SizedBox(height: 30),
                 Text(
-                  "User Details",
+                  language.text('userd'),
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

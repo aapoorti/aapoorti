@@ -209,13 +209,18 @@ class _LivUpcomRAState extends State<LivUpcomRA> {
               }, icon: Icon(Icons.search, color: Colors.white))
             ],
         ),
-        body: Builder(
-            builder: (context) => Material(
-              child: jsonResult.length == 0 ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : Column(children: <Widget>[
-                Container(child: Expanded(child: _myListView(context)))
-              ]),
-            ),
-       )
+        body: RefreshIndicator(
+          onRefresh: () async{
+            getliveUpcomingRA();
+          },
+          child: Builder(
+              builder: (context) => Material(
+                child: jsonResult.length == 0 ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : Column(children: <Widget>[
+                  Container(child: Expanded(child: _myListView(context)))
+                ]),
+              ),
+                 ),
+        )
       ),
     );
   }

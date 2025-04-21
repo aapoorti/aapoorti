@@ -15,7 +15,7 @@ class AapoortiLanguageProvider extends ChangeNotifier {
       debugPrint('SHARED PREFERENCES ARE NULL');
       return;
     }
-    String? val = prefs!.getString('language');
+    String? val = prefs!.getString('aapoortilanguage');
     language = val == null ? Language.English : languageCodeMapReverse[val]!;
   }
 
@@ -26,7 +26,7 @@ class AapoortiLanguageProvider extends ChangeNotifier {
     if(prefs == null) {
       prefs = await SharedPreferences.getInstance();
     }
-    await prefs!.setString('language', languageCodeMap[language] ?? languageCodeMap[Language.English]!);
+    await prefs!.setString('aapoortilanguage', languageCodeMap[language] ?? languageCodeMap[Language.English]!);
   }
 
   String get languageString {

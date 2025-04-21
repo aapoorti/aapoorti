@@ -33,14 +33,49 @@ class _PerformanceDashBoardState extends State<PerformanceDashBoard> with Single
 
   late TabController _tabController;
 
+  int _selectedIndex = 0;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        _selectedIndex = _tabController.index;
+      });
+    });
   }
 
   List<String> yearRanges = [];
+
+  Widget _buildTab(String text, int index) {
+    bool isSelected = _selectedIndex == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedIndex = index;
+            _tabController.animateTo(index);
+          });
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: TextStyle(
+              color: isSelected ? Colors.black : Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
 
   @override
@@ -53,7 +88,7 @@ class _PerformanceDashBoardState extends State<PerformanceDashBoard> with Single
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async{
-        AapoortiUtilities.showAlertDailog(context, "MMIS");
+        AapoortiUtilities().showAlertDailog(context, "MMIS");
         //_onBackPressed();
         return true;
       },
@@ -167,32 +202,40 @@ class _PerformanceDashBoardState extends State<PerformanceDashBoard> with Single
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            color: Colors.blue.shade400,
-            borderRadius: BorderRadius.circular(0),
-          ),
           child: Column(
             children: [
-              TabBar(
-                unselectedLabelColor: Colors.white,
-                labelColor: Colors.black,
-                //indicatorColor: Colors.white,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicatorWeight: 0,
-                indicatorPadding: EdgeInsets.zero,
-                isScrollable: false,
-                padding: EdgeInsets.zero,
-                onTap: (tabindex) {
-                  //_activeindex = tabindex;
-                },
-                indicator: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
-                controller: _tabController,
-                tabs: [
-                  Tab(child: Text("Summary")),
-                  Tab(child: Text("Graph"))
-                ],
+              // TabBar(
+              //   unselectedLabelColor: Colors.white,
+              //   labelColor: Colors.black,
+              //   //indicatorColor: Colors.white,
+              //   indicatorSize: TabBarIndicatorSize.tab,
+              //   indicatorWeight: 0,
+              //   indicatorPadding: EdgeInsets.zero,
+              //   isScrollable: false,
+              //   padding: EdgeInsets.zero,
+              //   onTap: (tabindex) {
+              //     //_activeindex = tabindex;
+              //   },
+              //   indicator: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+              //   controller: _tabController,
+              //   tabs: [
+              //     Tab(child: Text("Summary")),
+              //     Tab(child: Text("Graph"))
+              //   ],
+              // ),
+              Container(
+                padding: EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                  color: Colors.blue[800],
+                  borderRadius: BorderRadius.circular(0),
+                ),
+                child: Row(
+                  children: [
+                    _buildTab("Summary", 0),
+                    _buildTab("Graph", 1),
+                  ],
+                ),
               ),
-              SizedBox(height: 10),
               Expanded(child: TabBarView(
                   controller: _tabController,
                   physics: NeverScrollableScrollPhysics(),
@@ -320,7 +363,7 @@ Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, Da
               onTap: () {
                 if (_scaffoldKey.currentState!.isDrawerOpen) {
                   _scaffoldKey.currentState!.closeDrawer();
-                  AapoortiUtilities.showAlertDailog(context, "MMIS");
+                  AapoortiUtilities().showAlertDailog(context, "MMIS");
                   //_showConfirmationDialog(context);
                   //WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
                   //callWebServiceLogout();

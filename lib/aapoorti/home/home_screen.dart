@@ -49,132 +49,132 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   String? localCurrVer, globalCurrVer, globalLastAppVer;
 
-  Future<void> fetchPost() async {
-    try {
-      var v = AapoortiConstants.webServiceUrl + 'Common/CommonParam';
-      List<dynamic> jsonResult;
-      final response = await http.post(Uri.parse(v));
-      debugPrint("fetchPost body ${json.decode(response.body)}");
-      jsonResult = json.decode(response.body);
-      if(json.decode(response.body).toString() == "[{ErrorCode: 4}]"){
-        fetchPost();
-      }
-      else{
-        String paramValue = jsonResult.toString();
-        List paramList = paramValue.split("#");
-
-        String ForceUpFlagStr = paramList[0];
-        List ForceUpFlagVal = ForceUpFlagStr.split("=");
-        CommonParamData.ForceUpFlagVal = ForceUpFlagVal[1].trim();
-        //print(ForceUpFlagVal);
-
-        String LiveAucCountStr = paramList[1];
-        List LiveAucCountVal = LiveAucCountStr.split("=");
-        CommonParamData.LiveAucCountVal = LiveAucCountVal[1].trim();
-        //print(LiveAucCountVal);
-
-        String UpAucCountStr = paramList[3];
-        List UpAucCountVal = UpAucCountStr.split("=");
-        CommonParamData.UpAucCountVal = UpAucCountVal[1].trim();
-        //print(UpAucCountVal);
-
-        String AucSchedCountStr = paramList[5];
-        List AucSchedCountVal = AucSchedCountStr.split("=");
-        CommonParamData.AucSchedCountVal = AucSchedCountVal[1].trim();
-        //print(AucSchedCountVal);
-
-        String ClosingtodayCountStr = paramList[7];
-        List ClosingTodayCountVal = ClosingtodayCountStr.split("=");
-        CommonParamData.ClosingTodayCountVal = ClosingTodayCountVal[1].trim();
-        //print(ClosingTodayCountVal);
-
-        String dashboardUpdateStr = paramList[9];
-        List dashboardUpdateFlag = dashboardUpdateStr.split("=");
-        CommonParamData.dashboardUpdateFlag = dashboardUpdateFlag[1].trim();
-        //print(dashboardUpdateFlag);
-
-        String bannedfirmsCountStr = paramList[10];
-        List bannedFirmsCount = bannedfirmsCountStr.split("=");
-        CommonParamData.bannedFirmsCount = bannedFirmsCount[1].trim();
-        //print(bannedFirmsCount);
-
-        String closedRACountStr = paramList[11];
-        List closedRACount = closedRACountStr.split("=");
-        CommonParamData.closedRACount = closedRACount[1].trim();
-        //print(closedRACount);
-
-        //For pagination starts
-        String LiveAucPagesStr = paramList[2];
-        List LiveAucPageVal = LiveAucPagesStr.split("=");
-        CommonParamData.LiveAucPageVal = LiveAucPageVal[1].trim();
-        //print(LiveAucPageVal);
-
-        String UpAucPagesStr = paramList[4];
-        List UpAucPageVal = UpAucPagesStr.split("=");
-        CommonParamData.UpAucPageVal = UpAucPageVal[1].trim();
-        //print(UpAucPageVal);
-
-        String AucSchedPagesStr = paramList[6];
-        List AucSchedPageVal = AucSchedPagesStr.split("=");
-        CommonParamData.AucSchedPageVal = AucSchedPageVal[1].trim();
-        //print(AucSchedPageVal);
-
-        String closingTodayPagesStr = paramList[8];
-        List ClosingTodayPageVal = closingTodayPagesStr.split("=");
-        CommonParamData.ClosingTodayPageVal = ClosingTodayPageVal[1].trim();
-        //print(ClosingTodayPageVal);
-        //For pagination ends
-        if(this.mounted)
-          setState(() {
-            HomeScreen.isLoading = HomeScreen.isLoading & false;
-          });
-      }
-    } on Exception catch (_) {
-      fetchPost();
-    }
-  }
+  // Future<void> fetchPost() async {
+  //   try {
+  //     var v = AapoortiConstants.webServiceUrl + 'Common/CommonParam';
+  //     List<dynamic> jsonResult;
+  //     final response = await http.post(Uri.parse(v));
+  //     debugPrint("fetchPost body ${json.decode(response.body)}");
+  //     jsonResult = json.decode(response.body);
+  //     if(json.decode(response.body).toString() == "[{ErrorCode: 4}]"){
+  //       fetchPost();
+  //     }
+  //     else{
+  //       String paramValue = jsonResult.toString();
+  //       List paramList = paramValue.split("#");
+  //
+  //       String ForceUpFlagStr = paramList[0];
+  //       List ForceUpFlagVal = ForceUpFlagStr.split("=");
+  //       CommonParamData.ForceUpFlagVal = ForceUpFlagVal[1].trim();
+  //       //print(ForceUpFlagVal);
+  //
+  //       String LiveAucCountStr = paramList[1];
+  //       List LiveAucCountVal = LiveAucCountStr.split("=");
+  //       CommonParamData.LiveAucCountVal = LiveAucCountVal[1].trim();
+  //       //print(LiveAucCountVal);
+  //
+  //       String UpAucCountStr = paramList[3];
+  //       List UpAucCountVal = UpAucCountStr.split("=");
+  //       CommonParamData.UpAucCountVal = UpAucCountVal[1].trim();
+  //       //print(UpAucCountVal);
+  //
+  //       String AucSchedCountStr = paramList[5];
+  //       List AucSchedCountVal = AucSchedCountStr.split("=");
+  //       CommonParamData.AucSchedCountVal = AucSchedCountVal[1].trim();
+  //       //print(AucSchedCountVal);
+  //
+  //       String ClosingtodayCountStr = paramList[7];
+  //       List ClosingTodayCountVal = ClosingtodayCountStr.split("=");
+  //       CommonParamData.ClosingTodayCountVal = ClosingTodayCountVal[1].trim();
+  //       //print(ClosingTodayCountVal);
+  //
+  //       String dashboardUpdateStr = paramList[9];
+  //       List dashboardUpdateFlag = dashboardUpdateStr.split("=");
+  //       CommonParamData.dashboardUpdateFlag = dashboardUpdateFlag[1].trim();
+  //       //print(dashboardUpdateFlag);
+  //
+  //       String bannedfirmsCountStr = paramList[10];
+  //       List bannedFirmsCount = bannedfirmsCountStr.split("=");
+  //       CommonParamData.bannedFirmsCount = bannedFirmsCount[1].trim();
+  //       //print(bannedFirmsCount);
+  //
+  //       String closedRACountStr = paramList[11];
+  //       List closedRACount = closedRACountStr.split("=");
+  //       CommonParamData.closedRACount = closedRACount[1].trim();
+  //       //print(closedRACount);
+  //
+  //       //For pagination starts
+  //       String LiveAucPagesStr = paramList[2];
+  //       List LiveAucPageVal = LiveAucPagesStr.split("=");
+  //       CommonParamData.LiveAucPageVal = LiveAucPageVal[1].trim();
+  //       //print(LiveAucPageVal);
+  //
+  //       String UpAucPagesStr = paramList[4];
+  //       List UpAucPageVal = UpAucPagesStr.split("=");
+  //       CommonParamData.UpAucPageVal = UpAucPageVal[1].trim();
+  //       //print(UpAucPageVal);
+  //
+  //       String AucSchedPagesStr = paramList[6];
+  //       List AucSchedPageVal = AucSchedPagesStr.split("=");
+  //       CommonParamData.AucSchedPageVal = AucSchedPageVal[1].trim();
+  //       //print(AucSchedPageVal);
+  //
+  //       String closingTodayPagesStr = paramList[8];
+  //       List ClosingTodayPageVal = closingTodayPagesStr.split("=");
+  //       CommonParamData.ClosingTodayPageVal = ClosingTodayPageVal[1].trim();
+  //       //print(ClosingTodayPageVal);
+  //       //For pagination ends
+  //       if(this.mounted)
+  //         setState(() {
+  //           HomeScreen.isLoading = HomeScreen.isLoading & false;
+  //         });
+  //     }
+  //   } on Exception catch (_) {
+  //     fetchPost();
+  //   }
+  // }
 
   //**********DASHBOARD*****************
 
   final dbHelper = DatabaseHelper.instance;
-  void fetchPostDS() async {
-    try {
-      if(await AapoortiUtilities.check() == false) {
-        rowCount = await dbHelper.rowCountd();
-        if (rowCount! > 0) {
-          debugPrint('Fetching from local DB');
-          jsonResult = await dbHelper.fetchd();
-          AapoortiConstants.jsonResult1 = jsonResult!;
-        }
-      } else {
-        var v = AapoortiConstants.webServiceUrl + 'Common/DashboardData';
-        debugPrint(v);
-        final response = await http.post(Uri.parse(v));
-        jsonResult = json.decode(response.body);
-        AapoortiConstants.jsonResult1 = jsonResult!;
-        debugPrint("my data 1 ${jsonResult.toString()}");
-
-        for (int index = 0; index < jsonResult!.length; index++) {
-          Map<String, dynamic> row = {
-            DatabaseHelper.Tbld_Col1_MODULE: jsonResult![index]['MODULE'],
-            DatabaseHelper.Tbld_Col2_UNIQUEGRAPHID: jsonResult![index]['UNIQUEGRAPHID'],
-            DatabaseHelper.Tbld_Col3_HEADING: jsonResult![index]['HEADING'],
-            DatabaseHelper.Tbld_Col4_XAXIS: jsonResult![index]['XAXIS'],
-            DatabaseHelper.Tbld_Col5_YAXIS: jsonResult![index]['YAXIS'],
-            DatabaseHelper.Tbld_Col6_LEGEND: jsonResult![index]['LEGEND'],
-            DatabaseHelper.Tbld_Col7_LASTUPDATEDON: jsonResult![index]['LASTUPDATEDON'],
-            DatabaseHelper.Tbld_Col9_UPDATEDFLAG: jsonResult![index]['UPDATEDFLAG'],
-            DatabaseHelper.Tbld_Col8_CREATION_TIME: jsonResult![index]['CREATION_TIME'],
-          };
-          final id = dbHelper.insertd(row);
-        }
-      }
-      if (this.mounted)
-        setState(() {
-          HomeScreen.isLoading = HomeScreen.isLoading & false;
-        });
-    } on Exception catch (_) {}
-  }
+  // void fetchPostDS() async {
+  //   try {
+  //     if(await AapoortiUtilities.check() == false) {
+  //       rowCount = await dbHelper.rowCountd();
+  //       if (rowCount! > 0) {
+  //         debugPrint('Fetching from local DB');
+  //         jsonResult = await dbHelper.fetchd();
+  //         AapoortiConstants.jsonResult1 = jsonResult!;
+  //       }
+  //     } else {
+  //       var v = AapoortiConstants.webServiceUrl + 'Common/DashboardData';
+  //       debugPrint(v);
+  //       final response = await http.post(Uri.parse(v));
+  //       jsonResult = json.decode(response.body);
+  //       AapoortiConstants.jsonResult1 = jsonResult!;
+  //       debugPrint("my data 1 ${jsonResult.toString()}");
+  //
+  //       for (int index = 0; index < jsonResult!.length; index++) {
+  //         Map<String, dynamic> row = {
+  //           DatabaseHelper.Tbld_Col1_MODULE: jsonResult![index]['MODULE'],
+  //           DatabaseHelper.Tbld_Col2_UNIQUEGRAPHID: jsonResult![index]['UNIQUEGRAPHID'],
+  //           DatabaseHelper.Tbld_Col3_HEADING: jsonResult![index]['HEADING'],
+  //           DatabaseHelper.Tbld_Col4_XAXIS: jsonResult![index]['XAXIS'],
+  //           DatabaseHelper.Tbld_Col5_YAXIS: jsonResult![index]['YAXIS'],
+  //           DatabaseHelper.Tbld_Col6_LEGEND: jsonResult![index]['LEGEND'],
+  //           DatabaseHelper.Tbld_Col7_LASTUPDATEDON: jsonResult![index]['LASTUPDATEDON'],
+  //           DatabaseHelper.Tbld_Col9_UPDATEDFLAG: jsonResult![index]['UPDATEDFLAG'],
+  //           DatabaseHelper.Tbld_Col8_CREATION_TIME: jsonResult![index]['CREATION_TIME'],
+  //         };
+  //         final id = dbHelper.insertd(row);
+  //       }
+  //     }
+  //     if (this.mounted)
+  //       setState(() {
+  //         HomeScreen.isLoading = HomeScreen.isLoading & false;
+  //       });
+  //   } on Exception catch (_) {}
+  // }
 
   Color getDarkerShade(Color color, String route) {
     if (route == '/e-tender/generate-otp' ||
@@ -481,8 +481,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    this.fetchPost();
-    this.fetchPostDS();
+    //this.fetchPost();
+    //this.fetchPostDS();
     //fetchVersion();
     requestWritePermission();
     //version-control
@@ -534,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     super.dispose();
   }
 
-  void _navigateToPage(BuildContext context, String route) {
+  void _navigateToPage(BuildContext context, String route, AapoortiLanguageProvider language) {
       if (route == '/e-tender/custom-search') {
         Navigator.pushNamed(context, "/custom");
       }
@@ -627,13 +627,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              'Choose an option for file  ',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Roboto',
-                                color: Colors.black,
+                            Expanded(
+                              child: Text(
+                                '${language.text('cof')}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Roboto',
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                             GestureDetector(
@@ -657,7 +659,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         ),
                         SizedBox(height: 8),
                         Text(
-                          "E-Sale Condition",
+                          language.text('esalecond'),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -679,10 +681,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 Navigator.of(context).pop();
                                 AapoortiUtilities.downloadpdf(fileUrl, fileName, context);
                               },
-                              child: Text('Download'),
+                              child: Text(language.text('dwnd')),
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                fixedSize: Size(85, 40),
                                 backgroundColor: Colors.lightBlue[700],
                                 foregroundColor: Colors.white,
                               ),
@@ -690,7 +693,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 Navigator.of(context).pop();
                                 AapoortiUtilities.openPdf(context, fileUrl, fileName);
                               },
-                              child: Text('Open'),
+                              child: Text(language.text('open')),
                             ),
                           ],
                         ),
@@ -727,13 +730,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              'Choose an option for file  ',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Roboto',
-                                color: Colors.black,
+                            Expanded(
+                              child: Text(
+                                '${language.text('cof')}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Roboto',
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                             GestureDetector(
@@ -757,7 +762,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         ),
                         SizedBox(height: 8),
                         Text(
-                          "Auctioning Units",
+                          language.text('aucunitsd'),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -771,6 +776,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                fixedSize: Size(85, 40),
                                 backgroundColor: Colors.lightBlue[700],
                                 foregroundColor: Colors.white,
                               ),
@@ -778,10 +784,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 Navigator.of(context).pop();
                                 AapoortiUtilities.downloadpdf(fileUrl, fileName, context);
                               },
-                              child: Text('Download'),
+                              child: Text(language.text('dwnd')),
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                fixedSize: Size(85, 40),
                                 backgroundColor: Colors.lightBlue[700],
                                 foregroundColor: Colors.white,
                               ),
@@ -789,7 +796,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 Navigator.of(context).pop();
                                 AapoortiUtilities.openPdf(context, fileUrl, fileName);
                               },
-                              child: Text('Open'),
+                              child: Text(language.text('open')),
                             ),
                           ],
                         ),
@@ -897,7 +904,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     GridItem(language.text('raclosed'), Icons.lock_clock, AapoortiConstants.cardColor3, '/e-tender/ra-closed', true),
                     GridItem(language.text('searchpo'), Icons.find_in_page, AapoortiConstants.cardColor1, '/e-tender/search-po', true),
                     GridItem(language.text('generateotp'), 'OTP', AapoortiConstants.cardColor2, '/e-tender/generate-otp', true, isText: true),
-                  ], 0, scale: 0.9),
+                  ], 0, language, scale: 0.9),
 
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -915,7 +922,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     GridItem(language.text('lotsearch'), Icons.grid_view, AapoortiConstants.cardColor1, '/e-auction-1/lot-search', true),
                     GridItem(language.text('esalecon'), Icons.document_scanner, AapoortiConstants.cardColor2, '/e-auction-1/e-sale', true),
                     GridItem(language.text('aucunits'), Icons.device_hub, AapoortiConstants.cardColor3, '/e-auction-1/auction-units', true),
-                  ], 1, scale: 0.86),
+                  ], 1, language, scale: 0.86),
 
                   const SizedBox(height: 60),
                 ],
@@ -941,13 +948,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               children: [
                 Expanded(
                   child: _buildModuleButton(
-                    language.text('udmtitle'), () => _navigateToPage(context, '/udm'),
+                    language.text('udmtitle'), () => _navigateToPage(context, '/udm', language),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildModuleButton(
-                    language.text('crismmistitle'), () => _navigateToPage(context, '/cris-mmis'),
+                    language.text('crismmistitle'), () => _navigateToPage(context, '/cris-mmis', language),
                   ),
                 ),
               ],
@@ -1446,7 +1453,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildGridItem(GridItem item, int index, double scale) {
+  Widget _buildGridItem(GridItem item, int index, double scale, AapoortiLanguageProvider language) {
     final titleParts = item.title.split('\n');
     return InkWell(
       onTap: () async{
@@ -1456,10 +1463,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
           if(providedTime.isBefore(DateTime.now())){
             await fetchToken(context);
-            _navigateToPage(context, item.route);
+            _navigateToPage(context, item.route, language);
           }
           else{
-            _navigateToPage(context, item.route);
+            _navigateToPage(context, item.route, language);
           }
         }
         else{
@@ -1567,7 +1574,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildGridSection(List<GridItem> items, int sectionIndex, {double scale = 1.0}) {
+  Widget _buildGridSection(List<GridItem> items, int sectionIndex, AapoortiLanguageProvider language, {double scale = 1.0}) {
     return GridView.builder(
       itemCount: items.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -1579,7 +1586,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return _buildGridItem(items[index], sectionIndex * 100 + index, scale);
+        return _buildGridItem(items[index], sectionIndex * 100 + index, scale, language);
       },
     );
   }

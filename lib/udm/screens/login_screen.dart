@@ -308,6 +308,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
             ),
             child: AppBar(
               elevation: 0,
+              centerTitle: true,
               backgroundColor: Colors.transparent, // Make AppBar background transparent
               iconTheme: const IconThemeData(color: Colors.white),
               leading: IconButton(
@@ -456,8 +457,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                     const SizedBox(height: 10),
                                     FittedBox(
                                       fit: BoxFit.scaleDown,
-                                      child: const Text(
-                                        'Indian Railways E - Procurement System',
+                                      child: Text(
+                                        language.text('irepsheading'),
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,

@@ -23,6 +23,7 @@ import 'package:flutter_app/aapoorti/home/home_screen.dart';
 import 'package:flutter_app/aapoorti/login/Login.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class CommonScreen extends StatefulWidget {
@@ -293,11 +294,14 @@ class _CommonScreenState extends State<CommonScreen> with TickerProviderStateMix
     _isEnglish ? Provider.of<AapoortiLanguageProvider>(context, listen: false).updateLanguage(Language.English) : Provider.of<AapoortiLanguageProvider>(context, listen: false).updateLanguage(Language.Hindi);
   }
 
-  void _checkLanguage() {
+  void _checkLanguage() async{
     Language lan = Provider.of<AapoortiLanguageProvider>(context, listen: false).language;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       Language.Hindi == lan ?  _isEnglish = false : true;
+      prefs.getString('aapoortilanguage') == "hi" ? _isEnglish = false : true;
     });
+    _isEnglish ? Provider.of<AapoortiLanguageProvider>(context, listen: false).updateLanguage(Language.English) : Provider.of<AapoortiLanguageProvider>(context, listen: false).updateLanguage(Language.Hindi);
   }
 
   @override
@@ -311,7 +315,7 @@ class _CommonScreenState extends State<CommonScreen> with TickerProviderStateMix
         } else {
            //AapoortiUtilities.alertDialog(context, "IREPS");
            Future.delayed(Duration.zero, () => setState(() {bottomIndex = 0;  afterLogout = 1;}));
-           AapoortiUtilities.showAlertDailog(context, "IREPS");
+           AapoortiUtilities().showAlertDailog(context, "IREPS");
            return true;
         }
       },
@@ -415,47 +419,6 @@ class _CommonScreenState extends State<CommonScreen> with TickerProviderStateMix
             ),
           ),
         ),
-        // appBar: PreferredSize(
-        //   preferredSize: const Size.fromHeight(kToolbarHeight),
-        //   child: Container(
-        //     decoration: const BoxDecoration(
-        //       gradient: LinearGradient(
-        //         begin: Alignment.topLeft,
-        //         end: Alignment.bottomRight,
-        //         colors: [
-        //           Color(0xFF0D47A1), // Dark Blue
-        //           Color(0xFF1976D2), // Lighter Blue
-        //         ],
-        //       ),
-        //     ),
-        //     child: AppBar(
-        //       elevation: 0,
-        //       backgroundColor: Colors.transparent, // Make AppBar background transparent
-        //       iconTheme: const IconThemeData(color: Colors.white),
-        //       leading: InkWell(
-        //         onTap: () {
-        //           _scaffoldKey.currentState!.openDrawer();
-        //         },
-        //         child: Container(
-        //           margin: const EdgeInsets.all(8),
-        //           padding: const EdgeInsets.all(8),
-        //           decoration: BoxDecoration(
-        //             color: Colors.white.withOpacity(0.2),
-        //             borderRadius: BorderRadius.circular(8),
-        //           ),
-        //           child: const Icon(Icons.grid_view_rounded, color: Colors.white),
-        //         ),
-        //       ),
-        //       title: const Text(
-        //         'IREPS',
-        //         style: TextStyle(
-        //           color: Colors.white,
-        //           fontWeight: FontWeight.bold,
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
         backgroundColor: Colors.grey[200],
         drawer: AapoortiUtilities.navigationdrawerbeforLOgin(_scaffoldKey, context),
         body: _screens![bottomIndex],

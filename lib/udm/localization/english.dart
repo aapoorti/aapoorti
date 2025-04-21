@@ -41,6 +41,7 @@ Map<String, String> englishText = {
   'resetPinInstructionsTitle': 'To reset PIN for UDM',
   'resetPinInstructionsText': 'Click on ‘Reset APP PIN’ and complete the process',
   'validEmail' : 'Please enter valid Email-ID',
+ 'irepsheading' : 'Indian Railways E - Procurement System',
   //Home Screen
   'udmFull': 'User Depot Module',
   'udmtitle' : 'User Depot Module(UDM)',
@@ -227,6 +228,7 @@ Map<String, String> englishText = {
   //Summary of Stock
   'summaryOfStock': 'Summary of Stock',
   'userDepotStockSummary': 'User Depot Stock Summary',
+  'selectbtn' : 'Select',
 
   //Non-Moving Items
   'months': 'month\'s',
@@ -311,7 +313,6 @@ Map<String, String> englishText = {
   'averageRate': 'Average Rate Rs.',
   'itemDetails':'Item Details',
   'itemSummary':'Item Summary',
-  'consignee':'Consignee',
   'subDepot':'Sub Depot',
   'plItemCode':'PL No./Item Code',
   //MISC
@@ -481,7 +482,6 @@ Map<String, String> englishText = {
   'unit': 'Unit Type',
   'uname': 'Unit Name',
   'department': 'Department',
-  'consignee': 'Consignee',
   'pono&date': 'PO No. & Date',
   'itemdes': 'Description',
   'dtype': 'Doc. Type',
@@ -523,7 +523,6 @@ Map<String, String> englishText = {
   'recdvalue' : 'Recd. Value(Rs.)',
   'acceptqty' : 'Accept Qty.',
   'acceptvalue' : 'Accept Value(Rs.)',
-  'dropremarks' : 'Drop Remarks',
   'status' : 'Status',
   'action' : 'Action',
   'finalisedbyon' : 'Finalized by/on',
@@ -549,7 +548,6 @@ Map<String, String> englishText = {
   'messagemyrly' : 'Already data showing of My Railway',
   'mesaageallrly' : 'Already data showing of All Railway',
   'dnf' : 'Data not found',
-  'searchbtn' : 'Search',
   'search' : 'Search...',
   'plno' : 'PL No.',
   'desc' : 'Description',
@@ -570,7 +568,6 @@ Map<String, String> englishText = {
   'rlyboardintent' : 'RLY.BOARD INDENT COVERAGE DETAILS',
   'ponumname' : 'P.O.No./Vendor Name',
   'sr' : 'Sr',
-  'depot' : 'Depot',
   'airate' : 'AI Rate',
   'poqty' : 'PO Qty',
   'unit' : 'UNIT',
@@ -757,10 +754,8 @@ Map<String, String> englishText = {
   'fwdfnd' : 'Forwarded/Finalized by me',
   'awaitingaction' : 'Awaiting My Action',
   'casetracker' : 'Case Tracker',
-  'status' : 'Status',
   'demandno' : 'Demand No.',
   'indentor' : 'Indentor',
-  'consignee' : 'Consignee',
   'dmddtfrom' : 'Demand Date From',
   'dmddtto' : 'Demand Date To',
   'itemdesc' : 'Item Description',
@@ -804,7 +799,11 @@ Map<String, String> englishText = {
   'reqat' : 'Required at',
   'inhandqty' : 'In-Hand Qty.',
   'drb' : 'Delivery Reqd. by',
-
+  'raildiv' : 'Railway Division',
+  'plr' : 'Part List Reference',
+  'plcode' : 'Enter PL number or code',
+  'sihr' : 'Stock Item History Results (0)',
+  'sihrdes' : 'Please select a railway division and enter part list details\nto view the inventory history.',
 
 
   //--------Rejection/Warranty UI-------
@@ -817,7 +816,6 @@ Map<String, String> englishText = {
   'pt' : 'Period To',
   'fromdate' : 'Date: From',
   'todate' : 'Date: To',
-  'status' : 'Status',
   'rwsearch' : 'Search',
   'rwsearchhint' : 'Please Enter Warranty Claim No./DMTR No/Item Code/Item Description',
   'rwexit' : 'Exit',
@@ -951,7 +949,6 @@ Map<String, String> englishText = {
   'valueminappr' : 'Value & Min. Approval Level',
   'purunit' : 'Purchase Unit',
   'currentlywith' : 'Currently With',
-  'status' : 'Status',
   'viemdmd' : 'View Demand',
   'sdnf' : 'Sorry, document not found',
   'pdls' : 'PDF document loaded successfully!',
@@ -990,7 +987,6 @@ Map<String, String> englishText = {
   'item':'Item',
   'qty':'Qty',
   'vendor':'Vendor',
-  'status':'Status',
   'claimno':'Claim No',
   'claimdate':'Claim Date',
   'claimamount':'Claim Amount',
@@ -1023,7 +1019,6 @@ Map<String, String> englishText = {
   'itemdesc' : 'Description of Item',
   'stkinitiatorname' : "Initiator's Dtails",
   'currentwith' : 'Currently With',
-  'status' : 'Status',
 
 
   //---------CRN Summary----------------
@@ -1309,5 +1304,6 @@ Map<String, String> englishText = {
  'confdesc' : 'Do you want to logout from application??',
  'nostay' : 'No, stay',
  'yesexit' : 'Yes, exit',
- 'slcf' : 'Save Login Credentials for'
+ 'slcf' : 'Save Login Credentials for',
+ 'userd' : 'User Details'
 };

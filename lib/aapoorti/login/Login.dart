@@ -7,10 +7,13 @@ import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/aapoorti/common/CommonScreen.dart';
 import 'package:flutter_app/aapoorti/common/NoConnection.dart';
+import 'package:flutter_app/aapoorti/localization/languageHelper.dart';
+import 'package:flutter_app/aapoorti/provider/aapoorti_language_provider.dart';
 import 'package:flutter_app/mmis/routes/routes.dart';
 import 'package:get/get.dart';
 
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:provider/provider.dart';
 import 'home/UserHome.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
@@ -54,7 +57,7 @@ class _LoginActivityState extends State<LoginActivity> {
   bool visibilty = false;
 
   // Build Remember Me Section
-  Container _buildRememberMeSection() {
+  Container _buildRememberMeSection(AapoortiLanguageProvider language) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Row(
@@ -67,7 +70,7 @@ class _LoginActivityState extends State<LoginActivity> {
               });
             },
           ),
-          Text('Save Login Credentials for'),
+          Text(language.text('slcf')),
           const SizedBox(width: 8),
           Container(
             decoration: BoxDecoration(
@@ -81,7 +84,7 @@ class _LoginActivityState extends State<LoginActivity> {
                 items: _dayOptions.map((days) {
                   return DropdownMenuItem<int>(
                     value: days,
-                    child: Text('$days days'),
+                    child: Text('$days ${language.text('dayskey')}'),
                   );
                 }).toList(),
                 onChanged: _rememberMe
@@ -190,7 +193,7 @@ class _LoginActivityState extends State<LoginActivity> {
     });
   }
 
-  Future<void> _enableloginBottomSheet(BuildContext context) async {
+  Future<void> _enableloginBottomSheet(BuildContext context, AapoortiLanguageProvider language) async {
     return await showModalBottomSheet(
         context: context,
         constraints:
@@ -231,7 +234,7 @@ class _LoginActivityState extends State<LoginActivity> {
                       Row(
                         children: <Widget>[
                           Text(
-                            " Note: ",
+                            " ${language.text('note')}: ",
                             style: TextStyle(
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.normal,
@@ -244,7 +247,7 @@ class _LoginActivityState extends State<LoginActivity> {
                           Padding(padding: EdgeInsets.only(left: 5.0)),
                           Expanded(
                               child: Text(
-                                  "1. Login feature is available to users already \n    registered in IREPS.",
+                                  "1. ${language.text('loginfeature')}.",
                                   style: TextStyle(
                                     fontSize: 15.0,
                                     color: Colors.black,
@@ -258,7 +261,7 @@ class _LoginActivityState extends State<LoginActivity> {
                         children: <Widget>[
                           Padding(padding: EdgeInsets.only(left: 5.0)),
                           Text(
-                              "2. Login feature is available on Mobile App for:\n",
+                              "2. ${language.text('lfama')}:\n",
                               style: TextStyle(
                                 fontSize: 15.0,
                                 color: Colors.black,
@@ -274,7 +277,7 @@ class _LoginActivityState extends State<LoginActivity> {
                           //Padding(padding: new EdgeInsets.only(top:1.0)),
                           RichText(
                             text: TextSpan(
-                              text: 'Vendor',
+                              text: language.text('vendor'),
                               style: TextStyle(
                                 fontSize: 15.0,
                                 color: Colors.blueGrey,
@@ -299,7 +302,7 @@ class _LoginActivityState extends State<LoginActivity> {
                               EdgeInsets.fromLTRB(30.0, 10.0, 0.0, 10.0)),
                           RichText(
                             text: TextSpan(
-                              text: 'Railway User(Tender)',
+                              text: language.text('rut'),
                               style: TextStyle(
                                 fontSize: 15.0,
                                 color: Colors.blueGrey,
@@ -321,7 +324,7 @@ class _LoginActivityState extends State<LoginActivity> {
                           Padding(padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 10.0)),
                           RichText(
                             text: TextSpan(
-                              text: 'Railway User(UDM)',
+                              text: language.text('ruu'),
                               style: TextStyle(fontSize:15.0,color: Colors.blueGrey),
                               children: <TextSpan>[
                                 TextSpan(
@@ -345,10 +348,12 @@ class _LoginActivityState extends State<LoginActivity> {
                       Padding(padding: EdgeInsets.all(8.0)),
                       Row(
                         children: <Widget>[
-                          Text(
-                            "   To enable Login access for IREPS: ",
-                            style: TextStyle(
-                                fontSize: 15.0, fontWeight: FontWeight.normal),
+                          Expanded(
+                            child: Text(
+                              "   ${language.text('telafi')}: ",
+                              style: TextStyle(
+                                  fontSize: 15.0, fontWeight: FontWeight.normal),
+                            ),
                           )
                         ],
                       ),
@@ -358,7 +363,7 @@ class _LoginActivityState extends State<LoginActivity> {
                       Row(
                         children: <Widget>[
                           Padding(padding: EdgeInsets.only(left: 30.0)),
-                          Text("1. Login to www.ireps.gov.in",
+                          Text("1. ${language.text('websitelink')}",
                               style: TextStyle(
                                 fontSize: 15.0,
                                 color: Colors.blueGrey,
@@ -373,7 +378,7 @@ class _LoginActivityState extends State<LoginActivity> {
                           Padding(padding: EdgeInsets.only(left: 30.0)),
                           Expanded(
                             child: Text(
-                                '2. Please Locate "Enable Mobile App" Access for IREPS',
+                                '2. ${language.text('lafi')}',
                                 style: TextStyle(
                                   fontSize: 15.0,
                                   color: Colors.blueGrey,
@@ -386,15 +391,14 @@ class _LoginActivityState extends State<LoginActivity> {
                       Row(
                         children: <Widget>[
                           Padding(padding: EdgeInsets.only(left: 30.0)),
-                          Text("3. Complete the process.",
+                          Expanded(child: Text("3. ${language.text('ctp')}.",
                               style: TextStyle(
                                 fontSize: 15.0,
                                 color: Colors.blueGrey,
-                              )),
+                              ))),
                         ],
                       ),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(35.0, 0.0, 30.0, 20.0)),
+                      //Padding(padding: EdgeInsets.fromLTRB(35.0, 0.0, 30.0, 20.0)),
                     ],
                   ),
                 ),
@@ -404,7 +408,7 @@ class _LoginActivityState extends State<LoginActivity> {
         });
   }
 
-  Future<void> _resetpinBottomSheet(BuildContext context) async {
+  Future<void> _resetpinBottomSheet(BuildContext context, AapoortiLanguageProvider language) async {
     return await showModalBottomSheet(
         context: context,
         constraints:
@@ -427,7 +431,7 @@ class _LoginActivityState extends State<LoginActivity> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text("To reset PIN for IREPS: ",
+                      Text("${language.text('toresetpin')}: ",
                           style: TextStyle(
                               fontSize: 15.0, fontWeight: FontWeight.normal)),
                       InkWell(
@@ -450,7 +454,7 @@ class _LoginActivityState extends State<LoginActivity> {
                   Row(
                     children: <Widget>[
                       Padding(padding: EdgeInsets.only(left: 10.0)),
-                      Text("1. Login to www.ireps.gov.in",
+                      Text("1. ${language.text('websitelink')}",
                           style: TextStyle(
                             fontSize: 15.0,
                             color: Colors.blueGrey,
@@ -462,12 +466,14 @@ class _LoginActivityState extends State<LoginActivity> {
                   Row(
                     children: <Widget>[
                       Padding(padding: EdgeInsets.only(left: 10.0)),
-                      Text(
-                          "2. Go to link on the right navigation (Enable\n    MobileApp Access for IREPS)",
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            color: Colors.blueGrey,
-                          )),
+                      Expanded(
+                        child: Text(
+                            "2. ${language.text('goto')}",
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              color: Colors.blueGrey,
+                            )),
+                      ),
                     ],
                   ),
                   Padding(padding: EdgeInsets.fromLTRB(35.0, 0.0, 30.0, 10.0)),
@@ -476,7 +482,7 @@ class _LoginActivityState extends State<LoginActivity> {
                       Padding(padding: EdgeInsets.only(left: 10.0)),
                       Expanded(
                           child: Text(
-                              "3. Select RESET PIN and complete the process.",
+                              "3. ${language.text('selresetpin')}.",
                               style: TextStyle(
                                   fontSize: 15.0, color: Colors.blueGrey))),
                     ],
@@ -494,8 +500,7 @@ class _LoginActivityState extends State<LoginActivity> {
   String userType = "";
 
   Future<bool> _callLoginWebService(String email, String pin) async {
-    debugPrint(
-        'Function called ' + email.toString() + "-------" + pin.toString());
+    debugPrint('Function called ' + email.toString() + "-------" + pin.toString());
     try {
       var input = email + "#" + pin;
       debugPrint(input);
@@ -530,20 +535,19 @@ class _LoginActivityState extends State<LoginActivity> {
       String paramName = 'UserLogin';
 
       //Form Body For URL
-      String formBody = paramName + '=' +
-          Uri.encodeQueryComponent(urlInputString);
+      String formBody = paramName + '=' + Uri.encodeQueryComponent(urlInputString);
 
       var url = AapoortiConstants.webServiceUrl + 'Login/UserLogin';
 
       debugPrint("url = " + url);
 
       final response = await http.post(Uri.parse(url),
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: formBody,
-          encoding: Encoding.getByName("utf-8"));
+       headers: {
+         "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+      },
+       body: formBody,
+       encoding: Encoding.getByName("utf-8"));
       jsonResult = json.decode(response.body);
       debugPrint("form body = " + json.encode(formBody).toString());
       debugPrint("json result = " + jsonResult.toString());
@@ -553,8 +557,8 @@ class _LoginActivityState extends State<LoginActivity> {
       if(response.statusCode == 200) {
         debugPrint("Error code " + jsonResult[0]['ErrorCode'].toString());
         if (jsonResult[0]['ErrorCode'] == null) {
-          AapoortiUtilities.setUserDetails(
-              jsonResult); //To save user details in shared object
+          AapoortiConstants.loginUserEmailID = email;
+          AapoortiUtilities.setUserDetails(jsonResult); //To save user details in shared object
           userType = jsonResult[0]['USER_TYPE'].toString();
           return true;
         }
@@ -619,6 +623,7 @@ class _LoginActivityState extends State<LoginActivity> {
 
   @override
   Widget build(BuildContext context) {
+    AapoortiLanguageProvider language = Provider.of<AapoortiLanguageProvider>(context);
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: InkWell(
@@ -663,8 +668,8 @@ class _LoginActivityState extends State<LoginActivity> {
                     const SizedBox(height: 10),
                     FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: const Text(
-                        'Indian Railways E - Procurement System',
+                      child: Text(
+                        language.text('irepsheading'),
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -691,7 +696,7 @@ class _LoginActivityState extends State<LoginActivity> {
                         children: [
                           Expanded(
                             child: _LoginTypeButton(
-                              title: 'IREPS',
+                              title: language.text('ireps'),
                               isSelected: _selectedLoginType == 'IREPS',
                               onTap: () {
                                 setState(() {
@@ -702,7 +707,7 @@ class _LoginActivityState extends State<LoginActivity> {
                           ),
                           Expanded(
                             child: _LoginTypeButton(
-                              title: 'UDM',
+                              title: language.text('udmtitle'),
                               isSelected: _selectedLoginType == 'UDM',
                               onTap: () {
                                 setState(() {
@@ -723,10 +728,10 @@ class _LoginActivityState extends State<LoginActivity> {
                       validator: (value) {
                         // bool emailValid = RegExp("^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
                         bool emailValid = RegExp("^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})\$").hasMatch(value!.trim());
-                        if (value.isEmpty) {
-                          return ('Please enter valid Email-ID');
+                        if(value.isEmpty) {
+                          return (language.text('evalidemail'));
                         } else if (!emailValid) {
-                          return ('Please enter valid Email-ID');
+                          return (language.text('evalidemail'));
                         }
                         return null;
                         },
@@ -734,7 +739,7 @@ class _LoginActivityState extends State<LoginActivity> {
                         email = value!.trim();
                       },
                       decoration: InputDecoration(
-                        labelText: 'Email Address',
+                        labelText: language.text('email'),
                         prefixIcon: const Icon(Icons.email_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -749,7 +754,7 @@ class _LoginActivityState extends State<LoginActivity> {
                     TextFormField(
                       controller: _passwordController,
                       decoration: InputDecoration(
-                        labelText: 'Enter PIN',
+                        labelText: language.text('enterpin'),
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -772,9 +777,9 @@ class _LoginActivityState extends State<LoginActivity> {
                       initialValue: null,
                       validator: (pin) {
                         if (pin!.isEmpty) {
-                          return ('Please enter 6-12 digit PIN');
+                          return (language.text('digitpin'));
                         } else if (pin.length < 6 || pin.length > 12) {
-                          return ('Please enter 6-12 digit PIN');
+                          return (language.text('digitpin'));
                         }
                         return null;
                         },
@@ -785,7 +790,7 @@ class _LoginActivityState extends State<LoginActivity> {
                     ),
                     const SizedBox(height: 16),
                     // Remember Me Section with Days Selection
-                    _buildRememberMeSection(),
+                    _buildRememberMeSection(language),
                     const SizedBox(height: 24),
                     // Login Button
                     ElevatedButton(
@@ -797,7 +802,7 @@ class _LoginActivityState extends State<LoginActivity> {
                             validateAndLogin(_selectedDays);
                           }
                         } on SocketException catch (_) {
-                          AapoortiUtilities.showInSnackBar(context, "You are not connected to the internet!");
+                          AapoortiUtilities.showInSnackBar(context, language.text('connectionissue'));
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -807,8 +812,8 @@ class _LoginActivityState extends State<LoginActivity> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text(
-                        'Login',
+                      child: Text(
+                        language.text('login'),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -823,7 +828,7 @@ class _LoginActivityState extends State<LoginActivity> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              _enableloginBottomSheet(context);
+                              _enableloginBottomSheet(context, language);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.grey[200],
@@ -832,8 +837,8 @@ class _LoginActivityState extends State<LoginActivity> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Enable Login Access',
+                            child: Text(
+                              language.text('ela'),
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
@@ -846,7 +851,7 @@ class _LoginActivityState extends State<LoginActivity> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              _resetpinBottomSheet(context);
+                              _resetpinBottomSheet(context, language);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.grey[200],
@@ -855,8 +860,8 @@ class _LoginActivityState extends State<LoginActivity> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Reset PIN',
+                            child: Text(
+                              language.text('resetpin'),
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
