@@ -7,7 +7,7 @@ import 'package:flutter_app/udm/models/stock.dart';
 import 'package:flutter_app/udm/models/valueWise.dart';
 import 'package:flutter_app/udm/providers/languageProvider.dart';
 import 'package:flutter_app/udm/providers/stockProvider.dart';
-import 'package:flutter_app/udm/providers/valueWiseProvider.dart';
+import 'package:flutter_app/udm/valuewisestock/provider/valueWiseProvider.dart';
 import 'package:flutter_app/udm/widgets/custom_progress_indicator.dart';
 import 'package:flutter_app/udm/widgets/custom_rightside_drawer.dart';
 import 'package:flutter_app/udm/widgets/search_app_bar.dart';
@@ -80,7 +80,7 @@ class _ValueWiseScreenState extends State<ValueWiseScreen>
                     backgroundColor: Colors.redAccent,
                     duration: Duration(seconds: 3),
                     content: Text(
-                      ValueWiseProvider.error!.description.toString(),
+                      "Something went wrong, try later",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,

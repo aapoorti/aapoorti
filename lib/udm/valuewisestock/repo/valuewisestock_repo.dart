@@ -4,16 +4,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/udm/helpers/api.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
-import 'package:flutter_app/udm/warranty_crn_summary/models/railwaylistdata.dart';
+import 'package:flutter_app/udm/valuewisestock/model/railwaylistdata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class WrCrnSummaryRepo {
+class ValueWiseStockRepo {
 
-  WrCrnSummaryRepo._privateConstructor();
-  static final WrCrnSummaryRepo _instance = WrCrnSummaryRepo._privateConstructor();
-  static WrCrnSummaryRepo get instance => _instance;
+  ValueWiseStockRepo._privateConstructor();
+  static final ValueWiseStockRepo _instance = ValueWiseStockRepo._privateConstructor();
+  static ValueWiseStockRepo get instance => _instance;
 
-  List<WrCrnSummaryRlwData> dropdowndata_UDMRlyList = [];
+  List<ValueWiseStockRlwData> dropdowndata_UDMRlyList = [];
 
   //List<CrnSmryData> crnsummaryData = [];
   //List<CrnsumrylinkData> crnsummarylinkData = [];
@@ -35,7 +35,7 @@ class WrCrnSummaryRepo {
     return all;
   }
 
-  Future<List<WrCrnSummaryRlwData>> fetchrailwaylistData(BuildContext context) async{
+  Future<List<ValueWiseStockRlwData>> fetchrailwaylistData(BuildContext context) async{
     //IRUDMConstants.showProgressIndicator(context);
     try{
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -46,7 +46,7 @@ class WrCrnSummaryRepo {
         if(listdata['status'] == "OK") {
           var listJson = listdata['data'];
           if(listJson != null) {
-            dropdowndata_UDMRlyList = listJson.map<WrCrnSummaryRlwData>((val) => WrCrnSummaryRlwData.fromJson(val)).toList();
+            dropdowndata_UDMRlyList = listJson.map<ValueWiseStockRlwData>((val) => ValueWiseStockRlwData.fromJson(val)).toList();
             dropdowndata_UDMRlyList.sort((a, b) => a.value!.compareTo(b.value!));
             return dropdowndata_UDMRlyList;
           } else {
@@ -67,10 +67,8 @@ class WrCrnSummaryRepo {
     on HttpException {
       IRUDMConstants().showSnack('Something Unexpected happened! Please try again.', context);
     } on SocketException {
-      print('No internet connection 😑');
       IRUDMConstants().showSnack('No connectivity. Please check your connection.', context);
     } on FormatException {
-      print("Bad response format 👎");
       IRUDMConstants().showSnack('Bad response format 👎', context);
     } catch (err) {
       IRUDMConstants().showSnack('Something Unexpected happened! Please try again.', context);
@@ -270,6 +268,5 @@ class WrCrnSummaryRepo {
       //IRUDMConstants.removeProgressIndicator(context);
     }
   }
-
 
 }
