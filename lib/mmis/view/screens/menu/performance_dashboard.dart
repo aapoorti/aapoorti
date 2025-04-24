@@ -226,7 +226,7 @@ class _PerformanceDashBoardState extends State<PerformanceDashBoard> with Single
               Container(
                 padding: EdgeInsets.all(5.0),
                 decoration: BoxDecoration(
-                  color: Colors.blue[800],
+                  color: Colors.blue,
                   borderRadius: BorderRadius.circular(0),
                 ),
                 child: Row(

@@ -971,7 +971,7 @@ import 'package:flutter_app/udm/widgets/poSearch_rightside_drawer.dart';
 import 'package:flutter_app/udm/widgets/stock_rightside_drawer.dart';
 import 'package:flutter_app/udm/widgets/stock_summary_drawer.dart';
 import 'package:flutter_app/udm/widgets/storeDepot_rightside_drawer.dart';
-import 'package:flutter_app/udm/widgets/valueWiseStockFilter.dart';
+import 'package:flutter_app/udm/valuewisestock/view/valueWiseStockFilter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -1661,13 +1661,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
       bgColor: const Color(0xFFF3E5F5),
     ),
     MenuItemData(
-      title: 'Stocking Proposal',
+      title: 'Stocking Proposal Summary',
       icon: Icons.inventory,
       color: const Color(0xFF3F51B5),
       bgColor: const Color(0xFFE8EAF6),
     ),
     MenuItemData(
-      title: 'Warranty Rejection',
+      title: 'Warranty Rejection Register',
       icon: Icons.do_not_disturb,
       color: const Color(0xFFD32F2F),
       bgColor: const Color(0xFFFFEBEE),
@@ -1730,6 +1730,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
       //onWillPop: _onButtonPressed,
       child: Scaffold(
         key: _scaffoldKey,
+
         // appBar: AppBar(
         //     title: Text(language.text('udmFull'), style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w700)),
         //     elevation: 0.0,
@@ -1841,14 +1842,17 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
         backgroundColor: Colors.grey.shade100,
         //bottomNavigationBar: _buildBottomNavigationBar(),
         bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
-        body: Column(
-          children: [
-            //_buildHeader(),
-            _buildSearchBar(),
-            Expanded(
-              child: _showSearchResults ? _buildSearchResults() : _buildMainContent(),
-            ),
-          ],
+        body: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              //_buildHeader(),
+              _buildSearchBar(),
+              Expanded(
+                child: _showSearchResults ? _buildSearchResults() : _buildMainContent(),
+              ),
+            ],
+          ),
         ),
         // body: Padding(
         //   padding: EdgeInsets.all(5),
@@ -2100,6 +2104,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.indigo, width: 0.6),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -2138,7 +2143,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
 
   Widget _buildCategorySection(String title, List<MenuItemData> items, Color accentColor) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -2191,6 +2196,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.indigo, width: 0.6),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -2706,10 +2712,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
     else if (title == 'CRN Summary' || title == 'सीआरएन सारांश') {
       Navigator.of(context).pushNamed(CrnSummaryScreen.routeName);
     }
-    else if (title == 'Stocking Proposal' || title == 'स्टॉकिंग प्रस्ताव सारांश') {
+    else if (title == 'Stocking Proposal Summary' || title == 'स्टॉकिंग प्रस्ताव सारांश') {
       Navigator.of(context).pushNamed(StockingProposalSummaryScreen.routeName);
     }
-    else if (title == 'Warranty Rejection' || title == 'वारंटी अस्वीकृति रजिस्टर') {
+    else if (title == 'Warranty Rejection Register' || title == 'वारंटी अस्वीकृति रजिस्टर') {
       Navigator.of(context).pushNamed(WarrantyRejectionRegisterScreen.routeName);
     }
     else if (title == 'CRC Summary' || title == 'सीआरसी सारांश') {

@@ -149,7 +149,7 @@ class _CrcScreenState extends State<CrcScreen> with SingleTickerProviderStateMix
                       SizedBox(width: 10),
                       Text(language.text('crcdigisigned').length > 25
                           ? '${language.text('crcdigisigned').substring(0, 25)}...'
-                          : language.text('crcdigisigned'), style: TextStyle(color: Colors.white, fontSize: 21))
+                          : language.text('crcdigisigned'), style: TextStyle(color: Colors.white, fontSize: 18))
                     ],
                   );
                 }
@@ -206,11 +206,11 @@ class _CrcScreenState extends State<CrcScreen> with SingleTickerProviderStateMix
                   child: Column(
                     children: [
                       Padding(
-                          padding: EdgeInsets.all(5),
+                          padding: EdgeInsets.all(5.0),
                           child: TabBar(
                             unselectedLabelColor: Colors.white,
                             labelColor: Colors.black,
-                            indicatorColor: Colors.white,
+                            //indicatorColor: Colors.white,
                             indicatorSize: TabBarIndicatorSize.tab,
                             indicatorWeight: 0,
                             indicatorPadding: EdgeInsets.zero,

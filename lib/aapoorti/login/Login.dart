@@ -625,7 +625,7 @@ class _LoginActivityState extends State<LoginActivity> {
   Widget build(BuildContext context) {
     AapoortiLanguageProvider language = Provider.of<AapoortiLanguageProvider>(context);
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.white,
       body: InkWell(
         onTap: (){
           FocusScope.of(context).unfocus(); // Dismiss keyboard when tapping outside

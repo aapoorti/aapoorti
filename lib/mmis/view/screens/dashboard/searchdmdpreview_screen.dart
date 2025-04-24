@@ -779,7 +779,7 @@ class ItemsConsigneesPanel extends StatelessWidget {
                   _buildQuantityRow('Rate:', 'Rs. ${item.key3!}/-'),
                   const SizedBox(height: 8),
                   //Text("harsh ${item.key3} ${item.key4}"),
-                  item.key3 == 'NULL' && item.key4 == 'NULL' ? _buildQuantityRow('Value:', 'N/A') : item.key3 == 'NULL' && item.key4 != 'NULL' ? _buildQuantityRow('Value:', 'Rs. ${item.key4.toString()}/-') : item.key3 != 'NULL' && item.key4 == 'NULL' ? _buildQuantityRow('Value:', 'Rs. ${item.key3.toString()}/-') : _buildQuantityRow('Value:', 'Rs. ${int.parse(item.key3.toString())*int.parse(item.key4.toString())}/-'),
+                  item.key3 == 'NULL' && item.key4 == 'NULL' ? _buildQuantityRow('Value:', 'N/A') : item.key3 == 'NULL' && item.key4 != 'NULL' ? _buildQuantityRow('Value:', 'Rs. ${item.key4.toString()}/-') : item.key3 != 'NULL' && item.key4 == 'NULL' ? _buildQuantityRow('Value:', 'Rs. ${item.key3.toString()}/-') : _buildQuantityRow('Value:', 'Rs. ${double.parse(item.key3.toString())*double.parse(item.key4.toString())}/-'),
                 ],
               ),
             ),
@@ -1888,7 +1888,7 @@ class _AuthenticationPanelState extends State<AuthenticationPanel> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "${item.key6} ${item.key7}",
+                    item.key6 != "NULL" ? "${item.key6} ${item.key7}" : "${item.key7}",
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 13,

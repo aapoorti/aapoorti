@@ -132,7 +132,7 @@ import 'package:flutter_app/udm/widgets/poSearch_rightside_drawer.dart';
 import 'package:flutter_app/udm/widgets/stock_rightside_drawer.dart';
 import 'package:flutter_app/udm/widgets/stock_summary_drawer.dart';
 import 'package:flutter_app/udm/widgets/storeDepot_rightside_drawer.dart';
-import 'package:flutter_app/udm/widgets/valueWiseStockFilter.dart';
+import 'package:flutter_app/udm/valuewisestock/view/valueWiseStockFilter.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';

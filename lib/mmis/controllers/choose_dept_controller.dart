@@ -52,7 +52,7 @@ class ChooseDeptController extends GetxController{
           choosedeptState.value = ChooseDeptState.success;
           if(departlist.length == 1){
             Future.delayed(Duration(milliseconds: 0), (){
-              Get.toNamed(Routes.homeScreen, arguments: [departlist[0].key1, departlist[0].key6, departlist[0].key8,departlist[0].key9]);
+              Get.toNamed(Routes.homeScreen, arguments: [departlist[0].key1, departlist[0].key6, departlist[0].key8,departlist[0].key9, departlist[0].key2]);
             });
           }
         }

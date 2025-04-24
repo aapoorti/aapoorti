@@ -3,6 +3,7 @@ import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
 import 'package:flutter_app/mmis/controllers/choose_dept_controller.dart';
 import 'package:flutter_app/mmis/controllers/dashboard_controller.dart';
+import 'package:flutter_app/mmis/controllers/home_controller.dart';
 import 'package:flutter_app/mmis/controllers/network_controller.dart';
 import 'package:flutter_app/mmis/controllers/theme_controller.dart';
 import 'package:flutter_app/mmis/routes/routes.dart';
@@ -24,6 +25,7 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
   int selectedIndex = 0;
 
   final controller = Get.put(DashBoardController());
+  final homecontroller = Get.put(HomeController());
 
   final themeController =  Get.find<ThemeController>();
   final networkController = Get.put(NetworkController());
@@ -96,7 +98,7 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
       ),
       // appBar: AppBar(title: Text('CRIS MMIS',style: TextStyle(color: Colors.white)),backgroundColor: Colors.lightBlue[800]!, iconTheme: IconThemeData(color: Colors.white)),
       key: _scaffoldKey,
-      drawer: navDrawer(context, _scaffoldKey, controller, themeController),
+      drawer: navDrawer(context, _scaffoldKey, homecontroller, themeController),
       body: Container(
         height: Get.height,
         width: Get.width,
@@ -131,7 +133,7 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                           return InkWell(
                             onTap: () {
                               Future.delayed(Duration(milliseconds: 0), (){
-                                Get.toNamed(Routes.homeScreen, arguments: [choosedeptcontroller.departlist[index].key1, choosedeptcontroller.departlist[index].key6, choosedeptcontroller.departlist[index].key8,choosedeptcontroller.departlist[index].key9]);
+                                Get.toNamed(Routes.homeScreen, arguments: [choosedeptcontroller.departlist[index].key1, choosedeptcontroller.departlist[index].key6, choosedeptcontroller.departlist[index].key8,choosedeptcontroller.departlist[index].key9,choosedeptcontroller.departlist[index].key2]);
                               });
                             },
                             child: Card(
@@ -329,7 +331,7 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
     );
   }
 
-  Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, DashBoardController dashBoardController, ThemeController themeController) {
+  Widget navDrawer(BuildContext context, GlobalKey<ScaffoldState> _scaffoldKey, HomeController homeController, ThemeController themeController) {
     return Drawer(
       child: Column(
         children: [
@@ -340,18 +342,11 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                 children: <Widget>[
                   Container(
                     constraints: BoxConstraints.expand(height: 180.0),
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF0D47A1), // Dark Blue
-                          Color(0xFF1976D2), // Lighter Blue
-                        ],
-                      ),
-                    ),
                     alignment: Alignment.bottomLeft,
                     padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
+                    decoration: BoxDecoration(
+                      color: AapoortiConstants.primary,
+                    ),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
@@ -369,7 +364,7 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                                 child: Icon(
                                   Icons.person,
                                   size: 40,
-                                  color: Color(0xFF1976D2),
+                                  color: AapoortiConstants.primary,
                                 ),
                               ),
                               Text(
@@ -377,19 +372,22 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20.0),
+                                    fontSize: 20.0
+                                ),
                               ),
-                              //SizedBox(height: 4.0),
                               Obx(() => Text(
-                                  dashBoardController.username.value,
+                                  homeController.username.value,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18.0))),
+                                      fontSize: 18.0
+                                  )
+                              )),
                               SizedBox(height: 2.0),
-                              Obx(() => Text(dashBoardController.email.value,
-                                  style:
-                                  TextStyle(color: Colors.white, fontSize: 15.0)))
+                              Obx(() => Text(
+                                  homeController.email.value,
+                                  style: TextStyle(color: Colors.white, fontSize: 15.0)
+                              ))
                             ],
                           ),
                           SizedBox(width: 10),
@@ -412,57 +410,22 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
                     color: Colors.black,
                     height: 2.0,
                   ),
-                  // drawerTile(Iconic.lock, 'changepin'.tr, () {
-                  //   //Navigator.pop(context);
-                  //   _scaffoldKey.currentState!.closeDrawer();
-                  //   Get.toNamed(Routes.changepinScreen);
-                  // }),
-                  // drawerTile(Iconic.star, 'rateus'.tr, () {
-                  //   //Navigator.pop(context);
-                  //   _scaffoldKey.currentState!.closeDrawer();
-                  //   AapoortiUtilities.openStore(context);
-                  // }),
                 ],
               ),
             ),
           ),
           Column(
             children: [
-              // Align(
-              //   alignment: Alignment.topRight,
-              //   child: Padding(
-              //     padding: EdgeInsets.symmetric(horizontal: 5.0),
-              //     child: Container(
-              //       height: 80.0,
-              //       width: 80.0,
-              //       decoration: BoxDecoration(border: Border.all(width: 1.0, color: Colors.grey), borderRadius: BorderRadius.circular(40)),
-              //       child: Image.asset('assets/images/crisnew.png', fit: BoxFit.cover, width: 80, height: 80),
-              //     ),
-              //   ),
-              // ),
-              // SizedBox(height: 2.0),
               InkWell(
                 onTap: () {
                   if (_scaffoldKey.currentState!.isDrawerOpen) {
                     _scaffoldKey.currentState!.closeDrawer();
                     AapoortiUtilities().showAlertDailog(context, "MMIS");
-                    //_showConfirmationDialog(context);
-                    //WarningAlertDialog().changeLoginAlertDialog(context, () {callWebServiceLogout();}, language);
-                    //callWebServiceLogout();
                   }
                 },
                 child: Container(
                   height: 45,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFF0D47A1), // Dark Blue
-                        Color(0xFF1976D2), // Lighter Blue
-                      ],
-                    ),
-                  ),
+                  color: AapoortiConstants.primary,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -476,7 +439,6 @@ class _ChooseDepartScreenState extends State<ChooseDepartScreen> {
               )
             ],
           ),
-          //SizedBox(height: 15),
         ],
       ),
     );

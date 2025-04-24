@@ -555,7 +555,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
 
   Widget buildCardHeader() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(15),
       decoration: const BoxDecoration(
         color: Color(0xFF3949AB),
         borderRadius: BorderRadius.only(
@@ -580,22 +580,22 @@ class _SummaryScreenState extends State<SummaryScreen> {
               letterSpacing: 0.3,
             ),
           ),
-          const Spacer(),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: const Text(
-              "Overview",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-              ),
-            ),
-          ),
+          // const Spacer(),
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          //   decoration: BoxDecoration(
+          //     color: Colors.white.withOpacity(0.2),
+          //     borderRadius: BorderRadius.circular(30),
+          //   ),
+          //   child: const Text(
+          //     "Overview",
+          //     style: TextStyle(
+          //       color: Colors.white,
+          //       fontWeight: FontWeight.w500,
+          //       fontSize: 12,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -719,7 +719,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
 
   Widget buildMetricCard(MetricData metric) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       decoration: BoxDecoration(
         color: metric.color.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
@@ -750,19 +750,19 @@ class _SummaryScreenState extends State<SummaryScreen> {
                   color: metric.color,
                 ),
               ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: metric.color.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.arrow_upward,
-                  size: 12,
-                  color: metric.color,
-                ),
-              ),
+              // const Spacer(),
+              // Container(
+              //   padding: const EdgeInsets.all(4),
+              //   decoration: BoxDecoration(
+              //     color: metric.color.withOpacity(0.1),
+              //     shape: BoxShape.circle,
+              //   ),
+              //   child: Icon(
+              //     Icons.arrow_upward,
+              //     size: 12,
+              //     color: metric.color,
+              //   ),
+              // ),
             ],
           ),
         ],

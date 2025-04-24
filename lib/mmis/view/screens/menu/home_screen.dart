@@ -493,6 +493,7 @@
 
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
+import 'package:flutter_app/aapoorti/common/CommonScreen.dart';
 import 'package:flutter_app/mmis/extention/extension_util.dart';
 import 'package:flutter_app/mmis/utils/my_color.dart';
 import 'package:flutter_app/mmis/view/components/bottom_Nav/bottom_nav.dart';
@@ -501,6 +502,7 @@ import 'package:flutter_app/mmis/widgets/logout_dialog.dart';
 import 'package:flutter_app/mmis/widgets/switch_language_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/udm/helpers/wso2token.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:fluttericon/iconic_icons.dart';
@@ -511,6 +513,7 @@ import 'package:flutter_app/mmis/controllers/theme_controller.dart';
 import 'package:flutter_app/mmis/controllers/network_controller.dart';
 import 'package:flutter_app/mmis/routes/routes.dart';
 import 'package:flutter_app/mmis/utils/toast_message.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -534,6 +537,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String? crismmispendingcases = Get.arguments[2];
 
   String? oldimmspendingcases = Get.arguments[3];
+
+  String? chooseDept = Get.arguments[4];
 
   @override
   void initState() {
@@ -671,6 +676,36 @@ class _HomeScreenState extends State<HomeScreen> {
         // ),
         bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
         key: _scaffoldKey,
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          animatedIconTheme: IconThemeData(color: Colors.white),
+          spacing: 10.0,
+          backgroundColor: Colors.indigo.shade400,
+          //closeManually: true,
+          children: [
+            SpeedDialChild(
+                child: Icon(Icons.logout),
+                label: "Exit Application",
+                onTap: () {
+                  AapoortiUtilities().showAlertDailog(context, "MMIS");
+                }
+            ),
+            SpeedDialChild(
+                child: Icon(Icons.warehouse),
+                label: "Choose Department",
+                onTap: (){
+                  Navigator.pop(context);
+                }
+            ),
+            SpeedDialChild(
+                child: Icon(Icons.home),
+                label: "Home",
+                onTap: () {
+                  AapoortiUtilities().exitApp(context);
+                }
+            ),
+          ],
+        ),
         drawer: navDrawer(context, _scaffoldKey, controller, themeController),
         body: _buildHomeBody(context),
       )
@@ -687,107 +722,134 @@ class _HomeScreenState extends State<HomeScreen> {
           colors: [Colors.white, Colors.grey.shade100],
         ),
       ),
-      child: Center(  // Center the entire column
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,  // Center vertically
-            crossAxisAlignment: CrossAxisAlignment.center,  // Center horizontally
-            children: [
-              // Search Demand Card - Reduced size and centered
-              Container(
-                width: MediaQuery.of(context).size.width * 0.8,  // Reduced width to 80% of screen
-                height: 100,  // Reduced height from 140
-                child: _buildFeatureCard(
-                  'Search Demand',
-                  Icons.analytics_outlined,
-                  Colors.blue.shade50,
-                  Colors.blue.shade800,
-                  onTap: () async {
-                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                    DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
-                    if(providedTime.isBefore(DateTime.now())) {
-                      await fetchToken(context);
-                      Get.toNamed(Routes.searchDemandsScreen);
-                    } else {
-                      Get.toNamed(Routes.searchDemandsScreen);
-                    }
-                  },
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue
+            ),
+            height: 50,
+            width: Get.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 5.0, top: 4.0),
+                  child: Text("Department",textAlign: TextAlign.start, style: TextStyle(fontSize: 14, color: Colors.white)),
                 ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // Pending Cases Title
-              Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                child: const Text(
-                  'Pending Cases',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF000080),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-
-              // Pending Cases Cards in Row - Reduced size and centered
-              Container(
-                width: MediaQuery.of(context).size.width * 0.8,  // Reduced width to 80% of screen
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,  // Center the row
+                Padding(
+                  padding: const EdgeInsets.only(left: 5.0, top: 0.0),
+                  child: Text(chooseDept!,textAlign: TextAlign.start, style: TextStyle(fontSize: 16, color: Colors.white,fontWeight: FontWeight.w500)),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: Center(  // Center the entire column
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,  // Center vertically
+                  crossAxisAlignment: CrossAxisAlignment.center,  // Center horizontally
                   children: [
-                    // CRIS MMIS Card
-                    Expanded(
-                      child: _buildPendingCard(
-                        'CRIS MMIS',
-                        crismmispendingcases == "0" || crismmispendingcases == "0.0"
-                            ? "0"
-                            : crismmispendingcases!.contains('.')
-                            ? crismmispendingcases!.split('.')[1] == '0'
-                            ? crismmispendingcases!.split('.')[0]
-                            : crismmispendingcases!
-                            : crismmispendingcases!,
-                        Colors.indigo.shade50,
+                    // Search Demand Card - Reduced size and centered
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.8,  // Reduced width to 80% of screen
+                      height: 100,  // Reduced height from 140
+                      child: _buildFeatureCard(
+                        'Search Demand',
+                        Icons.analytics_outlined,
+                        Colors.blue.shade50,
+                        Colors.blue.shade800,
                         onTap: () async {
-                          if(crismmispendingcases == "0" || crismmispendingcases == "0.0") {
-                            AapoortiUtilities.showInSnackBar(context, "No Pending Demands in CRIS MMIS");
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+                          if(providedTime.isBefore(DateTime.now())) {
+                            await fetchToken(context);
+                            Get.toNamed(Routes.searchDemandsScreen);
                           } else {
-                            Get.toNamed(Routes.crismmispendingcaseScreen, arguments: [postId]);
+                            Get.toNamed(Routes.searchDemandsScreen);
                           }
                         },
                       ),
                     ),
-                    const SizedBox(width: 16),
-
-                    // OLD iMMS Card
-                    Expanded(
-                      child: _buildPendingCard(
-                        'OLD iMMS',
-                        oldimmspendingcases == "0" || oldimmspendingcases == "0.0"
-                            ? "0"
-                            : oldimmspendingcases!.contains('.')
-                            ? oldimmspendingcases!.split('.')[1] == '0'
-                            ? oldimmspendingcases!.split('.')[0]
-                            : oldimmspendingcases!
-                            : oldimmspendingcases!,
-                        Colors.teal.shade50,
-                        onTap: () {
-                          if(oldimmspendingcases == "0" || oldimmspendingcases == "0.0") {
-                            AapoortiUtilities.showInSnackBar(context, "No Pending Demands in Old iMMS");
-                          } else {
-                            Get.toNamed(Routes.oldimmspendingcaseScreen);
-                          }
-                        },
+            
+                    const SizedBox(height: 30),
+            
+                    // Pending Cases Title
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: const Text(
+                        'Pending Cases',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF000080),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+            
+                    // Pending Cases Cards in Row - Reduced size and centered
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.8,  // Reduced width to 80% of screen
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,  // Center the row
+                        children: [
+                          // CRIS MMIS Card
+                          Expanded(
+                            child: _buildPendingCard(
+                              'CRIS MMIS',
+                              crismmispendingcases == "0" || crismmispendingcases == "0.0"
+                                  ? "0"
+                                  : crismmispendingcases!.contains('.')
+                                  ? crismmispendingcases!.split('.')[1] == '0'
+                                  ? crismmispendingcases!.split('.')[0]
+                                  : crismmispendingcases!
+                                  : crismmispendingcases!,
+                              Colors.indigo.shade50,
+                              onTap: () async {
+                                if(crismmispendingcases == "0" || crismmispendingcases == "0.0") {
+                                  AapoortiUtilities.showInSnackBar(context, "No Pending Demands in CRIS MMIS");
+                                } else {
+                                  Get.toNamed(Routes.crismmispendingcaseScreen, arguments: [postId]);
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+            
+                          // OLD iMMS Card
+                          Expanded(
+                            child: _buildPendingCard(
+                              'OLD iMMS',
+                              oldimmspendingcases == "0" || oldimmspendingcases == "0.0"
+                                  ? "0"
+                                  : oldimmspendingcases!.contains('.')
+                                  ? oldimmspendingcases!.split('.')[1] == '0'
+                                  ? oldimmspendingcases!.split('.')[0]
+                                  : oldimmspendingcases!
+                                  : oldimmspendingcases!,
+                              Colors.teal.shade50,
+                              onTap: () {
+                                if(oldimmspendingcases == "0" || oldimmspendingcases == "0.0") {
+                                  AapoortiUtilities.showInSnackBar(context, "No Pending Demands in Old iMMS");
+                                } else {
+                                  Get.toNamed(Routes.oldimmspendingcaseScreen);
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

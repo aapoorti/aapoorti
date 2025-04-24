@@ -45,23 +45,28 @@ class LoginRepo {
       if(response.statusCode == 200) {
         var listdata = json.decode(response.body);
         debugPrint("loginresp $listdata");
-        if(listdata['status'] == "OK") {
-          var listJson = listdata['data'];
-          debugPrint("mmis login resp $listJson");
-          if(isLoginSaved) {
-            if(listJson != null) {
-              loginresp = listJson.map<LoginrespData>((val) => LoginrespData.fromJson(val)).toList();
-              prefs.setString('mmisemail', loginresp[0].emailId!.trim());
-              prefs.setString('mmismpin', mpin.trim());
-              saveloginuserData(loginresp);
-              return loginresp;
+        if(listdata['status'] == "ERROR"){
+          return loginresp = [];
+        }
+        else{
+          if(listdata['status'] == "OK") {
+            var listJson = listdata['data'];
+            debugPrint("mmis login resp $listJson");
+            if(isLoginSaved) {
+              if(listJson != null) {
+                loginresp = listJson.map<LoginrespData>((val) => LoginrespData.fromJson(val)).toList();
+                prefs.setString('mmisemail', loginresp[0].emailId!.trim());
+                prefs.setString('mmismpin', mpin.trim());
+                saveloginuserData(loginresp);
+                return loginresp;
+              }
             }
-          }
-          else{
-            if(listJson != null) {
-              loginresp = listJson.map<LoginrespData>((val) => LoginrespData.fromJson(val)).toList();
-              saveloginuserData(loginresp);
-              return loginresp;
+            else{
+              if(listJson != null) {
+                loginresp = listJson.map<LoginrespData>((val) => LoginrespData.fromJson(val)).toList();
+                saveloginuserData(loginresp);
+                return loginresp;
+              }
             }
           }
         }

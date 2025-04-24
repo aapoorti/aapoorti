@@ -884,7 +884,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return Container(
       height: size.height,
       width: size.width,
-      color: Colors.white30,
+      color: Colors.white,
       child: Stack(
         children: [
           SingleChildScrollView(

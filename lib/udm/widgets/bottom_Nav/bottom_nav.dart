@@ -49,36 +49,69 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
   @override
   Widget build(BuildContext context) {
     bool isEnglish = Provider.of<LanguageProvider>(context).language == Language.English;
-    return AnimatedBottomNavigationBar.builder(
-        elevation: 5,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+        border: Border(
+          top: BorderSide(
+            color: Colors.blueGrey, // customize your border color
+            width: 1.5, // customize thickness
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+            offset: Offset(0, -2), // subtle shadow above the bar
+          ),
+        ],
+      ),
+      child: AnimatedBottomNavigationBar.builder(
+        elevation: 0, // Disable native elevation if you're using shadow
         itemCount: iconList.length,
+        splashRadius: 5.0,
+        safeAreaLeft: true,
+        safeAreaRight: true,
         height: 60,
+        safeAreaBottom: true,
         tabBuilder: (int index, bool isActive) {
           return Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(iconList[index], height: 25, width: 25, color: isActive ?Color(0xFF0D47A1) : Colors.black),
+              Image.asset(
+                iconList[index],
+                height: 25,
+                width: 25,
+                color: isActive ? Color(0xFF0D47A1) : Colors.black,
+              ),
               SizedBox(height: 5),
-              Text((textList[index]).split('\n')[isEnglish ? 1 : 0],
-                style: TextStyle(color: isActive ? Color(0xFF0D47A1) : Colors.black),
-              )
+              Text(
+                (textList[index]).split('\n')[isEnglish ? 1 : 0],
+                style: TextStyle(
+                  color: isActive ? Color(0xFF0D47A1) : Colors.black,
+                ),
+              ),
             ],
           );
         },
-         backgroundColor: Colors.white,
-         activeIndex: bottomNavIndex,
-         splashColor: Colors.white,
-         splashSpeedInMilliseconds: 300,
-         notchSmoothness: NotchSmoothness.defaultEdge,
-         gapLocation: GapLocation.none,
-         leftCornerRadius: 20,
-         rightCornerRadius: 20,
-         onTap: (index) {
+        backgroundColor: Colors.transparent, // 👈 let container's color show
+        activeIndex: bottomNavIndex,
+        splashColor: Colors.white,
+        splashSpeedInMilliseconds: 300,
+        notchSmoothness: NotchSmoothness.defaultEdge,
+        gapLocation: GapLocation.none,
+        leftCornerRadius: 0,
+        rightCornerRadius: 0,
+        onTap: (index) {
           _onTap(index, widget.currentIndex, context);
-         },
-      );
-    }
+        },
+      ),
+    );}
   }
 
 

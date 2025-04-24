@@ -32,9 +32,16 @@ class _UpcomingState extends State<Upcoming> {
   }
 
   void fetchPost() async {
-    var v = AapoortiConstants.webServiceUrl + 'Auction/AucUpcoming?PAGECOUNTER=1';
-    final response = await http.post(Uri.parse(v));
-    jsonResult = json.decode(response.body);
+    try{
+      var v = AapoortiConstants.webServiceUrl + 'Auction/AucUpcoming?PAGECOUNTER=1';
+      final response = await http.post(Uri.parse(v));
+      debugPrint("üduudud ${response.body}");
+      jsonResult = json.decode(response.body);
+    }
+    catch (exc){
+
+    }
+
 
     setState(() {});
   }
@@ -53,12 +60,7 @@ class _UpcomingState extends State<Upcoming> {
             backgroundColor: AapoortiConstants.primary,
             title: Text('Upcoming Auctions (Sale)', style: TextStyle(color: Colors.white,fontSize: 18))),
         body: Center(
-            child: jsonResult == null
-                ? SpinKitFadingCircle(
-                    color: AapoortiConstants.primary,
-                    size: 120.0,
-                  )
-                : _myListView(context)),
+            child: jsonResult == null ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : _myListView(context)),
       ),
     );
   }
