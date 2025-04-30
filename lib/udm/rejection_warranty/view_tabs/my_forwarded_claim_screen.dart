@@ -64,7 +64,7 @@ class _MyForwardedClaimScreenState extends State<MyForwardedClaimScreen> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                   child: FormBuilderDateTimePicker(
-                    name: 'Warranty Claim from Period',
+                    name: language.text('wcp'),
                     initialDate: DateTime.now().subtract(const Duration(days: 180)),
                     initialValue: DateTime.now().subtract(const Duration(days: 180)),
                     inputType: InputType.date,
@@ -91,7 +91,7 @@ class _MyForwardedClaimScreenState extends State<MyForwardedClaimScreen> {
                return Padding(
                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                  child: FormBuilderDateTimePicker(
-                   name: 'Period To',
+                   name: language.text('pt'),
                    initialDate: DateTime.now(),
                    initialValue: DateTime.now(),
                    inputType: InputType.date,

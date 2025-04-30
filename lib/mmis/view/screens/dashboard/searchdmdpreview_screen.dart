@@ -393,22 +393,22 @@ class _DemandHeaderState extends State<DemandHeader> {
                     color: Colors.blue,
                   ),
                 ),
-                // InkWell(
-                //   onTap: (){
-                //     Get.toNamed(Routes.demandactionScreen);
-                //   },
-                //   child: Container(
-                //     height: 35,
-                //     width: 85,
-                //     alignment: Alignment.center,
-                //     child: Text("Action", style: TextStyle(color: Colors.white)),
-                //     decoration: BoxDecoration(
-                //       color: Colors.blue,
-                //       borderRadius: BorderRadius.circular(8.0),
-                //       border: Border.all(color: Colors.blue[300]!)
-                //     ),
-                //   ),
-                // ),
+                InkWell(
+                  onTap: (){
+                    Get.toNamed(Routes.demandactionScreen, arguments: [searchdmdPreviewcontroller.headerData[0].key2!, searchdmdPreviewcontroller.headerData[0].key15!]);
+                  },
+                  child: Container(
+                    height: 35,
+                    width: 85,
+                    alignment: Alignment.center,
+                    child: Text("Action", style: TextStyle(color: Colors.white)),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(color: Colors.blue[300]!)
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 18),
@@ -703,11 +703,11 @@ class _DemandHeaderState extends State<DemandHeader> {
             fontSize: 14,
             color: Colors.black,
           ),
-            trimLines: 4,
-            colorClickableText: Colors.blue[700],
-            trimMode: TrimMode.Line,
-            trimCollapsedText: '... More',
-            trimExpandedText: '...less',): Text(
+          trimLines: 4,
+          colorClickableText: Colors.blue[700],
+          trimMode: TrimMode.Line,
+          trimCollapsedText: '... More',
+          trimExpandedText: '...less',): Text(
             value,
             style: const TextStyle(
               fontSize: 14,

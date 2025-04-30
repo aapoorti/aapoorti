@@ -35,7 +35,7 @@ class ValueWiseStockRepo {
     return all;
   }
 
-  Future<List<ValueWiseStockRlwData>> fetchrailwaylistData(BuildContext context) async{
+  Future<dynamic> fetchrailwaylistData(BuildContext context) async{
     //IRUDMConstants.showProgressIndicator(context);
     try{
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -46,8 +46,10 @@ class ValueWiseStockRepo {
         if(listdata['status'] == "OK") {
           var listJson = listdata['data'];
           if(listJson != null) {
-            dropdowndata_UDMRlyList = listJson.map<ValueWiseStockRlwData>((val) => ValueWiseStockRlwData.fromJson(val)).toList();
-            dropdowndata_UDMRlyList.sort((a, b) => a.value!.compareTo(b.value!));
+            var rlyData = listJson;
+            dropdowndata_UDMRlyList.addAll(rlyData);
+            //dropdowndata_UDMRlyList = listJson.map<ValueWiseStockRlwData>((val) => ValueWiseStockRlwData.fromJson(val)).toList();
+            //dropdowndata_UDMRlyList.sort((a, b) => a.value!.compareTo(b.value!));
             return dropdowndata_UDMRlyList;
           } else {
             IRUDMConstants().showSnack('Something Unexpected happened! Please try again.', context);
@@ -82,6 +84,7 @@ class ValueWiseStockRepo {
   Future<dynamic> def_fetchUnit(String? value, String? unit_data, String? depart, String? unitName, String? depot, String? userSubDep, BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     myList_UDMUnitType.clear();
+    debugPrint("check now1 $unitName $unit_data ");
     //IRUDMConstants.showProgressIndicator(context);
     try {
       var result_UDMUnitType = await Network().postDataWithAPIMList('UDMAppList','UDMUnitType',value,prefs.getString('token'));
@@ -89,12 +92,19 @@ class ValueWiseStockRepo {
       if(UDMUnitType_body['status'] != 'OK') {
         //IRUDMConstants.removeProgressIndicator(context);
         myList_UDMUnitType.add(getAll());
+        def_fetchunitName(value!, '-1', unitName, depot, depart, userSubDep,context);
         return myList_UDMUnitType;
       } else {
         //IRUDMConstants.removeProgressIndicator(context);
         var unitData = UDMUnitType_body['data'];
         myList_UDMUnitType.add(getAll());
         myList_UDMUnitType.addAll(unitData);
+        if (value == '-1') {
+           def_fetchunitName(value!, '-1', unitName, depot, depart, userSubDep, context);
+        }
+        else if(unit_data != ""){
+          def_fetchunitName(value!, unit_data, unitName, depot, depart, userSubDep, context);
+        }
         return myList_UDMUnitType;
       }
     } on HttpException {
@@ -118,7 +128,7 @@ class ValueWiseStockRepo {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var result_UDMunitName=await Network().postDataWithAPIMList('UDMAppList','UnitName',rai!+"~"+unit!, prefs.getString('token'));
       var UDMunitName_body = json.decode(result_UDMunitName.body);
-      print("unit name list.... $UDMunitName_body");
+      debugPrint("unit name list.... $UDMunitName_body");
       if(UDMunitName_body['status'] != 'OK') {
         //IRUDMConstants.removeProgressIndicator(context);
         myList_UDMunitName.add(getAll());

@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiUtilities.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_app/aapoorti/home/auction/upcoming/upcomingnextpage.dart
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 
 class Userup {
   final String? upid, category;
@@ -32,18 +34,45 @@ class _UpcomingState extends State<Upcoming> {
   }
 
   void fetchPost() async {
-    try{
-      var v = AapoortiConstants.webServiceUrl + 'Auction/AucUpcoming?PAGECOUNTER=1';
-      final response = await http.post(Uri.parse(v));
-      debugPrint("üduudud ${response.body}");
-      jsonResult = json.decode(response.body);
+    var v = AapoortiConstants.webServiceUrl + 'Auction/AucUpcoming?PAGECOUNTER=1';
+    final response = await http.post(Uri.parse(v));
+    debugPrint("upcoming resp ${response.body}");
+
+    if(response.statusCode == 200) {
+      try {
+        final List<dynamic> responseBody = jsonDecode(response.body);
+
+        if(responseBody.isNotEmpty && responseBody[0] is Map<String, dynamic>) {
+          final data = responseBody[0];
+
+          if(data.containsKey('ErrorCode')) {
+            debugPrint("ErrorCode found: ${data['ErrorCode']}");
+            setState(() {
+              jsonResult = [];
+            });
+          }
+          else {
+            debugPrint("ErrorCode not found.");
+            setState(() {
+              jsonResult = json.decode(response.body);
+            });
+          }
+        } else {
+          setState(() {
+            jsonResult = json.decode(response.body);
+          });
+        }
+      } catch (e) {
+        setState(() {
+          jsonResult = [];
+        });
+      }
     }
-    catch (exc){
-
+    else {
+      setState(() {
+        jsonResult = [];
+      });
     }
-
-
-    setState(() {});
   }
 
   @override
@@ -60,7 +89,21 @@ class _UpcomingState extends State<Upcoming> {
             backgroundColor: AapoortiConstants.primary,
             title: Text('Upcoming Auctions (Sale)', style: TextStyle(color: Colors.white,fontSize: 18))),
         body: Center(
-            child: jsonResult == null ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : _myListView(context)),
+            child: jsonResult == null ? SpinKitFadingCircle(color: AapoortiConstants.primary, size: 120.0) : jsonResult!.isEmpty ? Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset('assets/json/no_data.json', height: 120, width: 120),
+                AnimatedTextKit(
+                    isRepeatingAnimation: false,
+                    animatedTexts: [
+                      TyperAnimatedText("Data not found",
+                          speed: Duration(milliseconds: 150),
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.bold)),
+                    ])
+              ],
+            ) : _myListView(context)),
       ),
     );
   }

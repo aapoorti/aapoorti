@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:math';
-
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter_app/mmis/controllers/demandaction_controller.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,11 +21,13 @@ class DemandActionScreen extends StatefulWidget {
 }
 
 class _DemandActionScreenState extends State<DemandActionScreen> {
-  final _demandNoController = TextEditingController(text: 'CRIS-EPS-25-00382');
-  final _demandDateController = TextEditingController(text: '21/03/2025');
+  final _demandNoController = TextEditingController(text: '-------');
+  final _demandDateController = TextEditingController(text: '-------');
   final _documentDescriptionController = TextEditingController();
   final _remarksController = TextEditingController();
   final _otpController = TextEditingController();
+
+  final controller = Get.put(DemandActionController());
 
   // State variables
   bool _isDataSaved = false;
@@ -39,19 +43,16 @@ class _DemandActionScreenState extends State<DemandActionScreen> {
   // Dropdown options
   final _stages = ['Fund Certification', 'Initial Review', 'Final Approval'];
   final _actions = ['Forward', 'Approve', 'Reject'];
-  final _users = [
-    'HAG CRIS MMIS',
-    'John Doe',
-    'Jane Smith',
-    'Alice Johnson'
-  ];
 
   late String _selectedUser;
+
+  String? demandNum = Get.arguments[0];
+  String? demanddate = Get.arguments[1];
 
   @override
   void initState() {
     super.initState();
-    _selectedUser = _users.first;
+    //_selectedUser = _users.first;
   }
 
   void _saveData() {
@@ -100,7 +101,7 @@ class _DemandActionScreenState extends State<DemandActionScreen> {
           documentDescription: _documentDescriptionController.text,
           fileName: _uploadedFile?.name,
           userProfileMode: _selectedUserProfileMode!,
-          user: _selectedUser,
+          user: controller.actionuser!.value,
           remarks: _remarksController.text,
           onEdit: () {
             Navigator.of(context).pop();
@@ -385,6 +386,16 @@ class _DemandActionScreenState extends State<DemandActionScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    setState(() {
+      _demandNoController.text = demandNum!;
+      _demandDateController.text = demanddate! == "NULL" ? '-----' : demanddate!;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -426,23 +437,166 @@ class _DemandActionScreenState extends State<DemandActionScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 4),
-                        _buildDropdown(
-                          label: 'Stage',
-                          value: _selectedStage,
-                          items: _stages,
-                          onChanged: _isDataFrozen ? null : (value) {
-                            setState(() => _selectedStage = value!);
-                          },
-                        ),
+                        Obx((){
+                          if(controller.stageState.value == StageState.idle){
+                            return Container(
+                              height: 45,
+                              width: Get.width,
+                              padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black, width: 1.0),
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Stage"),
+                                  Container(height: 25, width: 25, child: CircularProgressIndicator(color: Colors.indigo, strokeWidth: 2.0))
+                                ],
+                              ),
+                            );
+                          }
+                          if(controller.stageState.value == StageState.loading){
+                            return Container(
+                              height: 45,
+                              width: Get.width,
+                              padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black, width: 1.0),
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Stage"),
+                                  Container(height: 25, width: 25, child: CircularProgressIndicator(color: Colors.indigo, strokeWidth: 2.0))
+                                ],
+                              ),
+                            );
+                          }
+                          else{
+                            // return _buildDropdown(
+                            //   label: 'Stage',
+                            //   value: controller.stageslist.first,
+                            //   items: controller.stageslist,
+                            //   onChanged: _isDataFrozen ? null : (value) {
+                            //     controller.getSplitValue(value!);
+                            //   },
+                            // );
+                            return DropdownSearch<String>(
+                              //mode: Mode.DIALOG,
+                              //showSearchBox: true,
+                              selectedItem: controller.stageslist.first,
+                              //showSelectedItems: true,
+                              popupProps: PopupPropsMultiSelection.menu(
+                                showSearchBox: true,
+                                fit: FlexFit.loose,
+                                showSelectedItems: true,
+                                menuProps: MenuProps(
+                                    shape: RoundedRectangleBorder( // Custom shape without the right side scroll line
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      side: BorderSide(color: Colors.grey), // You can customize the border color
+                                    )
+                                ),
+                              ),
+                              decoratorProps: DropDownDecoratorProps(
+                                  decoration: InputDecoration(
+                                      labelText: 'Stage',
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide(width: 1, color: Colors.black)),
+                                      contentPadding: EdgeInsets.only(left: 10))
+                              ),
+                              items: (filter, infiniteScrollProps) => controller.stageslist.cast(),
+                              onChanged: (changedata) {
+                                 controller.getSplitValue(changedata!);
+                              },
+                            );
+                          }
+                        }),
+
                         const SizedBox(height: 10),
-                        _buildDropdown(
-                          label: 'Action',
-                          value: _selectedAction,
-                          items: _actions,
-                          onChanged: _isDataFrozen ? null : (value) {
-                            setState(() => _selectedAction = value!);
-                          },
-                        ),
+                        Obx((){
+                          if(controller.actionState.value == ActionState.idle){
+                            return Container(
+                              height: 45,
+                              width: Get.width,
+                              padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black, width: 1.0),
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Stage"),
+                                  Container(height: 25, width: 25, child: CircularProgressIndicator(color: Colors.indigo, strokeWidth: 2.0))
+                                ],
+                              ),
+                            );
+                          }
+                          else if(controller.actionState.value == ActionState.loading){
+                            return Container(
+                              height: 45,
+                              width: Get.width,
+                              padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black, width: 1.0),
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Stage"),
+                                  Container(height: 25, width: 25, child: CircularProgressIndicator(color: Colors.indigo, strokeWidth: 2.0))
+                                ],
+                              ),
+                            );
+                          }
+                          else{
+                            return DropdownSearch<String>(
+                              //mode: Mode.DIALOG,
+                              //showSearchBox: true,
+                              selectedItem: controller.actionlist.first,
+                              //showSelectedItems: true,
+                              popupProps: PopupPropsMultiSelection.menu(
+                                showSearchBox: true,
+                                fit: FlexFit.loose,
+                                showSelectedItems: true,
+                                menuProps: MenuProps(
+                                    shape: RoundedRectangleBorder( // Custom shape without the right side scroll line
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      side: BorderSide(color: Colors.grey), // You can customize the border color
+                                    )
+                                ),
+                              ),
+                              // popupShape: RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(5.0),
+                              //   side: BorderSide(color: Colors.grey),
+                              // ),
+                              decoratorProps: DropDownDecoratorProps(
+                                  decoration: InputDecoration(
+                                      labelText: 'Action',
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                                      contentPadding: EdgeInsets.only(left: 10))
+                              ),
+                              items: (filter, infiniteScrollProps) => controller.actionlist.cast(),
+                              onChanged: (changedata) {
+
+                              },
+                            );
+                          }
+                        }),
+                        // _buildDropdown(
+                        //   label: 'Action',
+                        //   value: _selectedAction,
+                        //   items: _actions,
+                        //   onChanged: _isDataFrozen ? null : (value) {
+                        //     setState(() => _selectedAction = value!);
+                        //   },
+                        // ),
                       ],
                     ),
                   ),
@@ -451,141 +605,141 @@ class _DemandActionScreenState extends State<DemandActionScreen> {
                 const SizedBox(height: 8),
 
                 // Document Description and Upload - Simplified
-                Card(
-                  elevation: 0.5,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Document Description and Upload buttons
-                        Row(
-                          children: [
-                            // Document Description
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: _isDataFrozen ? null : _toggleDocDescription,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[50],
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: Colors.grey[300]!),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          _documentDescriptionController.text.isEmpty
-                                              ? 'Doc Description'
-                                              : _documentDescriptionController.text,
-                                          style: TextStyle(
-                                            color: _documentDescriptionController.text.isEmpty
-                                                ? Colors.grey[700]
-                                                : Colors.black87,
-                                            fontSize: 14,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            // Upload Button
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: _isUploading || _isDataFrozen ? null : _requestPermissionAndUpload,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                                  decoration: BoxDecoration(
-                                    color: _isUploading ? Colors.grey[200] : Colors.grey[50],
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: Colors.grey[300]!),
-                                  ),
-                                  child: Text(
-                                    _isUploading ? 'Uploading...' : 'Upload (Optional)',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.grey[700],
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // Show text field when expanded
-                        if (_isDocDescriptionExpanded)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: TextField(
-                              controller: _documentDescriptionController,
-                              decoration: InputDecoration(
-                                labelText: 'Document Description',
-                                labelStyle: const TextStyle(fontSize: 14),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[50],
-                              ),
-                              enabled: !_isDataFrozen,
-                              maxLines: 2,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-
-                        // Uploaded File Information
-                        if (_uploadedFile != null)
-                          Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: Colors.grey[300]!),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    _uploadedFile!.name,
-                                    style: TextStyle(
-                                      color: Colors.grey[800],
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                                if (!_isDataFrozen)
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _uploadedFile = null;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Remove',
-                                      style: TextStyle(
-                                        color: Colors.blue[700],
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 8),
+                // Card(
+                //   elevation: 0.5,
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(10.0),
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         // Document Description and Upload buttons
+                //         Row(
+                //           children: [
+                //             // Document Description
+                //             Expanded(
+                //               child: GestureDetector(
+                //                 onTap: _isDataFrozen ? null : _toggleDocDescription,
+                //                 child: Container(
+                //                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                //                   decoration: BoxDecoration(
+                //                     color: Colors.grey[50],
+                //                     borderRadius: BorderRadius.circular(8),
+                //                     border: Border.all(color: Colors.grey[300]!),
+                //                   ),
+                //                   child: Row(
+                //                     children: [
+                //                       Expanded(
+                //                         child: Text(
+                //                           _documentDescriptionController.text.isEmpty
+                //                               ? 'Doc Description'
+                //                               : _documentDescriptionController.text,
+                //                           style: TextStyle(
+                //                             color: _documentDescriptionController.text.isEmpty
+                //                                 ? Colors.grey[700]
+                //                                 : Colors.black87,
+                //                             fontSize: 14,
+                //                           ),
+                //                           maxLines: 1,
+                //                           overflow: TextOverflow.ellipsis,
+                //                         ),
+                //                       ),
+                //                     ],
+                //                   ),
+                //                 ),
+                //               ),
+                //             ),
+                //             const SizedBox(width: 10),
+                //             // Upload Button
+                //             Expanded(
+                //               child: GestureDetector(
+                //                 onTap: _isUploading || _isDataFrozen ? null : _requestPermissionAndUpload,
+                //                 child: Container(
+                //                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                //                   decoration: BoxDecoration(
+                //                     color: _isUploading ? Colors.grey[200] : Colors.grey[50],
+                //                     borderRadius: BorderRadius.circular(8),
+                //                     border: Border.all(color: Colors.grey[300]!),
+                //                   ),
+                //                   child: Text(
+                //                     _isUploading ? 'Uploading...' : 'Upload (Optional)',
+                //                     textAlign: TextAlign.center,
+                //                     style: TextStyle(
+                //                       color: Colors.grey[700],
+                //                       fontSize: 14,
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //
+                //         // Show text field when expanded
+                //         if (_isDocDescriptionExpanded)
+                //           Padding(
+                //             padding: const EdgeInsets.only(top: 10.0),
+                //             child: TextField(
+                //               controller: _documentDescriptionController,
+                //               decoration: InputDecoration(
+                //                 labelText: 'Document Description',
+                //                 labelStyle: const TextStyle(fontSize: 14),
+                //                 border: OutlineInputBorder(
+                //                   borderRadius: BorderRadius.circular(8),
+                //                 ),
+                //                 filled: true,
+                //                 fillColor: Colors.grey[50],
+                //               ),
+                //               enabled: !_isDataFrozen,
+                //               maxLines: 2,
+                //               style: const TextStyle(fontSize: 14),
+                //             ),
+                //           ),
+                //
+                //         // Uploaded File Information
+                //         if (_uploadedFile != null)
+                //           Container(
+                //             margin: const EdgeInsets.only(top: 10),
+                //             padding: const EdgeInsets.all(8),
+                //             decoration: BoxDecoration(
+                //               color: Colors.grey[100],
+                //               borderRadius: BorderRadius.circular(6),
+                //               border: Border.all(color: Colors.grey[300]!),
+                //             ),
+                //             child: Row(
+                //               children: [
+                //                 Expanded(
+                //                   child: Text(
+                //                     _uploadedFile!.name,
+                //                     style: TextStyle(
+                //                       color: Colors.grey[800],
+                //                       fontSize: 14,
+                //                     ),
+                //                   ),
+                //                 ),
+                //                 if (!_isDataFrozen)
+                //                   InkWell(
+                //                     onTap: () {
+                //                       setState(() {
+                //                         _uploadedFile = null;
+                //                       });
+                //                     },
+                //                     child: Text(
+                //                       'Remove',
+                //                       style: TextStyle(
+                //                         color: Colors.blue[700],
+                //                         fontSize: 14,
+                //                       ),
+                //                     ),
+                //                   ),
+                //               ],
+                //             ),
+                //           ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                //
+                // const SizedBox(height: 8),
 
                 // User Profile Mode - With added header
                 Card(
@@ -633,14 +787,78 @@ class _DemandActionScreenState extends State<DemandActionScreen> {
                   elevation: 0.5,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: _buildDropdown(
-                      label: 'User',
-                      value: _selectedUser,
-                      items: _users,
-                      onChanged: _isDataFrozen ? null : (value) {
-                        setState(() => _selectedUser = value!);
-                      },
-                    ),
+                    child: Obx((){
+                      if(controller.userState.value == UserState.loading){
+                        return Container(
+                          height: 45,
+                          width: Get.width,
+                          padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black, width: 1.0),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Stage"),
+                              Container(height: 25, width: 25, child: CircularProgressIndicator(color: Colors.indigo, strokeWidth: 2.0))
+                            ],
+                          ),
+                        );
+                      }
+                      else if(controller.userState.value == UserState.idle){
+                        return Container(
+                          height: 45,
+                          width: Get.width,
+                          padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black, width: 1.0),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Stage"),
+                              Container(height: 25, width: 25, child: CircularProgressIndicator(color: Colors.indigo, strokeWidth: 2.0))
+                            ],
+                          ),
+                        );
+                      }
+                      else{
+                        return DropdownSearch<String>(
+                          selectedItem: controller.actionuser!.value,
+                          popupProps: PopupPropsMultiSelection.menu(
+                            showSearchBox: true,
+                            fit: FlexFit.loose,
+                            showSelectedItems: true,
+                            menuProps: MenuProps(
+                                shape: RoundedRectangleBorder( // Custom shape without the right side scroll line
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  side: BorderSide(color: Colors.grey), // You can customize the border color
+                                )
+                            ),
+                          ),
+                          decoratorProps: DropDownDecoratorProps(
+                              decoration: InputDecoration(
+                                  labelText: 'User',
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(color: Colors.black, width: 1.0)),
+                                  contentPadding: EdgeInsets.only(left: 10))
+                          ),
+                          items: (filter, infiniteScrollProps) => controller.userlist.map((e) => e.key3 as String).toList(),
+                           onChanged: (String? value) {
+                              final actionuser = controller.userlist.firstWhere((element) => element.key3 == value);
+                              debugPrint("actionUser  ${actionuser.key3}  .....$value");
+                              controller.name = (value ?? '').obs;
+                              //controller. = value;
+                              //selectedStatus = value!;
+                              //statusCode = selectedOption['value'];
+                              //debugPrint("Selected Value: ${selectedOption['value']}");
+                         },
+                        );
+                      }
+                    }),
                   ),
                 ),
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/udm/helpers/wso2token.dart';
 import 'package:flutter_app/udm/valuewisestock/model/railwaylistdata.dart';
 import 'package:flutter_app/udm/valuewisestock/repo/valuewisestock_repo.dart';
 import 'package:http/http.dart' as http;
@@ -114,106 +115,118 @@ class ValueWiseProvider with ChangeNotifier{
     }
   }
 
-  Future<dynamic> default_data() async {
-    debugPrint("Default data calling");
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setDefaultDataState(DefaultDataState.Busy);
-    itemTypeList.clear();
-    itemUsageList.clear();
-    itemtCategryaList.clear();
-    stockNonStockList.clear();
-    DatabaseHelper dbHelper = DatabaseHelper.instance;
-    dbResult = await dbHelper.fetchSaveLoginUser();
-    try {
-      var d_response = await Network.postDataWithAPIM('app/Common/GetListDefaultValue/V1.0.0/GetListDefaultValue', 'GetListDefaultValue',
-          dbResult![0][DatabaseHelper.Tb3_col5_emailid],
-          prefs.getString('token'));
-
-      var d_JsonData = json.decode(d_response.body);
-      var d_Json = d_JsonData['data'];
-      var result_UDMRlyList = await Network().postDataWithAPIMList(
-          'UDMAppList','UDMRlyList','',prefs.getString('token'));
-      var UDMRlyList_body = json.decode(result_UDMRlyList.body);
-      var rlyData = UDMRlyList_body['data'];
-      var myList_UDMRlyList = [];
-      myList_UDMRlyList.addAll(rlyData);
-
-      var staticDataresponse = await Network.postDataWithAPIM('app/Common/UdmAppListStatic/V1.0.0/UdmAppListStatic', 'UdmAppListStatic', '',prefs.getString('token'));
-
-      var staticData = json.decode(staticDataresponse.body);
-      List staticDataJson = staticData['data'];
-
-      var itemCatDataUrl = await Network().postDataWithAPIMList('UDMAppList','ItemCategory','',prefs.getString('token'));
-      var itemData = json.decode(itemCatDataUrl.body);
-      var itemCatDataJson = itemData['data'];
-
-      for (int i = 0; i < staticDataJson.length; i++) {
-        if (staticDataJson[i]['list_for'] == 'ItemType') {
-            var all = {
-              'intcode': staticDataJson[i]['key'],
-              'value': staticDataJson[i]['value'],
-            };
-            itemTypeList.add(all);
-        }
-        if(staticDataJson[i]['list_for'] == 'ItemUsage') {
-            var all = {
-              'intcode': staticDataJson[i]['key'],
-              'value': staticDataJson[i]['value'],
-            };
-            itemUsageList.add(all);
-
-        }
-        if(staticDataJson[i]['list_for'] == 'StockNonStock') {
-            var all = {
-              'intcode': staticDataJson[i]['key'],
-              'value': staticDataJson[i]['value'],
-            };
-            stockNonStockList.add(all);
-
-        }
-        if (staticDataJson[i]['list_for'] == 'StockAvailability') {
-            var all = {
-              'intcode': staticDataJson[i]['key'],
-              'value': staticDataJson[i]['value'],
-            };
-            stockAvailability.add(all);
-        }
-      }
-        itemtCategryaList.addAll(itemCatDataJson);
-
-        dropdowndata_UDMUnitType.clear();
-        dropdowndata_UDMDivision.clear();
-        dropdowndata_UDMUserDepot.clear();
-        dropdowndata_UDMRlyList = myList_UDMRlyList; //1
-        dropdowndata_UDMRlyList.sort((a, b) => a['value'].compareTo(b['value'])); //1
-        def_depart_result(d_Json[0]['org_subunit_dept'].toString());
-        railway = d_Json[0]['org_zone'];
-        department = d_Json[0]['org_subunit_dept'];
-        unitname = d_Json[0]['admin_unit'].toString();
-        unittype = d_Json[0]['org_unit_type'].toString();
-        Future.delayed(Duration(milliseconds: 0), () async {
-          def_fetchUnit(
-              d_Json[0]['org_zone'],
-              d_Json[0]['org_unit_type'].toString(),
-              d_Json[0]['org_subunit_dept'].toString(),
-              d_Json[0]['admin_unit'].toString(),
-              d_Json[0]['ccode'].toString(),
-              d_Json[0]['sub_cons_code'].toString());
-        });
-
-    } on HttpException {
-      //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
-    } on SocketException {
-      //IRUDMConstants().showSnack("No connectivity. Please check your connection.", context);
-    } on FormatException {
-      //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
-    } catch (err) {
-      //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
-    }
-
-    setDefaultDataState(DefaultDataState.Finished);
-    debugPrint("Default data calling end");
-  }
+  // Future<dynamic> default_data(BuildContext context) async {
+  //   debugPrint("Default data calling");
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setDefaultDataState(DefaultDataState.Busy);
+  //   itemTypeList.clear();
+  //   itemUsageList.clear();
+  //   itemtCategryaList.clear();
+  //   stockNonStockList.clear();
+  //   DatabaseHelper dbHelper = DatabaseHelper.instance;
+  //   dbResult = await dbHelper.fetchSaveLoginUser();
+  //   try {
+  //     var d_response = await Network.postDataWithAPIM('app/Common/GetListDefaultValue/V1.0.0/GetListDefaultValue', 'GetListDefaultValue',
+  //         dbResult![0][DatabaseHelper.Tb3_col5_emailid],
+  //         prefs.getString('token'));
+  //
+  //     var d_JsonData = json.decode(d_response.body);
+  //     var d_Json = d_JsonData['data'];
+  //     debugPrint("User resp $d_Json");
+  //     var result_UDMRlyList = await Network().postDataWithAPIMList(
+  //         'UDMAppList','UDMRlyList','',prefs.getString('token'));
+  //     var UDMRlyList_body = json.decode(result_UDMRlyList.body);
+  //     var rlyData = UDMRlyList_body['data'];
+  //     var myList_UDMRlyList = [];
+  //     myList_UDMRlyList.addAll(rlyData);
+  //
+  //     var staticDataresponse = await Network.postDataWithAPIM('app/Common/UdmAppListStatic/V1.0.0/UdmAppListStatic', 'UdmAppListStatic', '',prefs.getString('token'));
+  //
+  //     var staticData = json.decode(staticDataresponse.body);
+  //     List staticDataJson = staticData['data'];
+  //
+  //     var itemCatDataUrl = await Network().postDataWithAPIMList('UDMAppList','ItemCategory','',prefs.getString('token'));
+  //     var itemData = json.decode(itemCatDataUrl.body);
+  //     var itemCatDataJson = itemData['data'];
+  //
+  //     for (int i = 0; i < staticDataJson.length; i++) {
+  //       if (staticDataJson[i]['list_for'] == 'ItemType') {
+  //           var all = {
+  //             'intcode': staticDataJson[i]['key'],
+  //             'value': staticDataJson[i]['value'],
+  //           };
+  //           itemTypeList.add(all);
+  //       }
+  //       if(staticDataJson[i]['list_for'] == 'ItemUsage') {
+  //           var all = {
+  //             'intcode': staticDataJson[i]['key'],
+  //             'value': staticDataJson[i]['value'],
+  //           };
+  //           itemUsageList.add(all);
+  //
+  //       }
+  //       if(staticDataJson[i]['list_for'] == 'StockNonStock') {
+  //           var all = {
+  //             'intcode': staticDataJson[i]['key'],
+  //             'value': staticDataJson[i]['value'],
+  //           };
+  //           stockNonStockList.add(all);
+  //
+  //       }
+  //       if (staticDataJson[i]['list_for'] == 'StockAvailability') {
+  //           var all = {
+  //             'intcode': staticDataJson[i]['key'],
+  //             'value': staticDataJson[i]['value'],
+  //           };
+  //           stockAvailability.add(all);
+  //       }
+  //     }
+  //       itemtCategryaList.addAll(itemCatDataJson);
+  //
+  //       dropdowndata_UDMUnitType.clear();
+  //       dropdowndata_UDMDivision.clear();
+  //       dropdowndata_UDMUserDepot.clear();
+  //       dropdowndata_UDMRlyList = myList_UDMRlyList;
+  //       dropdowndata_UDMRlyList.sort((a, b) => a['value'].compareTo(b['value']));
+  //       def_depart_result(d_Json[0]['org_subunit_dept'].toString());
+  //       railway = d_Json[0]['account_name'];
+  //       rlyCode  = d_Json[0]['org_zone'];
+  //       unittype = d_Json[0]['unit_type'];
+  //       unittypecode = d_Json[0]['org_unit_type'].toString();
+  //       unitname = d_Json[0]['unit_name'];
+  //       unitnamecode = d_Json[0]['admin_unit'].toString();
+  //       department = d_Json[0]['dept_name'];
+  //       deptcode = d_Json[0]['org_subunit_dept'].toString();
+  //       consignee = "${d_Json[0]['ccode'].toString()}-${d_Json[0]['cname'].toString()}";
+  //       consigneecode = d_Json[0]['ccode'].toString();
+  //       subconsignee = "${d_Json[0]['sub_cons_code'].toString()}-${d_Json[0]['sub_user_depot'].toString()}";
+  //       subconsigneecode = d_Json[0]['sub_cons_code'].toString();
+  //       Future.delayed(Duration(milliseconds: 0), () async {
+  //         // def_fetchUnit(
+  //         //     d_Json[0]['org_zone'],
+  //         //     d_Json[0]['org_unit_type'].toString(),
+  //         //     d_Json[0]['org_subunit_dept'].toString(),
+  //         //     d_Json[0]['admin_unit'].toString(),
+  //         //     d_Json[0]['ccode'].toString(),
+  //         //     d_Json[0]['sub_cons_code'].toString(), context);
+  //
+  //         getUnitTypeData("", context);
+  //
+  //       });
+  //
+  //   } on HttpException {
+  //     //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
+  //   } on SocketException {
+  //     //IRUDMConstants().showSnack("No connectivity. Please check your connection.", context);
+  //   } on FormatException {
+  //     //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
+  //   } catch (err) {
+  //     //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
+  //   }
+  //
+  //   setDefaultDataState(DefaultDataState.Finished);
+  //   debugPrint("Default data calling end");
+  // }
 
   // --- Default Data ------
   DefaultDataState get defaultDataState => _defaultDataState;
@@ -266,34 +279,34 @@ class ValueWiseProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  // --- Consignee Data ---
-  // List<dynamic> get consigneelistData => dr;
-  // void setConsigneelistData(List<dynamic> conlist) {
-  //   _consigneeitems = conlist;
-  // }
-  // ConsigneeDataState get condatastatus => _consigneeDataState;
-  // void setConStatusState(ConsigneeDataState currentState) {
-  //   _consigneeDataState = currentState;
-  //   notifyListeners();
-  // }
+  //--- Consignee Data ---
+  List<dynamic> get consigneelistData => dropdowndata_UDMUserDepot;
+  void setConsigneelistData(List<dynamic> conlist) {
+    dropdowndata_UDMUserDepot = conlist;
+  }
+  ConsigneeDataState get condatastatus => _consigneeDataState;
+  void setConStatusState(ConsigneeDataState currentState) {
+    _consigneeDataState = currentState;
+    notifyListeners();
+  }
 
-  // --- Sub Consignee Data ---
-  // List<dynamic> get subconsigneeData => _subconsigneeitems;
-  // void setsubConsigneeData(List<dynamic> subconsigneelist) {
-  //   _subconsigneeitems = subconsigneelist;
-  // }
-  // SubConsigneeDataState get subconsigneedatastatus => _subconsigneeDataState;
-  // void setSubConsigneeStatusState(SubConsigneeDataState currentState) {
-  //   _subconsigneeDataState = currentState;
-  //   notifyListeners();
-  // }
+  //--- Sub Consignee Data ---
+  List<dynamic> get subconsigneeData => dropdowndata_UDMUserSubDepot;
+  void setsubConsigneeData(List<dynamic> subconsigneelist) {
+    dropdowndata_UDMUserSubDepot = subconsigneelist;
+  }
+  SubConsigneeDataState get subconsigneedatastatus => _subconsigneeDataState;
+  void setSubConsigneeStatusState(SubConsigneeDataState currentState) {
+    _subconsigneeDataState = currentState;
+    notifyListeners();
+  }
 
   Future<void> getRailwaylistData(BuildContext context) async{
     setRlwStatusState(RailwayDataState.Busy);
     //NSDemandSummaryRepo stockHistoryRepository = NSDemandSummaryRepo(context);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try{
-      Future<List<dynamic>> data = ValueWiseStockRepo.instance.fetchrailwaylistData(context);
+      Future<dynamic> data = ValueWiseStockRepo.instance.fetchrailwaylistData(context);
       data.then((value){
         debugPrint("railway data $value");
         if(value.isEmpty || value.length == 0){
@@ -332,28 +345,25 @@ class ValueWiseProvider with ChangeNotifier{
     dropdowndata_UDMUnitType.clear();
     if(rly == "") {
       try {
-        Future<dynamic> data = ValueWiseStockRepo.instance.def_fetchUnit(
-            prefs.getString('userzone'),
-            prefs.getString('orgunittype'),
-            prefs.getString('orgsubunit'),
-            prefs.getString('adminunit'),
+        Future<dynamic> data = ValueWiseStockRepo.instance.def_fetchUnit(prefs.getString('userzone'), prefs.getString('orgunittype'), prefs.getString('orgsubunit'), prefs.getString('adminunit'),
             prefs.getString('consigneecode'),
             prefs.getString('subconsigneecode'),
             context);
+        getUnitNameData(prefs.getString('userzone'), prefs.getString('orgunittype'),context);
         data.then((value) {
-          if (value.isEmpty || value.length == 0) {
+          if(value.isEmpty || value.length == 0) {
             setUnittypeStatusState(UnittypeDataState.Idle);
             IRUDMConstants().showSnack('Data not found.', context);
           }
           else if (value.isNotEmpty || value.length != 0) {
             setunittypelistData(value);
             value.forEach((item) {
-              if (item['intcode'].toString() ==
-                  prefs.getString('orgunittype')) {
+              if (item['intcode'].toString() == prefs.getString('orgunittype')) {
                 unittype = item['value'].toString();
                 unittypecode = item['intcode'].toString();
               }
             });
+            getUnitNameData(prefs.getString('userzone'), unittypecode,context);
             setUnittypeStatusState(UnittypeDataState.Finished);
           }
           else {
@@ -393,7 +403,6 @@ class ValueWiseProvider with ChangeNotifier{
         subconsignee = "All";
         subconsigneecode = "-1";
         data.then((value) {
-          //setConStatusState(ConsigneeDataState.Finished);
           setUnitnameStatusState(UnitnameDataState.Finished);
           setDepartmentStatusState(DepartmentDataState.Finished);
           //setSubConsigneeStatusState(SubConsigneeDataState.Finished);
@@ -403,6 +412,7 @@ class ValueWiseProvider with ChangeNotifier{
           }
           else if (value.isNotEmpty || value.length != 0) {
             setunittypelistData(value);
+            getUnitNameData(rly, unittypecode,context);
             setUnittypeStatusState(UnittypeDataState.Finished);
           }
           else {
@@ -442,7 +452,7 @@ class ValueWiseProvider with ChangeNotifier{
           else if (value.isNotEmpty || value.length != 0) {
             setunitnamelistData(value);
             value.forEach((item) {
-              if (item['intcode'].toString() == prefs.getString('adminunit')) {
+              if(item['intcode'].toString() == prefs.getString('adminunit')) {
                 unitname = item['value'].toString();
                 unitnamecode = item['intcode'].toString();
               }
@@ -511,7 +521,7 @@ class ValueWiseProvider with ChangeNotifier{
         else if (value.isNotEmpty || value.length != 0) {
           setdepartmentlistData(value);
           value.forEach((item) {
-            if (item['intcode'].toString() == prefs.getString('orgsubunit')) {
+            if(item['intcode'].toString() == prefs.getString('orgsubunit')) {
               department = item['value'].toString();
               deptcode = item['intcode'].toString();
             }
@@ -528,6 +538,254 @@ class ValueWiseProvider with ChangeNotifier{
     }
   }
 
+  Future<void> getConsignee(String? rly, String? orgsubunit, String? unittype, String? unitname, BuildContext context) async {
+    setConStatusState(ConsigneeDataState.Busy);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //_consigneeitems.clear();
+    if(unittype == "" && unitname == "" && prefs.getString('consigneecode') == "NA") {
+      consignee = "All";
+      consigneecode = "-1";
+      setConsigneelistData(_all());
+      Future.delayed(Duration(milliseconds: 1000),() => setConStatusState(ConsigneeDataState.Finished));
+    }
+    else if(unittype == "" && unitname == "" && prefs.getString('consigneecode') != "NA") {
+      try {
+        Future<dynamic> data = ValueWiseStockRepo.instance.fetchConsignee(
+            prefs.getString('userzone'),
+            prefs.getString('orgsubunit'),
+            prefs.getString('orgunittype'),
+            prefs.getString('adminunit'),
+            prefs.getString('consigneecode'),
+            prefs.getString('subconsigneecode'),
+            context);
+        data.then((value) {
+          if (value.isEmpty || value.length == 0) {
+            setConStatusState(ConsigneeDataState.Idle);
+            IRUDMConstants().showSnack('Data not found.', context);
+          }
+          else if (value.isNotEmpty || value.length != 0) {
+            setConsigneelistData(value.toSet().toList());
+            value.forEach((item) {
+              if(item['intcode'].toString() == "-1") {
+                consignee = item['value'].toString();
+                consigneecode = item['intcode'].toString();
+                return;
+              }
+              else {
+                if(item['intcode'].toString() ==  prefs.getString('consigneecode')){
+                  consignee = item['intcode'].toString() + "-" + item['value'].toString();
+                  consigneecode = item['intcode'].toString();
+                  return;
+                }
+              }
+            });
+            setConStatusState(ConsigneeDataState.Finished);
+          }
+          else {
+            setConStatusState(ConsigneeDataState.FinishedWithError);
+          }
+        });
+      }
+      on Exception catch (err) {
+        setConStatusState(ConsigneeDataState.FinishedWithError);
+        IRUDMConstants().showSnack(err.toString(), context);
+      }
+    }
+    else {
+      consignee = "All";
+      consigneecode = "-1";
+      try {
+        Future<dynamic> data = ValueWiseStockRepo.instance.fetchConsignee(
+            rly,
+            orgsubunit,
+            unittype,
+            unitname,
+            prefs.getString('consigneecode'),
+            prefs.getString('subconsigneecode'),
+            context);
+        data.then((value) {
+          if (value.isEmpty || value.length == 0) {
+            setConStatusState(ConsigneeDataState.Idle);
+            IRUDMConstants().showSnack('Data not found.', context);
+          }
+          else if (value.isNotEmpty || value.length != 0) {
+            setConsigneelistData(value.toSet().toList());
+            //consignee = "All";
+            //consigneecode = "-1";
+            // value.forEach((item) {
+            //   if(item['intcode'].toString() == "-1"){
+            //     consignee = item['value'].toString();
+            //     consigneecode = item['intcode'].toString();
+            //   }
+            //   else{
+            //     consignee = item['intcode'].toString()+"-"+item['value'].toString();
+            //     consigneecode = item['intcode'].toString();
+            //   }
+            // });
+            setConStatusState(ConsigneeDataState.Finished);
+          }
+          else {
+            setConStatusState(ConsigneeDataState.FinishedWithError);
+          }
+        });
+      }
+      on Exception catch (err) {
+        setConStatusState(ConsigneeDataState.FinishedWithError);
+        IRUDMConstants().showSnack(err.toString(), context);
+      }
+    }
+  }
+
+  Future<void> getSubConsignee(String? rly, String? orgsubunit, String? unittype, String? unitname, String? userDepot, BuildContext context) async {
+    setSubConsigneeStatusState(SubConsigneeDataState.Busy);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("user depot value $userDepot");
+    print("Sub consignee value ${prefs.getString('subconsigneecode')}");
+    //_subconsigneeitems.clear();
+    if(userDepot == "" && prefs.getString('subconsigneecode') == "NA") {
+      print("this is calling now1");
+      subconsignee = "All";
+      subconsigneecode = "-1";
+      setsubConsigneeData(_all());
+      Future.delayed(Duration(milliseconds: 1000),() => setSubConsigneeStatusState(SubConsigneeDataState.Finished));
+    }
+    else if(userDepot == "" && prefs.getString('subconsigneecode') != "NA") {
+      print("this is calling now2");
+      try {
+        Future<dynamic> data = ValueWiseStockRepo.instance.def_fetchSubDepot(
+            prefs.getString('userzone'),
+            prefs.getString('consigneecode'),
+            prefs.getString('subconsigneecode'),
+            context);
+        data.then((value) {
+          if(value.isEmpty || value.length == 0) {
+            setSubConsigneeStatusState(SubConsigneeDataState.Idle);
+            IRUDMConstants().showSnack('Data not found.', context);
+          }
+          else if(value.isNotEmpty || value.length != 0) {
+            setsubConsigneeData(value.toSet().toList());
+            value.forEach((item) {
+              if (item['intcode'].toString() == "-1") {
+                subconsignee = item['value'].toString();
+                subconsigneecode = item['intcode'].toString();
+                return;
+              }
+              else {
+                if(item['intcode'].toString() == prefs.getString('subconsigneecode')){
+                  subconsignee = item['intcode'].toString() + "-" + item['value'].toString();
+                  subconsigneecode = item['intcode'].toString();
+                  return;
+                }
+              }
+            });
+            setSubConsigneeStatusState(SubConsigneeDataState.Finished);
+          }
+          else {
+            setSubConsigneeStatusState(SubConsigneeDataState.FinishedWithError);
+          }
+        });
+      }
+      on Exception catch (err) {
+        setSubConsigneeStatusState(SubConsigneeDataState.FinishedWithError);
+        IRUDMConstants().showSnack(err.toString(), context);
+      }
+    }
+    else if(userDepot == "-1" && prefs.getString('subconsigneecode') != "NA") {
+      print("this is calling now3");
+      subconsignee = "All";
+      subconsigneecode = "-1";
+      setsubConsigneeData(_all());
+      setSubConsigneeStatusState(SubConsigneeDataState.Finished);
+    }
+    else if(userDepot != "-1" && prefs.getString('subconsigneecode') != "NA") {
+      print("this is calling now4");
+      subconsignee = "All";
+      subconsigneecode = "-1";
+      try {
+        Future<dynamic> data = ValueWiseStockRepo.instance.def_fetchSubDepot(
+            rly,
+            userDepot,
+            prefs.getString('subconsigneecode'),
+            context);
+        data.then((value) {
+          if (value.isEmpty || value.length == 0) {
+            setSubConsigneeStatusState(SubConsigneeDataState.Idle);
+            IRUDMConstants().showSnack('Data not found.', context);
+          }
+          else if (value.isNotEmpty || value.length != 0) {
+            setsubConsigneeData(value.toSet().toList());
+            setSubConsigneeStatusState(SubConsigneeDataState.Finished);
+          }
+          else {
+            setSubConsigneeStatusState(SubConsigneeDataState.FinishedWithError);
+          }
+        });
+      }
+      on Exception catch (err) {
+        setSubConsigneeStatusState(SubConsigneeDataState.FinishedWithError);
+        IRUDMConstants().showSnack(err.toString(), context);
+      }
+    }
+    else if(userDepot != "-1" && prefs.getString('subconsigneecode') == "NA") {
+      print("this is calling now5");
+      subconsignee = "All";
+      subconsigneecode = "-1";
+      try {
+        Future<dynamic> data = ValueWiseStockRepo.instance.def_fetchSubDepot(
+            rly,
+            userDepot,
+            prefs.getString('subconsigneecode'),
+            context);
+        data.then((value) {
+          if (value.isEmpty || value.length == 0) {
+            setSubConsigneeStatusState(SubConsigneeDataState.Idle);
+            IRUDMConstants().showSnack('Data not found.', context);
+          }
+          else if (value.isNotEmpty || value.length != 0) {
+            setsubConsigneeData(value.toSet().toList());
+            setSubConsigneeStatusState(SubConsigneeDataState.Finished);
+          }
+          else {
+            setSubConsigneeStatusState(SubConsigneeDataState.FinishedWithError);
+          }
+        });
+      }
+      on Exception catch (err) {
+        setSubConsigneeStatusState(SubConsigneeDataState.FinishedWithError);
+        IRUDMConstants().showSnack(err.toString(), context);
+      }
+    }
+    else {
+      print("this is calling now6");
+      subconsignee = "All";
+      subconsigneecode = "-1";
+      try {
+        Future<dynamic> data = ValueWiseStockRepo.instance.def_fetchSubDepot(
+            rly,
+            prefs.getString('consigneecode'),
+            prefs.getString('subconsigneecode'),
+            context);
+        data.then((value) {
+          if (value.isEmpty || value.length == 0) {
+            setSubConsigneeStatusState(SubConsigneeDataState.Idle);
+            IRUDMConstants().showSnack('Data not found.', context);
+          }
+          else if (value.isNotEmpty || value.length != 0) {
+            setsubConsigneeData(value.toSet().toList());
+            setSubConsigneeStatusState(SubConsigneeDataState.Finished);
+          }
+          else {
+            setSubConsigneeStatusState(SubConsigneeDataState.FinishedWithError);
+          }
+        });
+      }
+      on Exception catch (err) {
+        setSubConsigneeStatusState(SubConsigneeDataState.FinishedWithError);
+        IRUDMConstants().showSnack(err.toString(), context);
+      }
+    }
+  }
+
   Future<void> fetchAndStoreItemsListwithdata(railway,unitType,division,department,userDepot
   ,userSubDepot
   ,itemUsage
@@ -537,7 +795,7 @@ class ValueWiseProvider with ChangeNotifier{
   ,stkAvl
   ,stkAvlValue,context) async {
     setState(ValueWiseState.Busy);
-    countData=0;
+    countData = 0;
     countVis=false;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
@@ -545,7 +803,7 @@ class ValueWiseProvider with ChangeNotifier{
           railway+"~"+unitType +"~"+division+"~"+department+"~"+userDepot +
               "~"+ userSubDepot
               +"~"+itemUnit+"~"+itemUsage+"~"+itemCategory+"~"+stkNstk+"~"+stkAvl+"~"+stkAvlValue,prefs.getString('token'));
-      if (response.statusCode == 200) {
+      if(response.statusCode == 200) {
         var listdata = json.decode(response.body);
         if (listdata['status']=='OK') {
           var listJson=listdata['data'];
@@ -568,7 +826,8 @@ class ValueWiseProvider with ChangeNotifier{
         //  showInSnackBar("Data not found", context);
 
         }
-      } else {
+      }
+      else {
         setState(ValueWiseState.Idle);
         IRUDMConstants().showSnack('Something Unexpected happened! Please try again.', context);
       }
@@ -590,7 +849,7 @@ class ValueWiseProvider with ChangeNotifier{
   }
 
   void showInSnackBar(String value, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(value)
     ));
   }
@@ -649,62 +908,16 @@ class ValueWiseProvider with ChangeNotifier{
     var all = [{
       'intcode': '-1',
       'value': 'All',
-    }
-    ];
+    }];
     return all;
   }
 
-  Future<dynamic> def_depart_result(String depart) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    try {
-      var result_UDMDept=await Network().postDataWithAPIMList('UDMAppList','UDMDept','',prefs.getString('token'));
-      var UDMDept_body = json.decode(result_UDMDept.body);
-      var deptData = UDMDept_body['data'];
-      var myList_UDMDept = [];
-      myList_UDMDept.addAll(deptData);
-        dropdowndata_UDMDept = myList_UDMDept; //5
-        department = depart;
-    } on HttpException {
-      //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
-    } on SocketException {
-      //IRUDMConstants().showSnack("No connectivity. Please check your connection.", context);
-    } on FormatException {
-      //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
-    } catch (err) {
-      //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
-    }
-  }
+  Map<String, String> getAll() {
+    var all = {
+      'intcode': '-1',
+      'value': "All",
+    };
+    return all;
 
-  Future<dynamic> def_fetchUnit(String? value, String unit_data, String depart, String unitName, String depot, String userSubDep) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    try {
-      var result_UDMUnitType=await Network().postDataWithAPIMList('UDMAppList','UDMUnitType',value,prefs.getString('token'));
-      var UDMUnitType_body = json.decode(result_UDMUnitType.body);
-
-      var myList_UDMUnitType = [];
-      if (UDMUnitType_body['status'] != 'OK') {
-        //dropdowndata_UDMUnitType.add(getAll());
-      } else {
-        var unitData = UDMUnitType_body['data'];
-        //myList_UDMUnitType.add(getAll());
-        setunittypelistData(unitData);
-        myList_UDMUnitType.addAll(unitData);
-        dropdowndata_UDMUnitType = myList_UDMUnitType; //2
-        if (value == '-1') {
-          //def_fetchunitName(value!, '-1', unitName, depot, depart, userSubDep);
-        }
-      }
-      if(unit_data != "") {
-        //def_fetchunitName(value!, unit_data, unitName, depot, depart, userSubDep);
-      }
-    } on HttpException {
-      //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
-    } on SocketException {
-      //IRUDMConstants().showSnack("No connectivity. Please check your connection.", context);
-    } on FormatException {
-      //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
-    } catch (err) {
-      //IRUDMConstants().showSnack("Something Unexpected happened! Please try again.", context);
-    }
   }
 }
