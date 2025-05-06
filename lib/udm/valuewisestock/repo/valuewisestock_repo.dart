@@ -13,7 +13,7 @@ class ValueWiseStockRepo {
   static final ValueWiseStockRepo _instance = ValueWiseStockRepo._privateConstructor();
   static ValueWiseStockRepo get instance => _instance;
 
-  List<ValueWiseStockRlwData> dropdowndata_UDMRlyList = [];
+  var dropdowndata_UDMRlyList = [];
 
   //List<CrnSmryData> crnsummaryData = [];
   //List<CrnsumrylinkData> crnsummarylinkData = [];
@@ -47,9 +47,11 @@ class ValueWiseStockRepo {
           var listJson = listdata['data'];
           if(listJson != null) {
             var rlyData = listJson;
+            debugPrint("app railway data0 $rlyData");
             dropdowndata_UDMRlyList.addAll(rlyData);
             //dropdowndata_UDMRlyList = listJson.map<ValueWiseStockRlwData>((val) => ValueWiseStockRlwData.fromJson(val)).toList();
-            //dropdowndata_UDMRlyList.sort((a, b) => a.value!.compareTo(b.value!));
+            dropdowndata_UDMRlyList.sort((a, b) => a['value'].compareTo(b['value']));
+            debugPrint("app railway data1 $dropdowndata_UDMRlyList");
             return dropdowndata_UDMRlyList;
           } else {
             IRUDMConstants().showSnack('Something Unexpected happened! Please try again.', context);

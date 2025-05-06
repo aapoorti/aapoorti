@@ -260,7 +260,12 @@ class ValueWiseProvider with ChangeNotifier{
   // --- Unit Name Data ---
   List<dynamic> get unitnamelistData => dropdowndata_UDMDivision;
   void setunitnamelistData(List<dynamic> unitnamelist) {
-    dropdowndata_UDMDivision = unitnamelist;
+    final seen = <String>{};
+    final distinctList = unitnamelist.where((item) {
+      final identifier = '${item['intcode']}_${item['value']}';
+      return seen.add(identifier); // Only adds if not already in set
+    }).toList();
+    dropdowndata_UDMDivision = distinctList;
   }
   UnitnameDataState get unitnamedatastatus => _unitnameDataState;
   void setUnitnameStatusState(UnitnameDataState currentState) {
@@ -318,9 +323,9 @@ class ValueWiseProvider with ChangeNotifier{
           railway = "All";
           rlyCode = "-1";
           value.forEach((item) {
-            if(item.intcode.toString() == prefs.getString('userzone')){
-              railway = item.value.toString();
-              rlyCode = item.intcode.toString();
+            if(item['intcode'].toString() == prefs.getString('userzone')){
+              railway = item['value'].toString();
+              rlyCode = item['intcode'].toString();
             }
           });
           setRlwStatusState(RailwayDataState.Finished);
@@ -445,6 +450,7 @@ class ValueWiseProvider with ChangeNotifier{
             prefs.getString('subconsigneecode'),
             context);
         data.then((value) {
+          debugPrint("Unit name0 $value");
           if (value.isEmpty || value.length == 0) {
             setUnitnameStatusState(UnitnameDataState.Idle);
             IRUDMConstants().showSnack('Data not found.', context);
@@ -482,6 +488,7 @@ class ValueWiseProvider with ChangeNotifier{
             prefs.getString('subconsigneecode'),
             context);
         data.then((value) {
+          debugPrint("Unit name1 $value");
           if (value.isEmpty || value.length == 0) {
             setUnitnameStatusState(UnitnameDataState.Idle);
             IRUDMConstants().showSnack('Data not found.', context);
@@ -796,7 +803,7 @@ class ValueWiseProvider with ChangeNotifier{
   ,stkAvlValue,context) async {
     setState(ValueWiseState.Busy);
     countData = 0;
-    countVis=false;
+    countVis = false;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       var response = await Network.postDataWithAPIM('UDM/vws/ValueWiseStockResult/V1.0.0/ValueWiseStockResult','ValueWiseStockResult',

@@ -51,8 +51,8 @@ class _StatusDropDownState extends State<StatusDropDown> {
   String? plNo;
   String? payingAuthority;
   String? descriptionInput;
-  String? tDate;
-  String? fDate;
+  String? toDate;
+  String? fromDate;
   TextEditingController description = new TextEditingController();
   //==============================================
   final _formKey = GlobalKey<FormBuilderState>();
@@ -103,7 +103,6 @@ class _StatusDropDownState extends State<StatusDropDown> {
             icon: const Icon(Icons.home, color: Colors.white, size: 22),
             onPressed: () {
               Navigator.of(context).pop();
-              //Feedback.forTap(context);
             },
           ),
         ],
@@ -125,9 +124,60 @@ class _StatusDropDownState extends State<StatusDropDown> {
     return all;
   }
 
+  // Added date picker functionality
+  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
+    final DateTime currentDate = DateTime.now();
+    final DateTime initialDate =
+    isStartDate ? _parseDate(fromDate!) : _parseDate(toDate!);
+
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.blue.shade800,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        final String formattedDate =
+            '${pickedDate.day.toString().padLeft(2, '0')}-'
+            '${pickedDate.month.toString().padLeft(2, '0')}-'
+            '${pickedDate.year}';
+
+        if (isStartDate) {
+          fromDate = formattedDate;
+        } else {
+          toDate = formattedDate;
+        }
+      });
+    }
+  }
+
+  // Helper method to parse date string to DateTime
+  DateTime _parseDate(String dateStr) {
+    List<String> parts = dateStr.split('-');
+    return DateTime(
+      int.parse(parts[2]), // year
+      int.parse(parts[1]), // month
+      int.parse(parts[0]), // day
+    );
+  }
+
   Widget searchDrawer(Size mq, LanguageProvider language) {
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       children: [
         FormBuilder(
           key: _formKey,
@@ -135,104 +185,146 @@ class _StatusDropDownState extends State<StatusDropDown> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: FormBuilderDateTimePicker(
-                        name: 'FromDate',
-                        initialDate:
-                            DateTime.now().subtract(const Duration(days: 367)),
-                        initialValue:
-                            DateTime.now().subtract(const Duration(days: 367)),
-                        inputType: InputType.date,
-                        format: DateFormat('dd-MM-yyyy'),
-                        decoration: InputDecoration(
-                            labelText: language.text('podatefrom'),
-                            hintText: language.text('podatefrom'),
-                            contentPadding: EdgeInsetsDirectional.all(10),
-                            suffixIcon: Icon(Icons.calendar_month),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey, width: 1))),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: FormBuilderDateTimePicker(
-                        name: 'ToDate',
-                        initialDate: DateTime.now(),
-                        initialValue: DateTime.now(),
-                        inputType: InputType.date,
-                        format: DateFormat('dd-MM-yyyy'),
-                        decoration: InputDecoration(
-                            labelText: language.text('podateto'),
-                            hintText: language.text('podateto'),
-                            contentPadding: EdgeInsetsDirectional.all(10),
-                            suffixIcon: Icon(Icons.calendar_month),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey, width: 1))),
-                      ),
-                    ),
-                  ],
-                ),
-                // DropdownButtonFormField(
-                //   isExpanded: true,
-                //   value: railway,
-                //   icon: Icon(Icons.arrow_drop_down),
-                //   decoration: InputDecoration(
-                //     labelText: language.text('consigneerailway'),
-                //     hintText: '${language.text('select')} ${language.text('railway')}',
-                //     floatingLabelBehavior: FloatingLabelBehavior.always,
-                //     alignLabelWithHint: true,
-                //     labelStyle: Theme.of(context)
-                //         .primaryTextTheme
-                //         .caption!
-                //         .copyWith(color: Colors.black),
-                //     border: const OutlineInputBorder(),
-                //     contentPadding: EdgeInsetsDirectional.all(10),
-                //   ),
-                //   disabledHint: Text('${language.text('select')} ${language.text('railway')}'),
-                //   items: dropdowndata_UDMRlyList.map((item) {
-                //     return DropdownMenuItem(
-                //         child: Text(item['value']),
-                //         value: item['intcode'].toString());
-                //   }).toList(),
-                //   onChanged: (String? newValue) {
-                //     try {
-                //       setState(() {
-                //         railway = newValue;
-                //         dropdowndata_UDMUnitType.clear();
-                //         dropdowndata_UDMDivision.clear();
-                //         dropdowndata_UDMUserDepot.clear();
-                //         dropdowndata_UDMConsigneeInBillStatus.clear();
-                //         unitName = null;
-                //         fetchUnit(railway, "");
-                //         fetchConsignee(railway, "", "", "",  "");
-                //         dropdowndata_UDMUnitType.add(_all());
-                //         dropdowndata_UDMDivision.add(_all());
-                //         dropdowndata_UDMUserDepot.add(_all());
-                //         dropdowndata_UDMConsigneeInBillStatus.add(_all());
-                //
-                //         division = '-1';
-                //         department = '-1';
-                //         userDepot = '-1';
-                //         consignee = '-1';
-                //         description.clear();
-                //       });
-                //     } catch (e) {
-                //       print("execption" + e.toString());
-                //     }
-                //   },
-                //   validator: (dynamic val) {
-                //     if (val != null) {
-                //       return null;
-                //     } else {
-                //       return 'Please select Railway ';
-                //     }
-                //   },
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //   children: [
+                //     Expanded(
+                //       child: FormBuilderDateTimePicker(
+                //         name: 'FromDate',
+                //         initialDate:
+                //             DateTime.now().subtract(const Duration(days: 367)),
+                //         initialValue:
+                //             DateTime.now().subtract(const Duration(days: 367)),
+                //         inputType: InputType.date,
+                //         format: DateFormat('dd-MM-yyyy'),
+                //         decoration: InputDecoration(
+                //             labelText: language.text('podatefrom'),
+                //             hintText: language.text('podatefrom'),
+                //             contentPadding: EdgeInsetsDirectional.all(10),
+                //             suffixIcon: Icon(Icons.calendar_month),
+                //             enabledBorder: OutlineInputBorder(
+                //                 borderSide:
+                //                     BorderSide(color: Colors.grey, width: 1))),
+                //       ),
+                //     ),
+                //     SizedBox(width: 10),
+                //     Expanded(
+                //       child: FormBuilderDateTimePicker(
+                //         name: 'ToDate',
+                //         initialDate: DateTime.now(),
+                //         initialValue: DateTime.now(),
+                //         inputType: InputType.date,
+                //         format: DateFormat('dd-MM-yyyy'),
+                //         decoration: InputDecoration(
+                //             labelText: language.text('podateto'),
+                //             hintText: language.text('podateto'),
+                //             contentPadding: EdgeInsetsDirectional.all(10),
+                //             suffixIcon: Icon(Icons.calendar_month),
+                //             enabledBorder: OutlineInputBorder(
+                //                 borderSide:
+                //                     BorderSide(color: Colors.grey, width: 1))),
+                //       ),
+                //     ),
+                //   ],
                 // ),
+                Card(
+                  elevation: 1.5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(language.text('from'),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              InkWell(
+                                onTap: () {
+                                  _selectDate(context, true);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 9, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    border:
+                                    Border.all(color: Colors.grey.shade300),
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.white,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          fromDate!,
+                                          style: const TextStyle(fontSize: 13),
+                                        ),
+                                      ),
+                                      Icon(Icons.calendar_today,
+                                          size: 14,
+                                          color: Colors.blue.shade800),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(language.text('to'),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              InkWell(
+                                onTap: () {
+                                  _selectDate(context, false);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 9, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    border:
+                                    Border.all(color: Colors.grey.shade300),
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.white,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          toDate!,
+                                          style: const TextStyle(fontSize: 13),
+                                        ),
+                                      ),
+                                      Icon(Icons.calendar_today,
+                                          size: 14,
+                                          color: Colors.blue.shade800),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 SizedBox(height: 10),
                 Text(language.text('consigneerailway'),
                     style: TextStyle(
@@ -242,13 +334,13 @@ class _StatusDropDownState extends State<StatusDropDown> {
                 SizedBox(height: 10),
                 Container(
                   height: 45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      border: Border.all(color: Colors.grey, width: 1)),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius:
+                      BorderRadius.circular(7), // Slightly reduced radius
+                      color: Colors.white,
+                  ),
                   child: DropdownSearch<String>(
-                    //mode: Mode.DIALOG,
-                    //showSearchBox: true,
-                    //showSelectedItems: true,
                     selectedItem: railwayname,
                     popupProps: PopupPropsMultiSelection.menu(
                       showSearchBox: true,
@@ -333,12 +425,12 @@ class _StatusDropDownState extends State<StatusDropDown> {
                 Container(
                   height: 45,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      border: Border.all(color: Colors.grey, width: 1)),
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius:
+                    BorderRadius.circular(7), // Slightly reduced radius
+                    color: Colors.white,
+                  ),
                   child: DropdownSearch<String>(
-                    //mode: Mode.DIALOG,
-                    //showSearchBox: true,
-                    //showSelectedItems: true,
                     selectedItem: payingrlyname,
                     popupProps: PopupPropsMultiSelection.menu(
                       showSearchBox: true,
@@ -411,75 +503,18 @@ class _StatusDropDownState extends State<StatusDropDown> {
                     },
                   ),
                 ),
-                // DropdownButtonFormField(
-                //   isExpanded: true,
-                //   value: payingAuthority,
-                //   icon: Icon(Icons.arrow_drop_down),
-                //   decoration: InputDecoration(
-                //     labelText: language.text('payingauthorityrailway'),
-                //     hintText: '${language.text('select')} ${language.text('railway')}',
-                //     floatingLabelBehavior: FloatingLabelBehavior.always,
-                //     alignLabelWithHint: true,
-                //     labelStyle: Theme.of(context)
-                //         .primaryTextTheme
-                //         .caption!
-                //         .copyWith(color: Colors.black),
-                //     border: const OutlineInputBorder(),
-                //     contentPadding: EdgeInsetsDirectional.all(10),
-                //   ),
-                //   disabledHint:
-                //   Text('${language.text('select')} ${language.text('railway')}'),
-                //   // hint: Text('Select Railway'),
-                //   items: dropdowndata_UDMRlyList.map((item) {
-                //     return DropdownMenuItem(
-                //         child: Text(item['value']),
-                //         value: item['intcode'].toString());
-                //   }).toList(),
-                //   onChanged: (String? newValue) {
-                //     try {
-                //       setState(() {
-                //         payingAuthority = newValue;
-                //         dropdowndata_UDMUnitType.clear();
-                //         dropdowndata_UDMDivision.clear();
-                //         dropdowndata_UDMUserDepot.clear();
-                //         dropdowndata_UDMConsigneeInBillStatus.clear();
-                //         unitName = null;
-                //         fetchUnit(railway, "");
-                //         fetchConsignee(railway, "", "", "",  "");
-                //         dropdowndata_UDMUnitType.add(_all());
-                //         dropdowndata_UDMDivision.add(_all());
-                //         dropdowndata_UDMUserDepot.add(_all());
-                //         dropdowndata_UDMConsigneeInBillStatus.add(_all());
-                //
-                //         division = '-1';
-                //         department = '-1';
-                //         userDepot = '-1';
-                //         description.clear();
-                //       });
-                //     } catch (e) {
-                //       print("execption" + e.toString());
-                //     }
-                //   },
-                //   validator: (dynamic val) {
-                //     if (val != null) {
-                //       return null;
-                //     } else {
-                //       return 'Please select consignee details ';
-                //     }
-                //   },
-                // ),
                 SizedBox(height: 10),
                 Text(language.text('consigneedetails'), style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400)),
                 SizedBox(height: 10),
                 Container(
                   height: 45,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      border: Border.all(color: Colors.grey, width: 1)),
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius:
+                    BorderRadius.circular(7), // Slightly reduced radius
+                    color: Colors.white,
+                  ),
                   child: DropdownSearch<String>(
-                    //mode: Mode.DIALOG,
-                    //showSearchBox: true,
-                    //showSelectedItems: true,
                     selectedItem: userDepotName.toString().length > 35 ? userDepotName.toString().substring(0, 32) : userDepotName.toString(),
                     popupProps: PopupPropsMultiSelection.menu(
                       showSearchBox: true,
@@ -530,59 +565,6 @@ class _StatusDropDownState extends State<StatusDropDown> {
                     },
                   ),
                 ),
-                // DropdownButtonFormField(
-                //   isExpanded: true,
-                //   value: userDepot,
-                //   icon: Icon(Icons.arrow_drop_down),
-                //   decoration: InputDecoration(
-                //     labelText: language.text('consigneedetails'),
-                //     hintText:
-                //         //'${language.text('select')} ${language.text('departmentName')}',
-                //         '${language.text('consigneedetails')}',
-                //     floatingLabelBehavior: FloatingLabelBehavior.always,
-                //     alignLabelWithHint: true,
-                //     labelStyle: Theme.of(context)
-                //         .primaryTextTheme
-                //         .caption!
-                //         .copyWith(color: Colors.black),
-                //     border: const OutlineInputBorder(),
-                //     contentPadding: EdgeInsetsDirectional.all(10),
-                //   ),
-                //   disabledHint: Text(
-                //       '${language.text('select')} ${language.text('consigneedetails')}'),
-                //   // hint: Text('Select Railway'),
-                //   items: dropdowndata_UDMConsigneeInBillStatus.map((item) {
-                //     return DropdownMenuItem(
-                //         child: Text(() {
-                //           if (item['intcode'].toString() == '-1') {
-                //             return item['value'];
-                //           } else {
-                //             return item['intcode'].toString() +
-                //                 '-' +
-                //                 item['value'];
-                //           }
-                //         }()),
-                //         value: item['intcode'].toString());
-                //   }).toList(),
-                //   onChanged: (String? newValue) {
-                //     try {
-                //       setState(() {
-                //         userDepot = newValue;
-                //         description.clear();
-                //       });
-                //     } catch (e) {
-                //       print("execption" + e.toString());
-                //     }
-                //     fetchConsignee(railway, "", "", "", "");
-                //   },
-                //   validator: (dynamic val) {
-                //     if (val != null) {
-                //       return null;
-                //     } else {
-                //       return 'Please select consignee details ';
-                //     }
-                //   },
-                // ),
                 SizedBox(height: 10),
                 Text('${language.text('entersearchcriteria')}', style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400)),
                 SizedBox(height: 10),
@@ -595,9 +577,9 @@ class _StatusDropDownState extends State<StatusDropDown> {
                     return null;
                   },
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 1.0),
+                    contentPadding: EdgeInsets.fromLTRB(10.0, 20.0, 5.0, 1.0),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.blue, width: 1.0),
+                      borderSide: const BorderSide(color: Colors.grey, width: 1.0),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     errorBorder: OutlineInputBorder(
@@ -613,45 +595,75 @@ class _StatusDropDownState extends State<StatusDropDown> {
                     floatingLabelBehavior: FloatingLabelBehavior.auto,
                   ),
                 ),
-                // TextFormField(
-                //   controller: description,
-                //   validator: (val) {
-                //     if (val == null || val.length < 3) {
-                //       return language.text('plNoErrorText1');
-                //     }
-                //     return null;
-                //   },
-                //   decoration: InputDecoration(
-                //     labelText: '${language.text('entersearchcriteria')}',
-                //     hintText: language.text('searchcriteria'),
-                //     errorText:
-                //         _autoValidate ? language.text('plNoErrorText1') : null,
-                //     floatingLabelBehavior: FloatingLabelBehavior.always,
-                //     alignLabelWithHint: true,
-                //     labelStyle: Theme.of(context)
-                //         .primaryTextTheme
-                //         .caption!
-                //         .copyWith(color: Colors.black),
-                //     border: const OutlineInputBorder(),
-                //     contentPadding: EdgeInsetsDirectional.all(10),
-                //   ),
-                // ),
+
                 SizedBox(height: 20),
+                //----- Butto Here------
+
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //   children: [
+                //     Container(
+                //       height: 50,
+                //       width: 160,
+                //       child: OutlinedButton(
+                //         style: IRUDMConstants.bStyle(),
+                //         onPressed: () {
+                //           setState(() {
+                //             if(division == null || railway == null || unitName == null || department == null || userDepot == null) {
+                //               _validateInputs();
+                //             } else if(description.text.toString().trim().length < 3 || description.text.isEmpty) {
+                //               _validateInputs();
+                //               IRUDMConstants().showSnack(language.text('plNoErrorText1'), context);
+                //             } else {
+                //               statusProvider = Provider.of<StatusProvider>(context, listen: false);
+                //               Navigator.of(context).pushNamed(StatusDiaplayScreen.routeName);
+                //               statusProvider.fetchAndStoreItemsListwithdata(railway!, _formKey.currentState!.fields['FromDate']!.value,
+                //                   _formKey.currentState!.fields['ToDate']!.value,
+                //                   userDepot!,
+                //                   payingAuthority!,
+                //                   description.text.trim(),
+                //                   context);
+                //             }
+                //           });
+                //         },
+                //         child: Text(language.text('getDetails'),
+                //             style: TextStyle(
+                //               fontSize: 18,
+                //               fontWeight: FontWeight.bold,
+                //               color: AapoortiConstants.primary,
+                //             )),
+                //       ),
+                //     ),
+                //     Container(
+                //       width: 160,
+                //       height: 50,
+                //       child: OutlinedButton(
+                //         style: IRUDMConstants.bStyle(),
+                //         onPressed: () {
+                //           setState(() {
+                //             _formKey.currentState!.reset();
+                //             description.clear();
+                //             default_data();
+                //           });
+                //         },
+                //         child: Text(language.text('reset'),
+                //             style: TextStyle(
+                //               fontSize: 18,
+                //               fontWeight: FontWeight.bold,
+                //               color: AapoortiConstants.primary,
+                //             )),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Container(
-                      height: 50,
-                      width: 160,
-                      child: OutlinedButton(
-                        style: IRUDMConstants.bStyle(),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                        ),
                         onPressed: () {
-                          // print("from date ${_formKey.currentState!.fields['FromDate']!.value}");
-                          // print("to date ${_formKey.currentState!.fields['ToDate']!.value}");
-                          // print("railway code $railway");
-                          // print("User depot $userDepot");
-                          // print("paying auth $payingAuthority");
-                          // print("discription ${description.text}");
                           setState(() {
                             if(division == null || railway == null || unitName == null || department == null || userDepot == null) {
                               _validateInputs();
@@ -661,8 +673,8 @@ class _StatusDropDownState extends State<StatusDropDown> {
                             } else {
                               statusProvider = Provider.of<StatusProvider>(context, listen: false);
                               Navigator.of(context).pushNamed(StatusDiaplayScreen.routeName);
-                              statusProvider.fetchAndStoreItemsListwithdata(railway!, _formKey.currentState!.fields['FromDate']!.value,
-                                  _formKey.currentState!.fields['ToDate']!.value,
+                              statusProvider.fetchAndStoreItemsListwithdata(railway!, fromDate,
+                                  toDate,
                                   userDepot!,
                                   payingAuthority!,
                                   description.text.trim(),
@@ -670,19 +682,21 @@ class _StatusDropDownState extends State<StatusDropDown> {
                             }
                           });
                         },
-                        child: Text(language.text('getDetails'),
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: AapoortiConstants.primary,
-                            )),
+                        child: Text(
+                          language.text('getDetails'),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ),
-                    Container(
-                      width: 160,
-                      height: 50,
+                    const SizedBox(width: 12),
+                    Expanded(
                       child: OutlinedButton(
-                        style: IRUDMConstants.bStyle(),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                        ),
                         onPressed: () {
                           setState(() {
                             _formKey.currentState!.reset();
@@ -690,12 +704,13 @@ class _StatusDropDownState extends State<StatusDropDown> {
                             default_data();
                           });
                         },
-                        child: Text(language.text('reset'),
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: AapoortiConstants.primary,
-                            )),
+                        child: Text(
+                          language.text('reset'),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -708,10 +723,8 @@ class _StatusDropDownState extends State<StatusDropDown> {
 
   void _validateInputs() {
     if (_formKey.currentState!.validate()) {
-      print("If all data are correct then save data to out variables");
       _formKey.currentState!.save();
     } else {
-      print("If all data are not valid then start auto validation.");
       setState(() {
         _autoValidate = true;
       });
@@ -733,11 +746,17 @@ class _StatusDropDownState extends State<StatusDropDown> {
   }
 
   void initState() {
-    setState(() {
-      default_data();
-    });
-    // post_result();
     super.initState();
+    default_data();
+    getInitData();
+  }
+
+  void getInitData() {
+    DateTime frdate = DateTime.now().subtract(const Duration(days: 92));
+    DateTime tdate = DateTime.now();
+    final DateFormat formatter = DateFormat('dd-MM-yyyy');
+    fromDate = formatter.format(frdate);
+    toDate = formatter.format(tdate);
   }
 
   Future<dynamic> fetchUnit(String? value, String unit_data) async {
@@ -1210,16 +1229,4 @@ class _StatusDropDownState extends State<StatusDropDown> {
   void showInSnackBar(String value) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }
-
-  // void _validateInputs() {
-  //   if (_formKey.currentState!.validate()) {
-  //     print("If all data are correct then save data to out variables");
-  //     _formKey.currentState!.save();
-  //   } else {
-  //     print("If all data are not valid then start auto validation.");
-  //     setState(() {
-  //       _autoValidate = true;
-  //     });
-  //   }
-  // }
 }

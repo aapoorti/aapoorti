@@ -1,5 +1,6 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
 import 'package:flutter_app/udm/localization/languageHelper.dart';
@@ -18,33 +19,84 @@ import 'package:share_plus/share_plus.dart';
 
 class NonMovingScreen extends StatefulWidget {
   static const routeName = "/NonMoving-screen";
+
+  // final String railwayCode;
+  // final String unittypeCode;
+  // final String unitnameCode;
+  // final String deptCode;
+  // final String userDepotCode;
+  // final String userSubDepotCode;
+  // final String itemUsge;
+  // final String itemUnit;
+  // final String itemCat;
+  // final String sns;
+  // final String selectedMonth;
+  //
+  // const NonMovingScreen({Key? key, required this.railwayCode, required this.unittypeCode, required this.unitnameCode, required this.deptCode, required this.userDepotCode, required this.userSubDepotCode, required this.itemUsge, required this.itemUnit, required this.itemCat, required this.sns, required this.selectedMonth}) : super(key: key);
+
   @override
   _StockListScreenState createState() => _StockListScreenState();
 }
 
-class _StockListScreenState extends State<NonMovingScreen>
-    with SingleTickerProviderStateMixin {
-  // NonMovingProvider NonMovingProvider;
+class _StockListScreenState extends State<NonMovingScreen> with SingleTickerProviderStateMixin {
   String aacData = '';
   var totalValue = 0.0;
+
+
+
   @override
   void initState() {
-    FeatureDiscovery.hasPreviouslyCompleted(context, 'JumpButton')
-        .then((value) {
-      if (value == true) {
-        setState(() {
-          _isDiscovering = false;
-        });
-      }
-    });
+    // FeatureDiscovery.hasPreviouslyCompleted(context, 'JumpButton').then((value) {
+    //   if(value == true) {
+    //     setState(() {
+    //       _isDiscovering = false;
+    //     });
+    //   }
+    // });
     super.initState();
   }
 
+  late List<String> passedItems;
+
   @override
   void didChangeDependencies() {
-    /* Future.delayed(
-        Duration.zero, () => NonMovingProvider.fetchAndStoreStockList());*/
     super.didChangeDependencies();
+
+    final args = ModalRoute.of(context)?.settings.arguments;
+
+    List<String> passedItems = [];
+    if (args != null && args is List) {
+      passedItems = args.map((e) => e.toString()).toList();
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        getMovingData(passedItems);
+      });
+    }
+    else {
+      passedItems = [];
+    }
+
+  }
+
+  Future<void> getMovingData(List<String> passedItems) async {
+    if(passedItems.isNotEmpty) {
+      NonMovingProvider itemListProvider = Provider.of<NonMovingProvider>(context, listen: false);
+      itemListProvider.fetchAndStoreItemsListwithdata(
+          passedItems[0],
+          passedItems[1],
+          passedItems[2],
+          passedItems[3],
+          passedItems[4],
+          passedItems[5],
+          passedItems[6],
+          passedItems[7],
+          passedItems[8],
+          passedItems[9],
+          passedItems[10],
+          context);
+    }
+    else{
+      debugPrint("jjnjwejdjkwjke");
+    }
   }
 
   ScrollController _scrollController = ScrollController();
@@ -66,12 +118,10 @@ class _StockListScreenState extends State<NonMovingScreen>
           Consumer<NonMovingProvider>(builder: (_, NonMovingProvider, __) {
             if (NonMovingProvider.state == NonMovingState.Busy) {
               return Center(child: CircularProgressIndicator());
-            } else if (NonMovingProvider.state ==
-                NonMovingState.FinishedWithError) {
-              //  Navigator.of(context).pop();
+            }
+            else if (NonMovingProvider.state == NonMovingState.FinishedWithError) {
               Future.delayed(
-                  Duration.zero,
-                      () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  Duration.zero, () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.redAccent,
                     duration: Duration(seconds: 3),
                     content: Text(
@@ -86,7 +136,6 @@ class _StockListScreenState extends State<NonMovingScreen>
               return Container();
             } else if (NonMovingProvider.state == NonMovingState.Finished) {
               Future.delayed(Duration.zero, () {
-                //print("setting ${DateTime.now()}");
                 if (_isInit) {
                   setState(() {
                     _showFAB = NonMovingProvider.nonMovingList!.length > 20;
@@ -102,7 +151,6 @@ class _StockListScreenState extends State<NonMovingScreen>
               });
               return NotificationListener<ScrollNotification>(
                   onNotification: (scrollNotif) {
-                    // //print(scrollNotif);
                     if (scrollNotif is ScrollStartNotification ||
                         scrollNotif is ScrollUpdateNotification) {
                       setState(() {
@@ -190,11 +238,12 @@ class _StockListScreenState extends State<NonMovingScreen>
     for (int i = 0; i < list.length; i++) {
       if (list[i].stkvalue != 'NA') {
         totalValue = totalValue + double.parse(list[i].stkvalue!);
-        assert(totalValue is double);
       }
     }
     return totalValue.toStringAsFixed(2);
   }
+
+
 }
 
 class ProductBox extends StatelessWidget {
@@ -206,7 +255,6 @@ class ProductBox extends StatelessWidget {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
     return Container(
         padding: EdgeInsets.only(left: 6, top: 9, right: 6, bottom: 9),
-        //padding: EdgeInsets.all(4),
         child: Card(
             elevation: 6,
             color: Colors.white,
@@ -223,7 +271,7 @@ class ProductBox extends StatelessWidget {
                       (index! + 1).toString() + '.',
                       softWrap: false,
                       style:
-                      new TextStyle(fontSize: 14, color: Colors.indigo[800]
+                      TextStyle(fontSize: 14, color: Colors.indigo[800]
                         //fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -247,7 +295,7 @@ class ProductBox extends StatelessWidget {
                                       child: Text(
                                         language.text('consigneeDepot'),
                                         softWrap: false,
-                                        style: new TextStyle(
+                                        style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.indigo[800]
                                           //fontWeight: FontWeight.bold,
@@ -278,7 +326,7 @@ class ProductBox extends StatelessWidget {
                                     flex: 3,
                                     child: Text(
                                       '${language.text('ledgerNo')} / ${language.text('ledgerFolioNo')}',
-                                      style: new TextStyle(
+                                      style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.indigo[800]
                                         //fontWeight: FontWeight.bold,
@@ -310,7 +358,7 @@ class ProductBox extends StatelessWidget {
                                     flex: 3,
                                     child: Text(
                                       language.text('pl/itemCode'),
-                                      style: new TextStyle(
+                                      style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.indigo[800]
                                         //fontWeight: FontWeight.bold,
@@ -321,7 +369,7 @@ class ProductBox extends StatelessWidget {
                                     flex: 4,
                                     child: Text(
                                       item!.ledgerfolioplno!,
-                                      style: new TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.black87,
                                       ),
@@ -337,7 +385,7 @@ class ProductBox extends StatelessWidget {
                                     child: Text(
                                       '${language.text('itemType')} / \n${language.text('usage')} / \n${language.text('category')}',
                                       // 'Item Type /\n Usage / \n Category',
-                                      style: new TextStyle(
+                                      style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.indigo[800]
                                         //fontWeight: FontWeight.bold,
@@ -352,7 +400,7 @@ class ProductBox extends StatelessWidget {
                                           _itemUsage() +
                                           "\n" +
                                           item!.itemcat!,
-                                      style: new TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.black87,
                                       ),
@@ -384,7 +432,7 @@ class ProductBox extends StatelessWidget {
                                             return 'Non-Stock';
                                           }
                                         }(),
-                                        style: new TextStyle(
+                                        style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.black87,
                                         ),
@@ -399,7 +447,7 @@ class ProductBox extends StatelessWidget {
                                     flex: 3,
                                     child: Text(
                                       '${language.text('lastReceipt')} / ${language.text('issueDate')}',
-                                      style: new TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.indigo[800],
                                         // fontWeight: FontWeight.bold,
@@ -410,7 +458,7 @@ class ProductBox extends StatelessWidget {
                                       flex: 4,
                                       child: Text(
                                         item!.lmrdt! + "\n" + item!.lmidt! + "",
-                                        style: new TextStyle(
+                                        style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.black87,
                                         ),
@@ -424,7 +472,7 @@ class ProductBox extends StatelessWidget {
                                       flex: 3,
                                       child: Text(
                                         '${language.text('stock')} / ${language.text('unit')}',
-                                        style: new TextStyle(
+                                        style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                           color: Colors
@@ -435,7 +483,7 @@ class ProductBox extends StatelessWidget {
                                       flex: 4,
                                       child: Text(
                                         item!.stkqty! + ' ' + item!.stkunit!,
-                                        style: new TextStyle(
+                                        style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
                                           color: Colors.deepOrangeAccent,
@@ -450,7 +498,7 @@ class ProductBox extends StatelessWidget {
                                       flex: 3,
                                       child: Text(
                                         language.text('thresholdLimit'),
-                                        style: new TextStyle(
+                                        style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.indigo[800],
                                           //fontWeight: FontWeight.bold,
@@ -460,7 +508,7 @@ class ProductBox extends StatelessWidget {
                                       flex: 4,
                                       child: Text(
                                         item!.thresholdlimit!,
-                                        style: new TextStyle(
+                                        style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.black87,
                                         ),
@@ -474,7 +522,7 @@ class ProductBox extends StatelessWidget {
                                     flex: 3,
                                     child: Text(
                                       language.text('averageRateRs'),
-                                      style: new TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.indigo[800],
                                         //fontWeight: FontWeight.bold,
@@ -485,7 +533,7 @@ class ProductBox extends StatelessWidget {
                                       flex: 4,
                                       child: Text(
                                         item!.bar!,
-                                        style: new TextStyle(
+                                        style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.black87,
                                         ),
@@ -499,7 +547,7 @@ class ProductBox extends StatelessWidget {
                                     flex: 3,
                                     child: Text(
                                       language.text('valueRs'),
-                                      style: new TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         color: Colors
@@ -511,7 +559,7 @@ class ProductBox extends StatelessWidget {
                                       flex: 4,
                                       child: Text(
                                         item!.stkvalue!,
-                                        style: new TextStyle(
+                                        style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.deepOrangeAccent,

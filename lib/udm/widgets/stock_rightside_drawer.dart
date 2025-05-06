@@ -1371,10 +1371,7 @@ class _StockRightSideDrawerState extends State<StockRightSideDrawer> {
                   userDepotValue = item['intcode'].toString() + '-' + item['value'];
                 }
               });
-              print("sub depot calling now new");
               def_fetchSubDepot(rai, depot_id, userSubDep);
-            } else {
-
             }
           });
         }

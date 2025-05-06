@@ -309,10 +309,10 @@ class CrnSummaryViewModel with ChangeNotifier{
             IRUDMConstants().showSnack('Data not found.', context);
           }
           else if (value.isNotEmpty || value.length != 0) {
+            debugPrint("unit type0 $value");
             setunittypelistData(value);
             value.forEach((item) {
-              if (item['intcode'].toString() ==
-                  prefs.getString('orgunittype')) {
+              if (item['intcode'].toString() == prefs.getString('orgunittype')) {
                 unittype = item['value'].toString();
                 unittypecode = item['intcode'].toString();
               }
@@ -363,6 +363,7 @@ class CrnSummaryViewModel with ChangeNotifier{
             IRUDMConstants().showSnack('Data not found.', context);
           }
           else if (value.isNotEmpty || value.length != 0) {
+            debugPrint("unit type1 $value");
             setunittypelistData(value);
             setUnittypeStatusState(UnittypeDataState.Finished);
             // value.forEach((item) {

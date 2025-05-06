@@ -2208,9 +2208,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> with TickerProviderStat
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            // Handle navigation for each item
-            _navigate(_translate(item.title));
+          onTap: () async{
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            DateTime providedTime = DateTime.parse(prefs.getString('checkExp')!);
+            if (providedTime.isBefore(DateTime.now())) {
+              await fetchToken(context);
+              _navigate(_translate(item.title));
+            } else {
+              _navigate(_translate(item.title));
+            }
 
           },
           borderRadius: BorderRadius.circular(16),

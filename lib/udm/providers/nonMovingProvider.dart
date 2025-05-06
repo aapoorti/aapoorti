@@ -74,6 +74,7 @@ class NonMovingProvider with ChangeNotifier{
   ,itemCategory
   ,stkNstk
   ,stkAvlValue,BuildContext context) async {
+    debugPrint("kfkrkdkkr");
     setState(NonMovingState.Busy);
     countData=0;
     countVis=false;
@@ -89,8 +90,7 @@ class NonMovingProvider with ChangeNotifier{
               +"~"+itemUnit+"~"+itemUsage+"~"+itemCategory+"~"+stkNstk+"~"+stkAvlValue,prefs.getString('token'));
 
 
-      if (response.statusCode == 200) {
-         print(response.body);
+      if(response.statusCode == 200) {
         var listdata = json.decode(response.body);
         if (listdata['status']=='OK') {
           var listJson=listdata['data'];

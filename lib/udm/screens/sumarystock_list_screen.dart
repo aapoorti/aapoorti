@@ -1,5 +1,6 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
@@ -17,9 +18,6 @@ import 'item_details.dart';
 
 class SummaryStockListScreen extends StatefulWidget {
   static const routeName = "/Sumary-Stock-screen";
-
-  //String userDepot, userSubDepot;
-  //SummaryStockListScreen(this.userDepot, this.userSubDepot);
 
   @override
   _SummaryStockListScreenState createState() => _SummaryStockListScreenState();
@@ -41,10 +39,46 @@ class _SummaryStockListScreenState extends State<SummaryStockListScreen> with Si
     super.initState();
   }
 
+  late List<String> passedItems;
+
   @override
   void didChangeDependencies() {
-    // FocusScope.of(context).requestFocus(FocusNode());
     super.didChangeDependencies();
+
+    final args = ModalRoute.of(context)?.settings.arguments;
+
+    List<String> passedItems = [];
+    if (args != null && args is List) {
+      passedItems = args.map((e) => e.toString()).toList();
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        getSummaryStockData(passedItems);
+      });
+    }
+    else {
+      passedItems = [];
+    }
+
+  }
+
+  Future<void> getSummaryStockData(List<String> passedItems) async {
+    if(passedItems.isNotEmpty) {
+      SummaryStockProvider itemListProvider = Provider.of<SummaryStockProvider>(context, listen: false);
+      itemListProvider.fetchAndStoreItemsListwithdata(
+          passedItems[0],
+          passedItems[1],
+          passedItems[2],
+          passedItems[3],
+          passedItems[4],
+          passedItems[5],
+          passedItems[6],
+          passedItems[7],
+          passedItems[8],
+          passedItems[9],
+          context);
+    }
+    else{
+      debugPrint("jjnjwejdjkwjke");
+    }
   }
 
   ScrollController _scrollController = ScrollController();
@@ -56,7 +90,7 @@ class _SummaryStockListScreenState extends State<SummaryStockListScreen> with Si
   @override
   Widget build(BuildContext context) {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
-    final Map<String, dynamic> arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final args = ModalRoute.of(context)?.settings.arguments;
     return Scaffold(
         floatingActionButton: _showFAB ? IRUDMConstants().floatingAnimat(_isScrolling, _isDiscovering, this, _scrollController, context) : const SizedBox(width: 56, height: 120),
         appBar: SearchAppbar(
@@ -153,7 +187,7 @@ class _SummaryStockListScreenState extends State<SummaryStockListScreen> with Si
                                         return ProductBox(
                                           item: SummaryStockProvider.stockist![i],
                                           index: i,
-                                          arguments: arguments,
+                                          arguments: args,
                                         );
                                       }),
                                 )
@@ -173,7 +207,6 @@ class _SummaryStockListScreenState extends State<SummaryStockListScreen> with Si
     for (int i = 0; i < list.length; i++) {
       if (list[i].sTKVALUE != 'NA') {
         totalValue = totalValue + double.parse(list[i].sTKVALUE!);
-        assert(totalValue is double);
       }
     }
     return totalValue.toStringAsFixed(2);
@@ -183,7 +216,7 @@ class _SummaryStockListScreenState extends State<SummaryStockListScreen> with Si
 class ProductBox extends StatelessWidget {
   final SummaryStock? item;
   final int? index;
-  final Map<String, dynamic>? arguments;
+  final arguments;
   const ProductBox({this.item, this.index, this.arguments});
   Widget build(BuildContext context) {
     LanguageProvider language = Provider.of<LanguageProvider>(context);
@@ -305,7 +338,7 @@ class ProductBox extends StatelessWidget {
                                     child: Text(
                                       language.text('stockNonStock'),
                                       // 'Stock/Non-Stock',
-                                      style: new TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.indigo[800],
                                       ),
@@ -564,7 +597,7 @@ class ProductBox extends StatelessWidget {
                                           onPressed: () {
                                             Future.delayed(Duration.zero, () {
                                               Navigator.push(context, MaterialPageRoute(builder: (context) => ItemDetails(item!.oRGZONE, item!.iSSUECCODE, item!.sUBCONSCODE)),
-                                              );
+                                            );
                                             });
                                           },
                                           child: Icon(
@@ -585,11 +618,11 @@ class ProductBox extends StatelessWidget {
                                             var todate = formatter.format(tdate);
                                             Provider.of<SummaryStockProvider>(context, listen: false).fetchSummaryDetail(
                                                 item!.oRGZONE,
-                                                arguments!['unitType'].toString(),
-                                                arguments!['unitname'].toString(),
-                                                arguments!['department'].toString(),
-                                                arguments!['userdepot'].toString(),
-                                                arguments!['usersubdepot'].toString(),
+                                                arguments[1].toString(),
+                                                arguments[2].toString(),
+                                                arguments[3].toString(),
+                                                arguments[4].toString(),
+                                                arguments[5].toString(),
                                                 item!.lEDGERNO,
                                                 item!.lEDGERFOLIONO,
                                                 item!.lEDGERFOLIOPLNO,
@@ -598,18 +631,6 @@ class ProductBox extends StatelessWidget {
                                                 context).then((value) => _showModelSheet(fromdate, todate, context));
                                           },
                                           child: Provider.of<SummaryStockProvider>(context, listen: false).summarystockresultstate == SummaryStockResultState.Busy ? CircularProgressIndicator(strokeWidth: 2.0, color: Colors.blue) : Icon(Icons.description, color: Colors.white)),
-                                      // ElevatedButton(
-                                      //     style: ElevatedButton.styleFrom(
-                                      //       shape: CircleBorder(),
-                                      //     ),
-                                      //     onPressed: () {
-                                      //
-                                      //     },
-                                      //     child: Icon(
-                                      //       Icons.holiday_village_sharp,
-                                      //       color: Colors.white,
-                                      //     )
-                                      // ),
                                     ],
                                   )),
                             ],
@@ -646,10 +667,6 @@ class ProductBox extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
-                // Align(
-                //   alignment: Alignment.topLeft,
-                //   child: Text(language.text('consignee') + ' - ' + widget.userDepot + '\n' + language.text('subDepot') + ' - ' + widget.userSubDepot, style: TextStyle(color: Colors.black87)),
-                // ),
                 Divider(
                   height: 3,
                   color: Colors.black87,

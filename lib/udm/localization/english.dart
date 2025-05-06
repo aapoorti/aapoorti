@@ -69,7 +69,7 @@ Map<String, String> englishText = {
   //Search Item
   'searchItem': 'Search Item',
   'on-lineBillSummary' : 'On-Line Bill Summary',
-  'reset': 'Reset',
+
   'submit': 'Submit',
   'pinLengthError': 'Please enter 6-12 digit PIN',
   'railway': 'Railway',
@@ -436,7 +436,7 @@ Map<String, String> englishText = {
   'qty1': '',
   'payingrly': 'Consignee Railway',
 
-  'consrly': 'Consignee Railway',
+
   'Consignee Code': 'Consignee Code',
   'poNO': 'PO No.& Date',
   'podate': '',
@@ -760,7 +760,7 @@ Map<String, String> englishText = {
   'dmddtto' : 'Demand Date To',
   'itemdesc' : 'Item Description',
   'proceed' : 'Proceed',
-  'reset' : 'reset',
+  'reset' : 'Reset',
   'dmdnodt' : 'Demand No. & Date',
   'itemdetails' : 'Item Details',
   'valuemav' : 'Value & Min. Approval Level',
@@ -1077,7 +1077,6 @@ Map<String, String> englishText = {
   'orwarabr' : 'Orig.Recovery/Recov.Amt./Bal.Recovery',
   'vorqbrqau' : 'Value Orig.Rej.Qty./Bal.Rej.Qty./Acct. Unit',
   'rrrml' : 'Rejection Reason/Rejected Material Location',
-  'action' : 'Action',
 
   'twcao' : 'Total Warranty Claim Amount (Original)',
   'twcac' : 'Total Warranty Claim Amount (Current)',
@@ -1229,7 +1228,6 @@ Map<String, String> englishText = {
   'itemDesc' : 'Item Description',
   'stkqty' : 'Stock Qty',
   'stkv' : 'Stock Value',
-  'action' : 'Action',
   'allocation' : 'Allocation',
   'weorkorderno' : 'Work Order No.',
   'enduserunit' : 'Unit',

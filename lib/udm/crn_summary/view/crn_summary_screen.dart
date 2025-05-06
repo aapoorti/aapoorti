@@ -280,10 +280,9 @@ class _CrnSummaryScreenState extends State<CrnSummaryScreen> {
                               )
                           ),
                         ),
-                        // popupShape: RoundedRectangleBorder(
-                        //   borderRadius: BorderRadius.circular(5.0),
-                        //   side: BorderSide(color: Colors.grey),
-                        // ),
+                        items: (filter, loadProps) => value.unittypelistData.map((e){
+                          return e['value'].toString().trim();
+                        }).toList(),
                         decoratorProps: DropDownDecoratorProps(
                           decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(

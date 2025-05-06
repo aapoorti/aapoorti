@@ -441,6 +441,7 @@ class MyApp extends StatelessWidget {
                 ),
                 useMaterial3: true,
                 fontFamily: 'Roboto',
+
                 elevatedButtonTheme: ElevatedButtonThemeData(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
@@ -460,10 +461,32 @@ class MyApp extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(vertical: 6),
                 ),
                 inputDecorationTheme: InputDecorationTheme(
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.blue.shade800, width: 1.5),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  isDense: true,
+                ),
+                outlinedButtonTheme: OutlinedButtonThemeData(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.blue.shade800,
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    side: BorderSide(color: Colors.blue.shade800),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                 ),
               ),
               translations: Languages(), // Set up translations

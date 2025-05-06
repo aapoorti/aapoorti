@@ -1,5 +1,6 @@
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_app/aapoorti/common/AapoortiConstants.dart';
 import 'package:flutter_app/udm/helpers/shared_data.dart';
 import 'package:flutter_app/udm/models/high_value.dart';
@@ -29,22 +30,55 @@ class _StockListScreenState extends State<HighValueScreen>
   var totalValue = 0.0;
   @override
   void initState() {
-    FeatureDiscovery.hasPreviouslyCompleted(context, 'JumpButton')
-        .then((value) {
-      if (value == true) {
-        setState(() {
-          _isDiscovering = false;
-        });
-      }
-    });
+    // FeatureDiscovery.hasPreviouslyCompleted(context, 'JumpButton')
+    //     .then((value) {
+    //   if (value == true) {
+    //     setState(() {
+    //       _isDiscovering = false;
+    //     });
+    //   }
+    // });
     super.initState();
   }
 
+  late List<String> passedItems;
+
   @override
   void didChangeDependencies() {
-    /* Future.delayed(
-        Duration.zero, () => HighValueProvider.fetchAndStoreStockList());*/
     super.didChangeDependencies();
+
+    final args = ModalRoute.of(context)?.settings.arguments;
+
+    List<String> passedItems = [];
+    if (args != null && args is List) {
+      passedItems = args.map((e) => e.toString()).toList();
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        getHighValueItemData(passedItems);
+      });
+    }
+    else {
+      passedItems = [];
+    }
+
+  }
+
+  Future<void> getHighValueItemData(List<String> passedItems) async {
+    if(passedItems.isNotEmpty) {
+      HighValueProvider itemListProvider = Provider.of<HighValueProvider>(context, listen: false);;
+      itemListProvider.fetchAndStoreItemsListwithdata(
+          passedItems[0],
+          passedItems[1],
+          passedItems[2],
+          passedItems[3],
+          passedItems[4],
+          passedItems[5],
+          passedItems[6],
+          passedItems[7],
+          passedItems[8],
+          passedItems[9],
+          passedItems[10],
+          context);
+    }
   }
 
   ScrollController _scrollController = ScrollController();
@@ -101,7 +135,6 @@ class _StockListScreenState extends State<HighValueScreen>
               });
               return NotificationListener<ScrollNotification>(
                   onNotification: (scrollNotif) {
-                    // //print(scrollNotif);
                     if (scrollNotif is ScrollStartNotification ||
                         scrollNotif is ScrollUpdateNotification) {
                       setState(() {
